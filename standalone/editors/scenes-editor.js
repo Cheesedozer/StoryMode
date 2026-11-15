@@ -3,10 +3,7 @@
  * Handles scene CRUD operations and the Scenes tab
  */
 
-import { renderArrayEditor } from '../form/array-editor.js';
-import { renderCollapsible } from '../form/collapsible.js';
 import { Popup } from '../adapters/popup-adapter.js';
-import { BLUEPRINT_FIELDS } from '../../lib/blueprint/schema.js';
 import { getCurrentBlueprint } from '../handlers/blueprint-actions.js';
 
 // ============================================================================

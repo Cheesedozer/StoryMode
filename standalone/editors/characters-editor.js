@@ -3,7 +3,6 @@
  * Handles character arc CRUD operations and the Character Arcs tab
  */
 
-import { getCharacters } from '../adapters/character-adapter.js';
 import { Popup } from '../adapters/popup-adapter.js';
 import { showCharacterSearch, getArcTypeLabel } from './character-search-modal.js';
 import { getCurrentBlueprint } from '../handlers/blueprint-actions.js';

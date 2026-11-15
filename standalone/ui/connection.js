@@ -5,7 +5,7 @@
  */
 
 import { getApiUrl, isValidApiUrl } from '../settings-system.js';
-import { checkBackendConnection, isConnected as isBridgeConnected } from '../adapters/connection-bridge.js';
+import { checkBackendConnection } from '../adapters/connection-bridge.js';
 
 // ============================================================================
 // STATE

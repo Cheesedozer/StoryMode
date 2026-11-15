@@ -3,7 +3,6 @@
  * Provides library access through SillyTavern's file API
  */
 
-import { showError } from './notification-adapter.js';
 import { getRequestHeaders } from './connection-bridge.js';
 
 // ============================================================================

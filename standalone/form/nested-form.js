@@ -3,8 +3,7 @@
  * Handles nested object fields like setting, protagonist_group, antagonistic_forces
  */
 
-import { getNestedValue, setNestedValue } from '../adapters/utils-adapter.js';
-import { getFieldDefinition, DROPDOWN_OPTIONS } from '../../lib/blueprint/schema.js';
+import { getFieldDefinition } from '../../lib/blueprint/schema.js';
 import { markRequired, markOptional } from './validation.js';
 import { renderDropdown } from './dropdown.js';
 

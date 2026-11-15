@@ -3,7 +3,7 @@
  * Handles tab switching and content loading for the standalone editor
  */
 
-import { renderDetailsTab, extractDetailsValues, validateDetailsTab } from '../editors/details-editor.js';
+import { renderDetailsTab } from '../editors/details-editor.js';
 import { renderScenesTab } from '../editors/scenes-editor.js';
 import { renderCharactersTab } from '../editors/characters-editor.js';
 import { renderCoverTab } from '../editors/cover-editor.js';
@@ -169,41 +169,6 @@ export function loadTabContent(tabId) {
     }
 }
 
-/**
- * Load the Details tab content
- * @param {Object} blueprint - Blueprint object
- * @deprecated Use loadTabGeneric instead
- */
-function loadDetailsTab(blueprint) {
-    loadTabGeneric('details', blueprint);
-}
-
-/**
- * Load the Scenes tab content
- * @param {Object} blueprint - Blueprint object
- * @deprecated Use loadTabGeneric instead
- */
-function loadScenesTab(blueprint) {
-    loadTabGeneric('scenes', blueprint);
-}
-
-/**
- * Load the Character Arcs tab content
- * @param {Object} blueprint - Blueprint object
- * @deprecated Use loadTabGeneric instead
- */
-function loadCharactersTab(blueprint) {
-    loadTabGeneric('characters', blueprint);
-}
-
-/**
- * Load the Cover tab content
- * @param {Object} blueprint - Blueprint object
- * @deprecated Use loadTabGeneric instead
- */
-function loadCoverTab(blueprint) {
-    loadTabGeneric('cover', blueprint);
-}
 
 /**
  * Load the Lorebook tab content
@@ -252,21 +217,6 @@ function exportLorebookAsJSON(lorebook) {
     URL.revokeObjectURL(url);
 }
 
-/**
- * Show a placeholder tab for unimplemented features
- * @param {string} tabId - Tab identifier
- * @param {string} title - Tab title
- * @param {string} subtitle - Subtitle text
- */
-function showPlaceholderTab(tabId, title, subtitle) {
-    const $tabPanel = $(`#${tabId}Tab .tab-content`);
-    // Use safe DOM creation instead of template literal to prevent XSS
-    const $content = $('<div>').addClass('empty-state large');
-    $content.append($('<i>').addClass('fa-solid fa-hammer'));
-    $content.append($('<h3>').text(title));
-    $content.append($('<p>').text(subtitle));
-    $tabPanel.empty().append($content);
-}
 
 /**
  * Show empty state for when no blueprint is loaded

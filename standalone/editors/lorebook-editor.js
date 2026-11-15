@@ -179,16 +179,3 @@ function bindLorebookEvents($content) {
     });
 }
 
-/**
- * Extract lorebook data from tab (read-only in v1)
- * @param {jQuery} $content - Lorebook tab content
- * @returns {Object} { embedded_lorebook, linked_lorebooks }
- */
-export function extractLorebookValues($content) {
-    // Lorebook data is read-only in editor for now
-    // Just return what's already in the blueprint
-    return {
-        embedded_lorebook: null,  // Handled by parent editor
-        linked_lorebooks: [],     // Handled by parent editor
-    };
-}

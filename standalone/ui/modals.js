@@ -3,7 +3,13 @@
  * Handles settings modal and modal tab navigation
  */
 
-import { getSettings, applyTheme, setApiUrl, isValidApiUrl, getThemeOptions, getCurrentTheme } from '../settings-system.js';
+import {
+    getSettings,
+    applyTheme,
+    setApiUrl,
+    isValidApiUrl,
+    getCurrentTheme,
+} from '../settings-system.js';
 import { checkConnection } from './connection.js';
 import { getCsrfToken } from '../adapters/connection-bridge.js';
 

@@ -3,7 +3,7 @@
  * Handles blueprint CRUD operations (create, import, export)
  */
 
-import { showSuccess, showError, showWarning, showInfo } from '../adapters/notification-adapter.js';
+import { showSuccess, showError, showWarning } from '../adapters/notification-adapter.js';
 
 // PNG codec is loaded lazily via dynamic import() to avoid pulling in the
 // entire SillyTavern dependency chain at module-parse time.  The chain is:

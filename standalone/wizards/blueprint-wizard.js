@@ -6,7 +6,7 @@
 import { Popup } from '../adapters/popup-adapter.js';
 import { getStoryTypes, getAuthorStyles, generateBlueprint } from '../adapters/connection-bridge.js';
 import { getConnectionStatus } from '../adapters/connection-bridge.js';
-import { showSuccess, showError, showWarning, showInfo } from '../adapters/notification-adapter.js';
+import { showSuccess, showError, showWarning } from '../adapters/notification-adapter.js';
 import { setCurrentBlueprint } from '../handlers/blueprint-actions.js';
 import { renderLoreStep, extractLoreData } from './wizard-steps/lore-step.js';
 import {

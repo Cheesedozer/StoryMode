@@ -20,11 +20,8 @@ standalone/
 │   ├── popup-adapter.js          # Modal system (replaces ST Popup)
 │   ├── connection-bridge.js      # ST backend detection
 │   ├── notification-adapter.js   # Toast messages (wraps toastr)
-│   ├── storage-adapter.js        # localStorage/FileStorage switch
-│   ├── profile-adapter.js        # Connection Manager profiles
 │   ├── character-adapter.js      # Read-only character access
-│   ├── library-storage-adapter.js # Blueprint library file API wrapper
-│   └── utils-adapter.js          # Utility function adapters
+│   └── library-storage-adapter.js # Blueprint library file API wrapper
 │
 ├── ui/                           # UI components
 │   ├── routing.js                # Tab navigation
@@ -35,7 +32,6 @@ standalone/
 ├── form/                         # Form component library
 │   ├── dropdown.js               # Enum dropdowns
 │   ├── nested-form.js            # Nested objects
-│   ├── array-editor.js           # Arrays (alternate_endings, scenes)
 │   ├── collapsible.js            # Collapsible sections
 │   └── validation.js             # Field validation
 │
@@ -72,10 +68,8 @@ The standalone editor uses adapters to bridge SillyTavern dependencies:
 |--------------|---------|------------------------|
 | `Popup` class | `popup-adapter.js` | Creates DOM-based modals, `okButton: false` for custom actions |
 | `extension_settings` | `settings-system.js` | Uses localStorage, separate namespace |
-| `saveBase64AsFile` | `storage-adapter.js` | Direct `localStorage`, or ST API if connected |
 | `characters` array | `character-adapter.js` | Returns empty array unless connected |
 | `toastr` | `notification-adapter.js` | Wraps toastr.js directly |
-| Connection profiles | `profile-adapter.js` | Loads from ST API, caches locally |
 | Library operations | `library-storage-adapter.js` | File API wrapper for blueprint manifest and PNG storage |
 
 ### Module Reuse Strategy

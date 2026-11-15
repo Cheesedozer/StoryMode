@@ -131,12 +131,7 @@ export function renderLibraryView() {
 // UTILITIES (imported from lib/blueprint/utils.js)
 // ============================================================================
 
-import {
-    isValidUUID,
-    blueprintFilename,
-    isValidImageUrl,
-    getBlueprintCoverUrl as getUtilsCoverUrl
-} from '../../lib/blueprint/utils.js';
+import { isValidImageUrl, getBlueprintCoverUrl as getUtilsCoverUrl } from '../../lib/blueprint/utils.js';
 
 /**
  * Extract cover image URL from a blueprint object (standalone-specific wrapper)

@@ -5,6 +5,20 @@ All notable changes to Story Mode will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- Signal markers (`@@BEAT:N@@`, `@@NEXT_SCENE@@`, ...) are now stripped through the host's own message renderer, so the message keeps its markdown formatting (it was previously replaced with raw text), and the active swipe is cleaned too
+- Signal parsing tolerates common model formatting drift (`@@ BEAT: 2 @@`, `@@NEXT SCENE@@`, markers wrapped in backticks or bold)
+- Auto-generated "What's Next" options at arc completion were saved under a malformed key and never appeared in Arc History; the empty-result check was also skipped
+- GLM 4.7 reasoning retry never sent `reasoning.effort` (the override payload was dropped); retry detection no longer fires on every HTTP 400
+- Lorebook context is now forwarded to blueprint generation when it is passed on the request
+- The v2 IndexedDB to File API blueprint library migration was never invoked; it now runs once at startup
+- Hard-coded `third-party/Extension-StoryMode/` paths replaced with the extension's real base URL, so the extension works under any install folder name (including SillyBunny per-user extension folders)
+
+### Removed
+- ~2,500 lines of dead code: unreachable modules, unused exports and imports, the unreachable Story Mode branch of the blueprint injection builder, and the unused default-export object in `lib/blueprint/module.js`
+
 ## [1.1.0] - 2025-01-28
 
 ### Added
