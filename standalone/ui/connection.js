@@ -1,111 +1,83 @@
 /**
  * Connection Management Module
- * Handles SillyTavern backend connection detection and status display.
- * Delegates to connection-bridge for CSRF token management.
+ *
+ * Two independent connections matter to the editor:
+ *  - SillyTavern's server (CSRF token + file API): library load/save/import
+ *  - an open SillyTavern tab running Story Mode (host bridge): generation,
+ *    covers, characters and personas
+ * The banner shows both, and the host check repeats so opening a
+ * SillyTavern tab later enables generation without reloading.
  */
 
-import { getApiUrl, isValidApiUrl } from '../settings-system.js';
-import { checkBackendConnection, isConnected as isBridgeConnected } from '../adapters/connection-bridge.js';
+import { checkBackendConnection } from '../adapters/connection-bridge.js';
+import { connectToHost, isHostAvailable } from '../adapters/host-bridge.js';
 
-// ============================================================================
-// STATE
-// ============================================================================
+const HOST_RECHECK_MS = 15000;
 
-let isConnected = false;
-
-// ============================================================================
-// CONNECTION STATUS
-// ============================================================================
+let serverConnected = false;
+let hostConnected = false;
+let recheckTimer = null;
 
 /**
- * Check connection to SillyTavern backend
- * Uses the connection bridge which handles CSRF token acquisition
- * @returns {Promise<boolean>} True if connected
+ * Check both connections and update the banner.
+ * @returns {Promise<boolean>} True if the SillyTavern server is reachable
  */
 export async function checkConnection() {
-    const apiUrl = getApiUrl();
-
-    if (!apiUrl || !isValidApiUrl(apiUrl)) {
-        setConnectionStatus(false, 'API URL not configured');
-        return false;
-    }
-
     try {
-        const result = await checkBackendConnection();
-
-        if (result.connected) {
-            setConnectionStatus(true, `Connected to SillyTavern (${apiUrl})`);
-            return true;
-        } else {
-            setConnectionStatus(false, 'Could not connect - check URL and server');
-            return false;
-        }
+        serverConnected = (await checkBackendConnection()).connected;
     } catch (error) {
-        setConnectionStatus(false, `Connection error: ${error.message}`);
-        console.info('[Connection] Running in offline mode:', error.message);
-        return false;
+        console.info('[Connection] Server check failed:', error.message);
+        serverConnected = false;
     }
+    hostConnected = await connectToHost();
+    render();
+    scheduleHostRecheck();
+    return serverConnected;
 }
 
-/**
- * Set the connection status and update UI
- * @param {boolean} connected - Whether connected
- * @param {string} message - Status message
- */
-function setConnectionStatus(connected, message) {
-    isConnected = connected;
+function scheduleHostRecheck() {
+    clearTimeout(recheckTimer);
+    recheckTimer = setTimeout(async () => {
+        const before = hostConnected;
+        hostConnected = await connectToHost();
+        if (hostConnected !== before) render();
+        scheduleHostRecheck();
+    }, HOST_RECHECK_MS);
+}
 
-    const banner = $('#connectionBanner');
-    const statusText = $('#connectionStatusText');
-    const statusDot = banner.find('.status-dot');
+function render() {
+    const $banner = $('#connectionBanner');
+    const ok = serverConnected;
+    $banner.toggleClass('connected', ok).toggleClass('disconnected', !ok);
+    $banner.find('.status-dot').toggleClass('online', ok);
 
-    if (connected) {
-        banner.removeClass('disconnected').addClass('connected');
-        statusText.text(message);
-        statusDot.addClass('online');
+    let message;
+    if (!serverConnected) {
+        message = 'Cannot reach SillyTavern. Open this editor from SillyTavern (Story Mode → Fullscreen Editor) while the server is running.';
+    } else if (!hostConnected) {
+        message = 'Connected to SillyTavern library · Keep a SillyTavern tab open to use AI generation and covers';
     } else {
-        banner.removeClass('connected').addClass('disconnected');
-        statusText.text(message);
-        statusDot.removeClass('online');
+        message = 'Connected to SillyTavern · AI generation available';
     }
+    $('#connectionStatusText').text(message);
+    $banner.css('cursor', serverConnected ? 'default' : 'pointer');
 
-    // Emit event for other modules to respond
-    $(document).trigger('connection:changed', { connected, message });
-
-    // Update connection-aware UI elements
-    updateConnectionAwareUI();
+    $(document).trigger('connection:changed', { connected: serverConnected, host: hostConnected, message });
 }
 
-/**
- * Update UI elements that depend on connection status
- */
-function updateConnectionAwareUI() {
-    // Show/hide features that require connection
-}
-
-/**
- * Get the current connection status
- * @returns {boolean} True if connected
- */
+/** @returns {boolean} True if the SillyTavern server is reachable */
 export function getConnectionStatus() {
-    return isConnected;
+    return serverConnected;
 }
 
-/**
- * Initialize connection UI (make banner clickable)
- */
-export function initConnectionUI() {
-    $('#connectionBanner').on('click', function() {
-        if (!isConnected) {
-            $(document).trigger('open-settings');
-        }
-    });
+/** @returns {boolean} True if a SillyTavern tab with Story Mode answers */
+export function getHostStatus() {
+    return hostConnected && isHostAvailable();
+}
 
-    $(document).on('connection:changed', function(e, data) {
-        if (!data.connected) {
-            $('#connectionBanner').css('cursor', 'pointer').attr('title', 'Click to configure connection');
-        } else {
-            $('#connectionBanner').css('cursor', 'default').attr('title', '');
-        }
+/** Make the banner clickable to retry. */
+export function initConnectionUI() {
+    $('#connectionBanner').on('click', () => {
+        if (!serverConnected || !hostConnected) checkConnection();
     });
 }

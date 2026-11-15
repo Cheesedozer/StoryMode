@@ -3,7 +3,7 @@
  * Displays blueprint library grid with search, filtering, and selection
  */
 
-import { showError, showSuccess, showInfo } from '../adapters/notification-adapter.js';
+import { showError, showSuccess } from '../adapters/notification-adapter.js';
 import {
     getAllBlueprints,
     getBlueprintById,
@@ -131,12 +131,7 @@ export function renderLibraryView() {
 // UTILITIES (imported from lib/blueprint/utils.js)
 // ============================================================================
 
-import {
-    isValidUUID,
-    blueprintFilename,
-    isValidImageUrl,
-    getBlueprintCoverUrl as getUtilsCoverUrl
-} from '../../lib/blueprint/utils.js';
+import { isValidImageUrl, getBlueprintCoverUrl as getUtilsCoverUrl } from '../../lib/blueprint/utils.js';
 
 /**
  * Extract cover image URL from a blueprint object (standalone-specific wrapper)
@@ -385,19 +380,29 @@ export function initLibraryHandlers() {
         }
     });
 
-    // Export Blueprint (Trigger generic event for now)
+    // Export: the stored library file already is the blueprint PNG
     $(document).on('click', '[data-action="export"]', async function (e) {
         e.stopPropagation();
-        const card = $(this).closest('.storymode-blueprint-card');
-        const blueprintId = card.data('blueprint-id');
-        // We can implement export logic here or trigger an event
-        // For now, let's look for an export function in adapters
+        const blueprintId = $(this).closest('.storymode-blueprint-card').data('blueprint-id');
+        const entry = libraryData.find(b => b.blueprint_id === blueprintId);
+        if (!entry?.filename) {
+            showError('Could not find this blueprint\'s file');
+            return;
+        }
         try {
-            // Check if exportToPNG exists in adapter, otherwise just log
-            // TODO: Implement export
-            showInfo('Export feature coming soon');
+            const response = await fetch(`/user/files/${entry.filename}?t=${Date.now()}`);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const url = URL.createObjectURL(await response.blob());
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${(entry.title || 'blueprint').replace(/[^a-z0-9]+/gi, '_')}-${blueprintId}.png`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
         } catch (err) {
-            console.error(err);
+            console.error('[Library] Export failed:', err);
+            showError(`Export failed: ${err.message}`);
         }
     });
 
@@ -481,11 +486,9 @@ export async function showLibrary() {
  */
 export async function refreshLibrary() {
     try {
-        showInfo('Loading library...');
         libraryData = await fetchLibrary();
         console.log('[Library] Loaded blueprints:', libraryData);
         applyFiltersAndSearch();
-        showSuccess(`Loaded ${libraryData.length} blueprints`);
     } catch (error) {
         console.error('[Library] Error loading library:', error);
         showError(`Failed to load library: ${error.message}`);

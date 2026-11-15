@@ -1,363 +1,107 @@
 /**
- * Library Storage Adapter for Standalone Editor
- * Provides library access through SillyTavern's file API
+ * Library Storage Adapter for the Standalone Editor
+ *
+ * Thin wrapper over the extension's own library (lib/blueprint/library-adapter.js
+ * and file-storage.js), loaded through the import-map shims in index.html.
+ * Using the same code means the manifest and the blueprint PNGs are written
+ * in exactly the format the extension reads.
+ *
+ * Every write is announced over the host bridge so an open SillyTavern tab
+ * reloads its cached manifest instead of overwriting this tab's changes, and
+ * changes made in SillyTavern reload ours.
  */
 
-import { showError } from './notification-adapter.js';
-import { getRequestHeaders } from './connection-bridge.js';
+import { getLibrary, extractCoverAsCanvas } from '../../lib/blueprint/library-adapter.js';
+import { reloadManifest } from '../../lib/blueprint/manifest.js';
+import { importBlueprintFromPNG } from '../../lib/blueprint/file-storage.js';
+import { notifyLibraryChanged, onHostEvent } from './host-bridge.js';
 
-// ============================================================================
-// CONSTANTS
-// ============================================================================
+const changeListeners = new Set();
 
-const FILE_PREFIX = 'storymode-';
-const MANIFEST_FILE = 'storymode-manifest.json';
-
-// ============================================================================
-// UTILITY FUNCTIONS
-// ============================================================================
-
-/**
- * Ensure filename has the storymode prefix
- * @param {string} filename - Original filename
- * @returns {string} Prefixed filename
- */
-function ensurePrefix(filename) {
-    if (filename.startsWith(FILE_PREFIX)) return filename;
-    return FILE_PREFIX + filename;
-}
-
-/**
- * Convert filename to URL for downloading
- * @param {string} filename - File name
- * @returns {string} URL path
- */
-function toFileUrl(filename) {
-    const prefixed = ensurePrefix(filename);
-    return `/user/files/${prefixed}`;
-}
-
-// ============================================================================
-// FILE API WRAPPERS
-// ============================================================================
-
-/**
- * Read a file from SillyTavern's file storage.
- * Uses relative URLs since the editor is served from SillyTavern (same-origin).
- * @param {string} filename - File name (will be auto-prefixed)
- * @returns {Promise<any>} File contents (parsed JSON or raw text)
- */
-async function readFile(filename) {
-    const fileUrl = toFileUrl(filename);
-
-    const response = await fetch(fileUrl, {
-        method: 'GET',
-        headers: getRequestHeaders(),
-    });
-
-    if (!response.ok) {
-        if (response.status === 404) {
-            return null; // File doesn't exist
-        }
-        throw new Error(`Failed to read file: ${response.statusText}`);
-    }
-
-    const text = await response.text();
-
-    // Try to parse as JSON
+onHostEvent('library-changed', async () => {
     try {
-        return JSON.parse(text);
-    } catch {
-        return text;
-    }
-}
-
-/**
- * Write a file to SillyTavern's file storage
- * Uses the upload endpoint with base64 encoding
- * @param {string} filename - File name (will be auto-prefixed)
- * @param {any} content - File content (will be JSON.stringify'd if object)
- * @returns {Promise<void>}
- */
-async function writeFile(filename, content) {
-    // Convert content to string if object
-    const contentStr = typeof content === 'string' ? content : JSON.stringify(content, null, 2);
-
-    // Encode to base64
-    const base64 = btoa(unescape(encodeURIComponent(contentStr)));
-
-    const response = await fetch('/api/files/upload', {
-        method: 'POST',
-        headers: getRequestHeaders(),
-        body: JSON.stringify({
-            name: ensurePrefix(filename),
-            data: base64,
-        }),
-    });
-
-    if (!response.ok) {
-        throw new Error(`Failed to write file: ${response.statusText}`);
-    }
-}
-
-/**
- * Delete a file from SillyTavern's file storage
- * @param {string} filename - File name (will be auto-prefixed)
- * @returns {Promise<void>}
- */
-async function deleteFile(filename) {
-    const prefixed = ensurePrefix(filename);
-    const path = `user/files/${prefixed}`;
-
-    const response = await fetch('/api/files/delete', {
-        method: 'POST',
-        headers: getRequestHeaders(),
-        body: JSON.stringify({ path }),
-    });
-
-    if (!response.ok) {
-        throw new Error(`Failed to delete file: ${response.statusText}`);
-    }
-}
-
-// ============================================================================
-// MANIFEST OPERATIONS
-// ============================================================================
-
-/**
- * Load the blueprint manifest
- * @returns {Promise<Object>} Manifest object with blueprints array
- */
-export async function loadManifest() {
-    try {
-        const manifest = await readFile(MANIFEST_FILE);
-        if (!manifest) {
-            return { version: '1.0.0', blueprints: [] };
-        }
-        return manifest;
+        await reloadManifest();
     } catch (error) {
-        console.error('[LibraryStorage] Failed to load manifest:', error);
-        return { version: '1.0.0', blueprints: [] };
+        console.warn('[LibraryStorage] Manifest reload failed:', error);
     }
+    changeListeners.forEach(fn => fn());
+});
+
+/** Subscribe to library changes made in another tab. */
+export function onLibraryChangedElsewhere(fn) {
+    changeListeners.add(fn);
+    return () => changeListeners.delete(fn);
+}
+
+function afterWrite() {
+    notifyLibraryChanged();
 }
 
 /**
- * Save the blueprint manifest
- * @param {Object} manifest - Manifest object
- * @returns {Promise<void>}
- */
-export async function saveManifest(manifest) {
-    await writeFile(MANIFEST_FILE, manifest);
-}
-
-// ============================================================================
-// BLUEPRINT OPERATIONS
-// ============================================================================
-
-/**
- * Convert manifest entry to card-compatible format
- * Replicates logic from lib/blueprint/library-adapter.js
- * @param {Object} entry - Manifest entry
- * @returns {Object} Card-compatible blueprint object
- */
-function entryToCardFormat(entry) {
-    if (!entry) return null;
-
-    const coverFileUrl = entry.filename
-        ? `/user/files/${entry.filename}?t=${new Date(entry.modified_at).getTime()}`
-        : null;
-
-    return {
-        ...entry,
-        coverFileUrl,
-        userMetadata: {
-            title: entry.title,
-            favorite: entry.favorite,
-        },
-        libraryData: {
-            dateAdded: entry.created_at,
-            dateModified: entry.modified_at,
-            lastAccessed: entry.last_accessed_at,
-            accessCount: entry.access_count,
-        }
-    };
-}
-
-/**
- * Get all blueprints from the library
- * @returns {Promise<Array>} Array of blueprint manifest entries
+ * @returns {Promise<Array>} Card-format entries (title, cover URL, favorite, dates)
  */
 export async function getAllBlueprints() {
-    const manifest = await loadManifest();
-    return (manifest.blueprints || []).map(entryToCardFormat);
+    const library = await getLibrary();
+    return library.getAllBlueprints({ sortBy: 'modified', sortOrder: 'desc' });
 }
 
 /**
- * Get a specific blueprint by ID
- * @param {string} blueprintId - Blueprint ID
- * @returns {Promise<Object|null>} Blueprint object or null if not found
+ * Load a full blueprint. Its stored PNG doubles as the cover image, so the
+ * URL is kept on the object; saving re-embeds it unless a new cover is chosen.
+ * @param {string} blueprintId
+ * @returns {Promise<Object|null>}
  */
 export async function getBlueprintById(blueprintId) {
-    const manifest = await loadManifest();
-    const entry = manifest.blueprints.find(b => b.blueprint_id === blueprintId);
-
-    if (!entry) {
-        return null;
+    const library = await getLibrary();
+    const blueprint = await library.getBlueprint(blueprintId);
+    if (blueprint) {
+        const entry = (await library.getAllBlueprints()).find(b => b.blueprint_id === blueprintId);
+        if (entry?.coverFileUrl && !blueprint.metadata?.coverGallery?.length) {
+            blueprint.coverFileUrl = entry.coverFileUrl;
+        }
     }
-
-    // Load blueprint from PNG file
-    // Files are at root level: user/files/storymode-bp-{uuid}.png
-    const filename = `storymode-bp-${blueprintId}.png`;
-    const blueprint = await readBlueprintPNG(filename);
-
-    // Augment with computed cover URL for consistency
-    if (blueprint && typeof blueprint === 'object') {
-        blueprint.coverFileUrl = entry.filename ? `/user/files/${entry.filename}` : null;
-    }
-
     return blueprint;
 }
 
 /**
- * Save a blueprint to the library
- * @param {Object} blueprint - Blueprint object
- * @returns {Promise<void>}
+ * Save (create or update) a blueprint in the shared library.
+ * @param {Object} blueprint
  */
 export async function saveBlueprint(blueprint) {
-    const manifest = await loadManifest();
-    const blueprintId = blueprint.blueprint_id || blueprint.id;
-
-    if (!blueprintId) {
-        throw new Error('Blueprint must have an ID');
-    }
-
-    // Update or add manifest entry
-    const existingIndex = manifest.blueprints.findIndex(b => b.blueprint_id === blueprintId);
-
-    // Ensure filename is consistent
-    const filename = `storymode-bp-${blueprintId}.png`;
-
-    const entry = {
-        blueprint_id: blueprintId,
-        title: blueprint.userMetadata?.title || blueprint.blueprint_title || 'Untitled',
-        blueprint_title: blueprint.blueprint_title,
-        story_type_name: blueprint.story_type_name,
-        created_at: blueprint.created_at || new Date().toISOString(),
-        modified_at: new Date().toISOString(),
-        favorite: blueprint.userMetadata?.favorite || false,
-        coverImageUrl: blueprint.coverImageUrl || blueprint.metadata?.coverImageUrl,
-        metadata: blueprint.metadata,
-        filename: filename // Standard field used to generate coverFileUrl
-    };
-
-    if (existingIndex >= 0) {
-        manifest.blueprints[existingIndex] = entry;
-    } else {
-        manifest.blueprints.push(entry);
-    }
-
-    // Save manifest
-    await saveManifest(manifest);
-
-    // Save blueprint as PNG
-    await saveBlueprintPNG(filename, blueprint);
+    const library = await getLibrary();
+    await library.saveBlueprint(blueprint);
+    afterWrite();
 }
 
-/**
- * Delete a blueprint from the library
- * @param {string} blueprintId - Blueprint ID
- * @returns {Promise<void>}
- */
+/** @param {string} blueprintId */
 export async function deleteBlueprint(blueprintId) {
-    const manifest = await loadManifest();
-
-    // Remove from manifest
-    manifest.blueprints = manifest.blueprints.filter(b => b.blueprint_id !== blueprintId);
-    await saveManifest(manifest);
-
-    // Delete PNG file
-    // Files are at root level: user/files/storymode-bp-{uuid}.png
-    const filename = `storymode-bp-${blueprintId}.png`;
-    try {
-        await deleteFile(filename);
-    } catch (error) {
-        console.warn('[LibraryStorage] Failed to delete blueprint file:', error);
-    }
+    const library = await getLibrary();
+    await library.deleteBlueprint(blueprintId);
+    afterWrite();
 }
 
 /**
- * Toggle favorite status for a blueprint
- * @param {string} blueprintId - Blueprint ID
- * @param {boolean} favorite - New favorite status
- * @returns {Promise<void>}
+ * @param {string} blueprintId
+ * @param {boolean} favorite
  */
 export async function setFavorite(blueprintId, favorite) {
-    const manifest = await loadManifest();
-    const entry = manifest.blueprints.find(b => b.blueprint_id === blueprintId);
-
-    if (entry) {
-        entry.favorite = favorite;
-        await saveManifest(manifest);
-    }
-}
-
-// ============================================================================
-// PNG CODEC
-// ============================================================================
-
-/**
- * Read blueprint from PNG file (handling both JSON and Binary formats)
- * @param {string} filename - File name
- * @returns {Promise<Object>} Blueprint object
- */
-async function readBlueprintPNG(filename) {
-    try {
-        const blob = await readBlob(filename);
-        if (!blob) return null;
-
-        // Try treating as JSON (Legacy/Text format)
-        const text = await blob.text();
-        if (text.trim().startsWith('{')) {
-            try {
-                return JSON.parse(text);
-            } catch {
-                // Invalid JSON, fall through to PNG decode
-            }
-        }
-
-        // Try decoding as Binary PNG
-        const { decodeBlueprintFromPNG } = await import('../../lib/blueprint/codec.js');
-        return await decodeBlueprintFromPNG(blob);
-    } catch (error) {
-        console.warn(`[LibraryStorage] Error reading blueprint ${filename}:`, error);
-        return null;
-    }
+    const library = await getLibrary();
+    await library.setFavorite(blueprintId, favorite);
+    const { flushManifest } = await import('../../lib/blueprint/manifest.js');
+    await flushManifest();
+    afterWrite();
 }
 
 /**
- * Read file as Blob (for binary access)
- * @param {string} filename 
- * @returns {Promise<Blob>}
+ * Import a blueprint PNG into the library, keeping the original bytes.
+ * @param {File} file
+ * @returns {Promise<Object|null>} Imported blueprint, or null if cancelled
  */
-async function readBlob(filename) {
-    const url = `/user/files/${filename}?t=${Date.now()}`;
-    try {
-        const response = await fetch(url);
-        if (!response.ok) return null;
-        return await response.blob();
-    } catch (e) {
-        console.error('[LibraryStorage] Fetch failed:', e);
-        return null;
-    }
+export async function importPngToLibrary(file) {
+    await getLibrary();
+    const blueprint = await importBlueprintFromPNG(file);
+    if (blueprint) afterWrite();
+    return blueprint;
 }
 
-/**
- * Save blueprint as PNG file
- * @param {string} filename - File name
- * @param {Object} blueprint - Blueprint object
- * @returns {Promise<void>}
- */
-async function saveBlueprintPNG(filename, blueprint) {
-    // TODO: Implement PNG encoding using codec.js (currently saves as JSON)
-    await writeFile(filename, blueprint);
-}
+export { extractCoverAsCanvas };

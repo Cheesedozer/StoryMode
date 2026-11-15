@@ -24,12 +24,10 @@ Extension-StoryMode/
 │   │   ├── connection-bridge.js  # Backend API detection and calls
 │   │   ├── popup-adapter.js      # Modal system (replaces ST Popup class)
 │   │   ├── notification-adapter.js # Toast notifications (wraps toastr)
-│   │   ├── storage-adapter.js    # localStorage vs ST FileAPI
 │   │   ├── character-adapter.js  # Read-only character access
-│   │   ├── profile-adapter.js    # API profile stub
 │   │   ├── lorebook-adapter.js   # ST worldinfo/lorebook API access (v1.2+)
-│   │   ├── library-storage-adapter.js # Blueprint library file API wrapper
-│   │   └── utils-adapter.js      # Utility shims
+│   │   ├── host-bridge.js        # BroadcastChannel client to the ST tab
+│   │   └── library-storage-adapter.js # Wraps lib/blueprint/library-adapter.js
 │   ├── editors/             # Tab-specific editors (Details, Scenes, Characters, Cover, Lorebook)
 │   │   ├── details-editor.js          # Details tab form (reuses shared renderers)
 │   │   ├── details-field-renderers.js # Individual field rendering
@@ -42,7 +40,6 @@ Extension-StoryMode/
 │   │   ├── cover-generate-modal.js    # AI cover generation dialog
 │   │   └── character-search-modal.js  # Character search dialog
 │   ├── form/                # Reusable form components
-│   │   ├── array-editor.js  # Dynamic array field editor
 │   │   ├── collapsible.js   # Collapsible sections
 │   │   ├── dropdown.js      # Dropdown component
 │   │   ├── nested-form.js   # Nested object forms
@@ -71,20 +68,17 @@ Extension-StoryMode/
 ├── data/
 │   ├── story_types.json     # 40+ story type definitions
 │   ├── author_styles.json   # 40+ author style definitions
-│   └── blueprint-master-prompt.txt # Master blueprint prompt
 ├── prompts/                 # LLM prompt templates (loaded at runtime)
 │   ├── blueprint-generation/
 │   │   └── metaphor-instructions.txt
 │   ├── phased-generation/
 │   │   ├── foundation-prompt.txt
-│   │   ├── characters-prompt.txt
 │   │   ├── characters-prompt-generate.txt
 │   │   ├── characters-prompt-with-data.txt
 │   │   ├── scene-plan-prompt.txt
 │   │   ├── scene-batch-prompt.txt
 │   │   ├── scenes-prompt.txt
-│   │   ├── resolutions-prompt.txt
-│   │   └── validation-prompt.txt
+│   │   └── resolutions-prompt.txt
 │   ├── scene-management/
 │   │   ├── opening-message.txt
 │   │   ├── scene-summary.txt
@@ -103,6 +97,8 @@ Extension-StoryMode/
     │   ├── file-backed-data.js # File API persistence layer (debounced saves)
     │   ├── data-migration-v3.js # localforage/localStorage → File API migration
     │   ├── arc-engine.js    # Phase calculation, prompt injection
+    │   ├── phases.js        # Four-phase model shared by rounds and scenes
+    │   ├── content-level.js # Mature content level (off/intimacy/explicit)
     │   └── event-handlers.js# Message events, signal parsing
     ├── blueprint/           # Blueprint system
     │   ├── index.js         # Re-exports public API
@@ -113,7 +109,6 @@ Extension-StoryMode/
     │   ├── prompts.js       # Master prompt template loading (extracted from module.js)
     │   ├── settings-sync.js # Settings sync and round calculation (extracted from module.js)
     │   ├── startup.js       # Blueprint startup, missing style handling (extracted from module.js)
-    │   ├── types.js         # JSDoc type definitions (Blueprint, Scene, etc.)
     │   ├── schema.js        # Blueprint field definitions
     │   ├── validation.js    # Blueprint validation
     │   ├── normalization.js # Data normalization
@@ -169,8 +164,6 @@ Extension-StoryMode/
     │       ├── blueprint-tabs.js # Blueprint generation/display tabs
     │       ├── wizard.js    # Wizard progress/preview components
     │       ├── library.js   # Library tab, blueprint cards
-    │       ├── sidebar.js   # Settings sidebar
-    │       ├── misc.js      # Additional tab content
     │       ├── character-picker.js # Character picker component
     │       ├── scenario-characters.js # Character/persona status detection
     │       ├── scenario-characters-popup.js # Draggable scenario characters popup
@@ -233,7 +226,6 @@ Extension-StoryMode/
     │   ├── index.js
     │   ├── mocks.js         # Mock LLM responses for testing
     │   ├── handler-audit.js # Event handler audit (auditHandlers())
-    │   └── test-data-loader.js # Blueprint test data loader (disabled)
     ├── utils/               # Shared utilities
     │   └── import-helpers.js # Import sanitization and deduplication
     └── css/                 # Stylesheets (33 files, granular per feature)
@@ -307,10 +299,9 @@ Extension-StoryMode/
 | `settings-sync.js` | ~235 | Settings sync and round calculation |
 | `scene-pacing.js` | ~188 | Scene pacing calculations, scene boundary logic |
 | `resource-utils.js` | ~105 | Three-tier style resolution (library → inline → embedded) |
-| `types.js` | ~89 | JSDoc type definitions (no executable code) |
 | `prompts.js` | ~88 | Master prompt template loading |
 
-`module.js` was reduced from ~1,207 to ~398 lines by extracting `prompts.js`, `settings-sync.js`, `startup.js`, and `types.js` (joining earlier extractions of `injection.js`, `scene-pacing.js`, `summarization.js`). It remains the re-export hub for backward compatibility.
+`module.js` was reduced from ~1,207 to ~398 lines by extracting `prompts.js`, `settings-sync.js`, and `startup.js` (joining earlier extractions of `injection.js`, `scene-pacing.js`, `summarization.js`). It remains a re-export hub, trimmed to the members other modules actually use.
 
 ### Extracted Controller Panel Modules (lib/ui/)
 
@@ -374,8 +365,6 @@ Extension-StoryMode/
 | `scenario-characters.js` | ~159 | Character/persona status detection (was ~377) |
 | `index.js` | ~120 | Re-exports all components |
 | `resource-import.js` | ~82 | Import embedded characters/personas to ST library |
-| `sidebar.js` | ~75 | Settings sidebar |
-| `misc.js` | ~65 | Additional tab content |
 | `helpers.js` | ~43 | Utility functions |
 
 `scenario-characters.js` was split: status detection logic stays in the original, popup UI extracted to `scenario-characters-popup.js`. `resource-import.js` handles importing embedded resources to the SillyTavern library.
@@ -439,13 +428,14 @@ Direct re-exports (`export { x } from './foo.js'`) don't create local bindings, 
 |------|-------|---------|
 | `mocks.js` | ~368 | Mock LLM responses, async cover placeholder generation |
 | `handler-audit.js` | ~241 | Event handler audit utility |
-| `test-data-loader.js` | ~147 | Blueprint test data loader (disabled) |
 
 ## Module Dependencies
 
 ```
 lib/core/
 ├── constants.js (no deps)
+├── phases.js (no deps)
+├── content-level.js (no deps)
 ├── file-backed-data.js (imports blueprint/file-api, /script.js)
 ├── data-migration-v3.js (imports blueprint/file-api, editor/import-export, popup.js)
 ├── state-manager.js (imports constants, file-backed-data)
@@ -456,7 +446,6 @@ lib/blueprint/
 ├── schema.js (no internal deps)
 ├── validation.js (imports schema)
 ├── utils.js (no internal deps - FILE_PREFIX, UUID_V4_PATTERN, isValidUUID, blueprintFilename)
-├── types.js (no deps - JSDoc only)
 ├── placeholders.js (no internal deps)
 ├── resource-utils.js (no internal deps - pure functions)
 ├── storage.js (imports utils, validation, png/*)
@@ -502,8 +491,6 @@ lib/ui/
     ├── blueprint-tabs.js (imports state-manager, blueprint/module, helpers, wizard, phase-override-panel, blueprint-shared)
     ├── wizard.js (imports component-system)
     ├── library.js (imports blueprint/utils, blueprint-tabs)
-    ├── sidebar.js (imports component-system)
-    ├── misc.js (imports state-manager)
     ├── character-picker.js (imports component-system, blueprint/characters/*)
     ├── scenario-characters.js (imports blueprint/storage, characters/linker, blueprint/utils)
     ├── scenario-characters-popup.js (imports scenario-characters, resource-import, component-system)
@@ -552,6 +539,21 @@ lib/scenario/
 ├── injection.js (imports state-manager, character-injection)
 ├── beats.js (imports state-manager)
 └── character-injection.js (imports blueprint/characters/*, scenario/injection)
+
+lib/editor/structure/
+├── model.js (imports story/shapes, story/arcs, story/chapters, story/conditions, story/story-events)
+├── sections.js (imports model, story/*)
+└── structure-editor.js (imports sections, model; jQuery)
+
+lib/story/
+├── shapes.js (imports core/phases only; usable by the standalone editor)
+├── arcs.js (imports shapes)
+├── chapters.js (imports shapes, arcs, core/phases)
+├── conditions.js (no deps)
+├── story-events.js (imports conditions, chapters, core/phases)
+├── drama.js (imports state-manager, blueprint/storage, ledger, chapters, conditions, story-events)
+├── ledger.js (imports state-manager)
+└── tracker.js (imports state-manager, blueprint/storage, generation/orchestration, ledger)
 
 lib/utils/
 └── import-helpers.js (no deps - pure functions)
@@ -676,10 +678,8 @@ const url = new URL('../../data/author_styles.json', import.meta.url);
 | Blueprint file storage | `lib/blueprint/file-storage.js` | `file-api.js`, `manifest.js` |
 | Blueprint library | `lib/blueprint/library-adapter.js` | `integration.js`, `manifest.js` |
 | Blueprint import UI | `lib/blueprint/import-ui.js` | `import.js`, `utils.js` |
-| Blueprint master prompt | `lib/blueprint/prompts.js` | `data/blueprint-master-prompt.txt` |
 | Blueprint settings sync | `lib/blueprint/settings-sync.js` | `state-manager.js` |
 | Blueprint startup | `lib/blueprint/startup.js` | `missing-style-handler.js`, `storage.js` |
-| Blueprint type defs | `lib/blueprint/types.js` | - |
 | Style resolution (export) | `lib/blueprint/resource-utils.js` | `export.js`, `editor-action-handlers.js` |
 | Placeholder resolution | `lib/blueprint/placeholders.js` | - |
 | Scene beat editor | `lib/editor/blueprint-editor/scene-beats-editor.js` | `schema.js`, `utils.js` |
@@ -706,6 +706,14 @@ const url = new URL('../../data/author_styles.json', import.meta.url);
 | Controller: structure | `lib/ui/controller-panel-structure.js` | `drag.js` |
 | Controller: popups | `lib/ui/controller-panel-popups.js` | `ui/components` |
 | Controller: summary | `lib/ui/controller-panel-summary.js` | `blueprint/module` |
+| Arc shapes catalogue | `lib/story/shapes.js` | `data/story_types.json` (`defaultShape`), `editor/story-type-form.js` |
+| Spine/threads at runtime and in generation | `lib/story/arcs.js` | `core/arc-engine.js`, `scenario/injection.js`, `generation/prompts.js`, `generation/orchestration.js`, `blueprint/normalization.js` |
+| Structure editor (both editors) | `lib/editor/structure/structure-editor.js` | `model.js`, `sections.js`, `editor/blueprint-editor.js` (mount), `standalone/editors/structure-editor.js` |
+| Ledger compaction | `lib/story/drama.js` (`scheduleLedgerCompaction`) | `story/ledger.js` (`compactChapter`, `unfoldSummary`), `blueprint/summarization.js` |
+| Chapters | `lib/story/chapters.js` | `scenario/injection.js`, `generation/orchestration.js`, `generation/staged-scenes.js`, `blueprint/normalization.js` |
+| Tentpoles, complications, ending lean | `lib/story/drama.js` | `story-events.js`, `conditions.js`, `index.js` (GENERATION_STARTED), `core/event-handlers.js` (epilogue, trackReply) |
+| Story tracker (inline / secondary model) | `lib/story/tracker.js` | `core/event-handlers.js` (`trackReply`, `applyStorySignals`), `index.js` (`waitForTracker`) |
+| Story ledger | `lib/story/ledger.js` | `core/arc-engine.js` (injection), `ui/ledger-panel.js` (panel + editor) |
 | Scenario Mode | `lib/scenario/injection.js` | `beats.js`, `character-injection.js`, `blueprint/module.js` |
 | Scenario characters | `lib/ui/components/scenario-characters.js` | `scenario-characters-popup.js`, `resource-import.js` |
 | Resource import | `lib/ui/components/resource-import.js` | `blueprint/characters/*` |

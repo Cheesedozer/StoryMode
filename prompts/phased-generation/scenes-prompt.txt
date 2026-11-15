@@ -1,8 +1,4 @@
-You are an expert story designer. Generate the SCENES phase of a story blueprint.
-
-This is Phase 3 of 5 in a phased blueprint generation process. You will design a complete scene plan that builds upon the foundation and characters established in Phases 1-2.
-
-**CRITICAL:** Generate your response immediately and directly. Do not engage in verbose internal reasoning or deliberation - you are an expert who can design scenes efficiently. Proceed directly to producing valid JSON.
+You are an expert story designer. This is Phase 3 of 4 of a story blueprint: the scene plan, built on the foundation and characters from Phases 1-2. The player persona is the protagonist, and the user decides what they do.
 
 ## STORY TYPE
 
@@ -29,38 +25,37 @@ This is Phase 3 of 5 in a phased blueprint generation process. You will design a
 
 **Character Arcs:** {{CHARACTER_ARCS_SUMMARY}}
 
-## TURNING POINT MAPPING (Required)
+## STORY ARCS AND CHAPTERS
 
-**Every character turning point listed above MUST appear in your scene plan.** This is non-negotiable—the scene plan is how turning points become playable moments.
+{{ARCS_SECTION}}
 
-For each turning point, you must:
-1. Assign it to a specific scene (via `character_focus`)
-2. Create a beat that enables that turning point to occur
-3. Set an `emotional_beat_target` that reflects the turning point's impact
+Group the scenes into chapters. A chapter is a stretch of the story that moves one or more arc stages forward and holds one to three scenes, usually two. Each chapter lists the stages it advances in `advances` as `"arc:stage"` strings (for example `"spine:preparation"`). Every chapter advances a spine stage; a chapter that also moves a thread lists that stage too. Stages run in order within each arc. Coordinate the arcs this way:
 
-**Example mapping:**
-- Turning point: "Mark discovers the invoices don't add up"
-  → Scene 2, Beat "Hidden Invoices", character_focus: Mark with emotional_beat_target "growing suspicion"
+- The spine's climax stage comes in the chapter that holds the climax scene, last among the climaxes. A thread's climax lands in an earlier chapter or in the same chapter as the spine's.
+- At most one thread reaches its climax in any chapter.
+- Threads appear often enough to stay alive, roughly every second chapter, and are woven into the spine's scenes rather than given scenes of their own.
 
-If a character has 4 turning points, your scene plan must have 4 corresponding beats across different scenes.
+## TENTPOLES
 
-## AUTHOR STYLE GUIDANCE
+Tentpoles are 2 to 4 situations that happen whatever the protagonist has done, at a set point in the story. The player steers how the protagonist meets one, and so how it turns out, but cannot stop it arriving, the way an oncoming car arrives whether or not you saw it coming. Write each as events and other characters' actions.
 
-{{AUTHOR_STYLE_SECTION}}
+The story type's signature moment is one of them, adapted to this story:
 
-## MEMORABLE ELEMENT
-
-Every great story has a moment that readers carry with them—a clever twist, an emotional peak, a meaningful MacGuffin, or a signature setpiece. This is the story type's defining memorable element:
-
-**Type:** {{MEMORABLE_ELEMENT_TYPE}}
-**Name:** {{MEMORABLE_ELEMENT_NAME}}
-**Description:** {{MEMORABLE_ELEMENT_DESCRIPTION}}
-**Recommended Placement:** {{MEMORABLE_ELEMENT_PLACEMENT}}
-
-**Setup Hooks (plant these in earlier scenes):**
+**{{MEMORABLE_ELEMENT_NAME}}** ({{MEMORABLE_ELEMENT_TYPE}}, usually in the {{MEMORABLE_ELEMENT_PLACEMENT}} phase): {{MEMORABLE_ELEMENT_DESCRIPTION}}
+Setup hooks:
 {{MEMORABLE_ELEMENT_SETUP_HOOKS}}
 
-**CRITICAL:** Your scene plan MUST include this memorable element. Assign it to the appropriate scene based on the recommended placement. Plant the setup hooks in earlier scenes so the payoff feels earned.
+Each tentpole has a trigger: the chapter it arrives in (`{ "chapter": 3 }`, 0-based) or an arc stage (`{ "stage": "spine:execution" }`). Plant each tentpole's setup hooks in earlier scenes so it feels earned. A tentpole is brought in during play when its trigger is reached, so the scenes of its chapter leave room for it instead of scripting it as a beat.
+
+## TURNING POINTS
+
+Give every turning point from Phase 2 a place in the scene plan: assign it to a scene through `character_focus`, add a beat that creates the conditions for it, and set an `emotional_beat_target` for its impact. A character with four turning points therefore appears in four beats across different scenes.
+
+For a turning point that belongs to the player persona, the beat creates the situation that makes the turning point possible; whether and how it happens is up to the player.
+
+## WRITING STYLE
+
+{{AUTHOR_STYLE_SECTION}}
 
 ## USER SCENARIO
 
@@ -73,181 +68,77 @@ Every great story has a moment that readers carry with them—a clever twist, an
 ## STORY PARAMETERS
 
 - **Expected Scenes:** {{EXPECTED_SCENE_COUNT}}
-- **Scene Distribution:** Setup (~25%) → Escalation (~50%) → Climax (~15%) → Resolution (~10%)
+- **Scene Distribution:** {{PHASE_DISTRIBUTION}}
 
-## SCENE STRUCTURE
+## SCENE DESIGN
 
-Each scene needs:
-- **situation**: 1–2 sentences describing what the protagonists face
-- **key_events_if_unchallenged**: 3–5 core events that advance the scene (player choices override/expand these)
-- **choice_points**: 0–2 per scene (story-altering decisions only; include example player intents and narrative consequences)
-- **beats**: 3–7 beats that mark progression through the scene (see beat types below)
+Each scene is a complete dramatic unit built around a goal and an obstacle:
 
-Beat types: **establishment** (set scene/mood) | **hook** (create interest) | **reaction** (character response) | **escalation** (raise stakes) | **pivot** (change direction) | **emotional** (emotional moment) | **transition** (bridge to next scene)
+- **purpose**: the scene's goal, phrased as what must be settled by the end of it (for instance "win the magistrate's support" or "get out of the city before dawn").
+- **chapter**: the index of the chapter this scene belongs to.
+- **situation**: 1–2 sentences on where the protagonist is, what they want right now, and what opposes them in this scene.
+- **key_events_if_unchallenged**: 3–5 things the opposition and other characters will do in this scene if the protagonist doesn't intervene. The world keeps moving; the player's choices change or stop these events.
+- **choice_points**: 0–2 story-altering decisions, with example approaches the player might take, where each would lead, and a short tag for each approach. The tags are how the story remembers the choice: later complications and endings check for them.
+- **beats**: 3–7 milestones that mark progress through the scene.
+- **character_focus**: required when a scene carries a turning point.
+- Optional: **hooks_for_future** (threads paid off in later scenes) and **expected_rounds** (rough number of exchanges the scene should take).
 
-Each beat requires: index, title, description, type, and required (true/false).
+Beat types: **establishment** (set the scene) | **hook** (create interest) | **reaction** (a character responds) | **escalation** (raise the stakes) | **pivot** (change direction) | **emotional** (an emotional moment) | **transition** (bridge to the next scene)
 
-**character_focus** (required for scenes with turning points):
-```json
-"character_focus": [
-  {
-    "name": "Character Name",
-    "emotional_beat_target": "what emotional shift occurs",
-    "turning_point": "which turning point this addresses (if any)"
-  }
-]
-```
+Beats describe what the world and the non-player characters do, reveal, or demand. When a beat involves the player persona, it sets up the situation they face; their action, decision, and emotional reaction are left to the player.
 
-Optional: hooks_for_future (threads connecting to later scenes), expected_rounds (how many rounds this scene spans).
+**Scene boundaries.** Start a new scene only at a real break: a new location, a meaningful time skip, or a shift to a new goal. Keep a crisis together with its immediate aftermath and consequences when they happen in one continuous stretch; a bridge collapse and the scramble to escape it are one scene.
 
-## SCENE COHESION RULES
-
-A scene is a **complete dramatic unit**. Do NOT split continuous action into separate scenes.
-
-**Anti-Split Rule:** Keep together:
-- Action sequences and their immediate emotional aftermath
-- A crisis and its resolution when they occur in the same location
-- A confrontation and its direct consequences if they flow without interruption
-
-**Bad example:** Scene 7 "The Bridge Collapse" + Scene 8 "The Aftermath"
-**Good example:** Scene 7 "The Bridge Collapse and Escape" (includes BOTH the crisis AND the immediate emotional beat)
-
-If characters remain in continuous action/reaction without a scene break (new location, significant time skip, or narrative pause), it belongs in ONE scene.
-
-**Climax-Resolution Unity:** The CLIMAX phase scene and its immediate aftermath MUST be combined if:
-- They occur in the same location or continuous movement
-- Less than 1 hour passes narratively between them
-- The same core characters are involved
-
-The final RESOLUTION scene should represent a NEW situation—next day, different location, or clearly separated context—not the last few minutes of the climax action. Resolution is for reflection and new equilibrium, not for finishing the climax's loose ends.
+**Climax and resolution.** {{CLIMAX_NOTE}} The final resolution scene takes place in a new situation (later, elsewhere, or clearly separated), and is about the new equilibrium rather than the climax's last minutes.
 
 ## YOUR TASK
 
-Generate a JSON object with **scene_plan** (array of {{EXPECTED_SCENE_COUNT}} scene objects). Each scene must follow this structure:
+Return a JSON object with three fields:
+
+- **chapters**: the chapters, each `{ "index": 0, "title": "short chapter title", "summary": "one sentence: what this stretch is about", "advances": ["spine:<stage id>", "<thread id>:<stage id>"] }`
+- **tentpoles**: 2 to 4 tentpoles, each `{ "id": "snake_case_id", "name": "short name", "trigger": { "chapter": 3 } or { "stage": "spine:<stage id>" }, "situation": "what happens regardless", "ways_to_meet": ["2-4 ways the protagonist might respond"], "setup_hooks": ["things planted earlier"] }`
+- **scene_plan**: an array of {{EXPECTED_SCENE_COUNT}} scenes, each shaped like this:
 
 ```json
 {
   "index": 0,
-  "title": "memorable scene title",
-  "phase": "setup|escalation|climax|resolution",
-  "purpose": "what this scene accomplishes for plot/character/theme",
-  "situation": "1–2 sentences describing the scene",
-  "key_events_if_unchallenged": ["event 1", "event 2", "event 3"],
+  "title": "short scene title",
+  "phase": "setup | escalation | climax | resolution",
+  "purpose": "what must be settled by the end of the scene",
+  "chapter": 0,
+  "situation": "where the protagonist is, what they want now, what opposes them",
+  "key_events_if_unchallenged": ["what the opposition or others do if the protagonist doesn't intervene"],
   "choice_points": [
     {
-      "id": "scene_choice_id",
-      "description": "what decision do players make?",
-      "example_player_intents": ["intent 1", "intent 2"],
+      "id": "unique_choice_id",
+      "description": "the decision the situation forces",
+      "example_player_intents": ["one approach", "another approach"],
       "consequences": {
-        "direction_if_choice_1": "outcome",
-        "direction_if_choice_2": "outcome"
-      }
+        "direction_if_<approach>": "where that approach leads"
+      },
+      "tags": ["snake_case tags naming what the protagonist did, one per approach, e.g. sided_with_dispatcher"]
     }
   ],
   "character_focus": [
     {
-      "name": "Character Name",
-      "emotional_beat_target": "what emotional shift this scene creates",
-      "turning_point": "exact turning point text from Phase 2 (or null if none)"
+      "name": "character name",
+      "emotional_beat_target": "the emotional shift this scene creates",
+      "turning_point": "exact turning point text from Phase 2, or null"
     }
   ],
   "beats": [
     {
       "index": 0,
       "title": "beat title",
-      "description": "what happens—specific action or revelation",
-      "type": "establishment|hook|reaction|escalation|pivot|emotional|transition",
+      "description": "what happens: a specific event, action by another character, or revelation",
+      "type": "establishment | hook | reaction | escalation | pivot | emotional | transition",
       "required": true
     }
-  ]
+  ],
+  "hooks_for_future": ["optional threads for later scenes"]
 }
 ```
-
-## QUICK EXAMPLE
-
-One scene showing turning point mapping (your output should have {{EXPECTED_SCENE_COUNT}} scenes):
-
-Given character arc turning point: *"Elena discovers her own forgotten memories among the stored data"*
-
-```json
-{
-  "scene_plan": [
-    {
-      "index": 2,
-      "title": "The Archive's Secret",
-      "phase": "escalation",
-      "purpose": "Shatter Elena's self-perception as objective observer through personal discovery",
-      "situation": "Elena is cataloging memory files when she encounters one with her own biometric signature from a time she cannot remember.",
-      "key_events_if_unchallenged": [
-        "Elena notices anomalous file during routine cataloging",
-        "Biometric match triggers security alert she must suppress",
-        "Memory fragment plays, showing younger Elena in a subject chair",
-        "Realization that her scientific objectivity was built on a lie"
-      ],
-      "choice_points": [
-        {
-          "id": "scene2_revelation",
-          "description": "How does Elena respond to discovering she was a test subject?",
-          "example_player_intents": [
-            "Dig deeper into her own file immediately",
-            "Confront Dr. Sterling about the deception",
-            "Hide the discovery and pretend nothing happened"
-          ],
-          "consequences": {
-            "direction_if_dig_deeper": "Uncover more painful truths but gain leverage",
-            "direction_if_confront": "Force Sterling's hand, escalate conflict",
-            "direction_if_hide": "Maintain cover but carry psychological burden"
-          }
-        }
-      ],
-      "character_focus": [
-        {
-          "name": "Elena",
-          "emotional_beat_target": "shock dissolving into betrayed fury masked by professional composure",
-          "turning_point": "Discovers her own forgotten memories among the stored data"
-        }
-      ],
-      "beats": [
-        {
-          "index": 0,
-          "title": "Routine Cataloging",
-          "description": "Elena methodically processes memory files, clinical and detached",
-          "type": "establishment",
-          "required": true
-        },
-        {
-          "index": 1,
-          "title": "Anomalous Signature",
-          "description": "A file's biometric data matches Elena's own—impossible, since she was never a subject",
-          "type": "hook",
-          "required": true
-        },
-        {
-          "index": 2,
-          "title": "The Memory Plays",
-          "description": "Elena watches her younger self in a subject chair, memories being extracted",
-          "type": "emotional",
-          "required": true
-        },
-        {
-          "index": 3,
-          "title": "Shattered Objectivity",
-          "description": "Elena realizes her entire scientific career was built on an erased foundation",
-          "type": "pivot",
-          "required": true
-        }
-      ],
-      "hooks_for_future": [
-        "The suppressed security alert may be logged somewhere",
-        "Other subjects may have similar 'erased researcher' origins"
-      ]
-    }
-  ]
-}
-```
-
-Note how `character_focus.turning_point` explicitly maps to the Phase 2 turning point, and the beats create the moment where that turning point can occur.
 
 ## RESPONSE FORMAT
 
-Return ONLY valid JSON. No explanations, markdown blocks, or filler. Your entire response must be a single parseable JSON object with the scene_plan field.
+Return a single JSON object with the chapters, tentpoles and scene_plan fields and nothing else.

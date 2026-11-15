@@ -14,9 +14,12 @@ import {
     handleFileSelect,
     handleExport,
     handleJsonExport,
+    handleSave,
+    hasUnsavedChanges,
     setCurrentBlueprint,
     updateUIState,
 } from './handlers/blueprint-actions.js';
+import { onLibraryChangedElsewhere } from './adapters/library-storage-adapter.js';
 import { showBlueprintWizard } from './wizards/blueprint-wizard.js';
 import { showLibrary, hideLibrary, initLibraryHandlers } from './ui/library-view.js';
 
@@ -75,6 +78,9 @@ async function initApp() {
         updateUIState();
     }
 
+    // Hide blueprint-only navigation until something is open
+    updateUIState();
+
     isInitialized = true;
     console.log(`[${APP_NAME}] Initialization complete`);
 }
@@ -92,6 +98,7 @@ function setupEventHandlers() {
         e.preventDefault();
         await showLibrary();
     });
+    $('#saveLink').on('click', (e) => { e.preventDefault(); handleSave(); });
     $('#generateBlueprintLink').on('click', handleGenerateWizard);
     $('#newBlueprintLink').on('click', handleNewBlueprint);
     $('#importLink').on('click', handleImport);
@@ -129,6 +136,18 @@ function setupEventHandlers() {
     $(document).on('library:blueprint-selected.standalone-app', handleLibraryBlueprintSelected);
     $(document).on('library:new-blueprint.standalone-app', handleNewBlueprint);
     $(document).on('library:import.standalone-app', handleImport);
+
+    // Empty-state buttons inside the editor tabs
+    $(document).on('blueprint:new.standalone-app', handleNewBlueprint);
+    $(document).on('blueprint:import.standalone-app', handleImport);
+
+    // Help modal
+    $('#helpModal').on('click', '.modal-close, #closeHelpBtn', () => $('#helpModal').hide());
+
+    // Keep the library grid current when SillyTavern changes the library
+    onLibraryChangedElsewhere(() => {
+        if ($('#libraryView').is(':visible')) showLibrary();
+    });
 }
 
 /**
@@ -147,7 +166,9 @@ function handleBlueprintLoaded(e, data) {
  * @param {Object} data - Event data with blueprint
  */
 function handleLibraryBlueprintSelected(e, data) {
-    console.log('[App] Blueprint selected from library:', data.blueprint);
+    if (hasUnsavedChanges() && !window.confirm('You have unsaved changes. Open another blueprint anyway?')) {
+        return;
+    }
 
     // Hide library
     hideLibrary();
@@ -171,9 +192,10 @@ function handleLibraryBlueprintSelected(e, data) {
 async function handleGenerateWizard() {
     const blueprint = await showBlueprintWizard();
     if (blueprint) {
-        // Wizard already sets the blueprint and triggers the event
-        // Just update UI state
+        // The wizard already set the blueprint; show it in the editor
+        hideLibrary();
         updateUIState();
+        switchTab('details');
     }
 }
 
@@ -208,11 +230,11 @@ function handleTabShow() {
  * @param {KeyboardEvent} e - Keyboard event
  */
 function handleKeyboard(e) {
-    // Ctrl/Cmd + S - Save/Export
+    // Ctrl/Cmd + S - Save to library
     if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault();
         if (getCurrentBlueprint()) {
-            handleExport();
+            handleSave();
         }
     }
 
@@ -300,6 +322,7 @@ if (typeof window !== 'undefined' && window.location?.hostname === 'localhost') 
         handleImport,
         handleExport,
         handleJsonExport,
+        handleSave,
         handleGenerateWizard,
         currentBlueprint: getCurrentBlueprint,
         isConnected: getConnectionStatus,

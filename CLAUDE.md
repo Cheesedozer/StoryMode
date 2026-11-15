@@ -4,7 +4,7 @@ Quick reference for Claude Code when working with this repository.
 
 ## Project Overview
 
-Story Mode is a SillyTavern extension providing narrative structure through three-act story arc progression and author style emulation. Injects context-aware prompts to guide AI narration.
+Story Mode is a SillyTavern extension providing narrative structure through four-phase story arc progression and writing-style guidance. Injects context-aware prompts to guide AI narration.
 
 ## Documentation Index
 
@@ -19,8 +19,18 @@ Story Mode is a SillyTavern extension providing narrative structure through thre
 ## Quick Architecture Summary
 
 **Two Pacing Modes** (see [ARCHITECTURE.md](./ARCHITECTURE.md) for details):
-- **Story Mode**: Round-based, `currentStep++` on user message, 33% phase boundaries
+- **Story Mode**: Round-based, `currentStep++` on user message, four phases (25/50/15/10, `lib/core/phases.js`)
 - **Scenario Mode**: Signal-based (`@@BEAT:N@@`, `@@NEXT_SCENE@@`), blueprint-driven
+
+**Play state:** `chatState.scenario` (`createPlayState()` in `lib/core/state-manager.js`) is the only copy of scene index, beat statuses, the ledger and the tracker fallback flag. Legacy `blueprintState.currentSceneIndex`/`beatProgress` are migrated away on load.
+
+**Arc shapes:** `lib/story/shapes.js` (catalogue, no SillyTavern imports) and `lib/story/arcs.js` (spine + up to 2 threads, current stages, `<arcs>` block, generation rules). See ARCHITECTURE.md.
+
+**Structure editor:** `lib/editor/structure/` (model, sections, structure-editor) edits arcs, chapters, tentpoles, complications, ending conditions and choice tags; mounted as the Structure tab in both editors.
+
+**Chapters and drama manager:** `lib/story/chapters.js` (chapters own arc stages), `lib/story/conditions.js` (tag/stage/chapter conditions), `lib/story/story-events.js` (normalize tentpoles, complications, ending conditions), `lib/story/drama.js` (runtime: tentpoles, complications on stalls, ending lean). See ARCHITECTURE.md.
+
+**Tracker and ledger:** `lib/story/tracker.js` (inline markers or a secondary model after every reply), `lib/story/ledger.js` (what the story has established, swipe-aware), `lib/ui/ledger-panel.js` (panel section + editor, hidden by default). See ARCHITECTURE.md.
 
 **Key Entry Points:**
 - `index.js` - Main entry, UI setup, event wiring
@@ -232,6 +242,38 @@ window.StoryModeDebug.auditHandlers({ showAll: true })
 8. Verify signals stripped from displayed message
 9. Controller panel shows Act X/Y (not Round)
 
+### Arc Shapes
+- Story Mode, Slice of Life at the climax → phase shows RESONANCE, no confrontation guidance
+- Change Story Shape away from the type's default → the type's phase prompts are left out
+- Threads: story type suggestions preselected; None removes them; never more than 2
+- Generate Heist + Romance → chapters list `advances`; romance crisis is not in a chapter after the spine's climax
+- v1 blueprint → `<arcs>` shows an Escalation spine following scene phases
+
+### Structure Editor
+- Structure tab in the extension editor and the standalone editor shows six sections
+- Change an arc's shape with chapters pointing at it → confirm, references removed
+- Create chapters, move a scene, remove a chapter → its stages and scenes join the previous chapter
+- Put a thread climax after the spine's → structure check flags it; "Apply arc rules" fixes it
+- Save, export PNG, re-import → every v2 field identical, `schema_version: 2`
+
+### Ledger Compaction & Stall
+- Finish a chapter with 4+ ledger entries → one "chapter N summary" entry with all tags; Unfold restores
+- Swipe the same reply several times → stall does not grow
+
+### Chapters & Drama Manager
+- Generated blueprint has `chapters`, `tentpoles`, `complications`, and endings with `reached_if`
+- Reach a tentpole's chapter → `<happening_now>` appears whatever the player did; it says "under way" after one reply
+- 4 replies without progress → the most specific matching complication is injected (turn off in Story Tracking settings)
+- `@@NOTE: ... #tag@@` → ledger entry with that tag
+- Climax → ending lean follows ledger tags; resolution freezes it; ending scene and epilogue use it
+
+### Tracker & Ledger
+- Inline mode: `@@NOTE: ...@@` becomes a ledger entry and is stripped from the message
+- Secondary mode: no markers in the prompt; tracker profile called after every reply; next generation waits for it
+- Secondary call fails → warning toast, next reply uses inline markers, then secondary resumes
+- Swipe a reply → its ledger entries go inactive; swipe back → active again
+- Ledger hidden by default; "Show Story Ledger" → panel section and editor (add/edit/delete)
+
 ### General
 10. Test wand menu controls
 11. Verify persistence across chat changes
@@ -287,13 +329,11 @@ window.StoryModeDebug.auditHandlers({ showAll: true })
 ## Known Limitations
 
 ### Architecture Issues (v1)
-- **Dual scene index storage:** `chatState.scenario.currentSceneIndex` and `blueprintState.currentSceneIndex` can drift out of sync
-- **Beat state duplication:** `scenario.beatState` (new) vs `beatProgress` (legacy) track differently
 - **No UI for mode switching:** Users cannot toggle between Story/Scenario modes manually
 
 ### Stub Functions (v2 placeholders)
 - `resolvePlaceholders()` - returns text unchanged (no placeholder resolution)
-- `checkPrerequisites()` - always returns true (no prerequisite checking)
+- `checkPrerequisites()` - always returns true for beats (conditions exist for tentpoles, complications and endings in `lib/story/conditions.js`, not for beats)
 
 ### GLM 4.7 Reasoning Parameter Error
 
@@ -309,8 +349,9 @@ Bad Request {"error":{"message":"Invalid option: expected one of \"xhigh\"|\"hig
 **Manual Fix:** Edit connection profile preset, change reasoning effort from "auto" to "high".
 
 ### General
-- Phase boundaries fixed at 33%
-- No nested/branching arcs
+- Phase proportions are fixed (25/50/15/10) and shared with blueprint scenes; shapes map their stages onto these slots
+- The extension editor's Structure tab is covered by module tests and the shared component's browser test, not yet clicked through inside SillyTavern
+- No sequential arcs (Journey then Siege) yet; one spine plus up to two threads
 - Story types manually selected
 - Regeneration edge cases partially addressed
 - **Concurrent tab editing:** Two tabs editing story types/styles → last-write-wins (same as manifest.js)

@@ -7,8 +7,10 @@
  * authenticated request headers to all other modules.
  */
 
-// Note: getApiUrl is no longer needed here — all API calls use relative URLs
-// since the editor is served from within SillyTavern (same-origin).
+import { connectToHost, isHostAvailable, getHostStyles, generateBlueprintViaHost, generateCoverViaHost } from './host-bridge.js';
+
+// All API calls use relative URLs: the editor is served from within
+// SillyTavern (same-origin).
 
 // ============================================================================
 // CONNECTION STATE
@@ -143,113 +145,87 @@ export async function authenticatedFetch(url, options = {}) {
 // DATA LOADERS (story types, author styles)
 // ============================================================================
 
-/** Cache for static JSON data */
+/** Cache for loaded style lists */
 const dataCache = {};
 
+/** User data files written by the extension (lib/core/file-backed-data.js) */
+const USER_DATA_FILES = {
+    'story_types.json': 'storymode-story-types.json',
+    'author_styles.json': 'storymode-author-styles.json',
+};
+
 /**
- * Load a JSON data file from the extension's data/ directory
- * @param {string} filename - JSON filename (e.g., 'story_types.json')
- * @returns {Promise<Array>} Parsed JSON array
+ * Load a style list, preferring the user's own data:
+ * 1. the open SillyTavern tab (includes unsaved edits and custom entries)
+ * 2. the user's saved file in user/files/
+ * 3. the defaults bundled with the extension
+ * @param {string} filename - Bundled data filename
+ * @param {string} hostKey - Key in the host's getStyles() result
+ * @returns {Promise<Array>}
  */
-async function loadDataFile(filename) {
+async function loadStyleList(filename, hostKey) {
     if (dataCache[filename]) return dataCache[filename];
 
-    // Resolve relative to standalone/ → ../data/
-    const url = new URL(`../../data/${filename}`, import.meta.url).href;
-    const response = await fetch(url);
+    try {
+        if (isHostAvailable() || await connectToHost()) {
+            const styles = await getHostStyles();
+            if (Array.isArray(styles?.[hostKey]) && styles[hostKey].length) {
+                return (dataCache[filename] = styles[hostKey]);
+            }
+        }
+    } catch (error) {
+        console.warn(`[Connection] Could not get ${hostKey} from SillyTavern tab:`, error.message);
+    }
 
+    try {
+        const response = await fetch(`/user/files/${USER_DATA_FILES[filename]}?t=${Date.now()}`);
+        if (response.ok) {
+            const data = await response.json();
+            if (Array.isArray(data) && data.length) return (dataCache[filename] = data);
+        }
+    } catch { /* fall through to bundled defaults */ }
+
+    const response = await fetch(new URL(`../../data/${filename}`, import.meta.url).href);
     if (!response.ok) {
         throw new Error(`Failed to load ${filename}: ${response.statusText}`);
     }
-
-    const data = await response.json();
-    dataCache[filename] = data;
-    return data;
+    return (dataCache[filename] = await response.json());
 }
 
-/**
- * Get available story types from extension data
- * @returns {Promise<Array>} Story type definitions
- */
-export async function getStoryTypes() {
-    return loadDataFile('story_types.json');
+/** @returns {Promise<Array>} Story type definitions */
+export function getStoryTypes() {
+    return loadStyleList('story_types.json', 'storyTypes');
 }
 
-/**
- * Get available author styles from extension data
- * @returns {Promise<Array>} Author style definitions
- */
-export async function getAuthorStyles() {
-    return loadDataFile('author_styles.json');
+/** @returns {Promise<Array>} Author style definitions */
+export function getAuthorStyles() {
+    return loadStyleList('author_styles.json', 'authorStyles');
 }
 
 // ============================================================================
-// BLUEPRINT GENERATION (requires LLM backend)
+// GENERATION (runs in the open SillyTavern tab)
 // ============================================================================
 
 /**
- * Generate a blueprint via SillyTavern's LLM API
- * @param {Object} request - Generation parameters from wizard
- * @param {string} request.story_type_id
- * @param {string} request.core_premise
- * @param {Object} request.embedded_lorebook - OPTIONAL: Embedded lorebook
- * @param {Array<string>} request.linked_lorebooks - OPTIONAL: Linked lorebook names
- * ... other fields
- * @returns {Promise<Object>} Generated blueprint object
- * @throws {Error} If not connected or generation fails
+ * Generate a blueprint using the user's SillyTavern connection settings.
+ * @param {Object} form - Wizard form data
+ * @param {Function} [onProgress] - Progress callback (event, data)
+ * @returns {Promise<Object>} Generated blueprint
  */
-export async function generateBlueprint(request) {
-    if (!isConnected()) {
-        throw new Error('Not connected to SillyTavern. Please configure your connection in Settings.');
-    }
-
-    // Ensure lorebook fields are present (even if null/empty)
-    const requestWithLore = {
-        ...request,
-        embedded_lorebook: request.embedded_lorebook || null,
-        linked_lorebooks: request.linked_lorebooks || [],
-    };
-
-    const response = await authenticatedFetch('/api/plugins/storymode/generate', {
-        method: 'POST',
-        body: JSON.stringify(requestWithLore),
-    });
-
-    if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Blueprint generation failed: ${errorText}`);
-    }
-
-    return await response.json();
+export function generateBlueprint(form, onProgress) {
+    return generateBlueprintViaHost(form, onProgress);
 }
 
-// ============================================================================
-// COVER GENERATION (requires Stable Diffusion backend)
-// ============================================================================
-
 /**
- * Generate a cover image via SillyTavern's SD API
- * @param {Object} request - Generation parameters (prompt, dimensions, etc.)
- * @returns {Promise<string>} Base64 image data
- * @throws {Error} If not connected or SD unavailable
+ * Generate a cover image with SillyTavern's configured image source.
+ * @param {Object} blueprint
+ * @param {string} [prompt] - Custom positive prompt (else the blueprint's cover prompt)
+ * @param {string} [negative] - Negative prompt
+ * @returns {Promise<string>} Image URL (data: or server path)
  */
-export async function generateCover(request) {
-    if (!isConnected()) {
-        throw new Error('Not connected to SillyTavern. Please configure your connection in Settings.');
-    }
-
-    const response = await authenticatedFetch('/api/sd/generate', {
-        method: 'POST',
-        body: JSON.stringify(request),
-    });
-
-    if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Stable Diffusion generation failed: ${errorText}`);
-    }
-
-    const data = await response.json();
-    return data.image;
+export async function generateCover(blueprint, prompt = '', negative = '') {
+    const { imageUrl } = await generateCoverViaHost(blueprint, prompt, negative);
+    return imageUrl;
 }
 
 // ============================================================================

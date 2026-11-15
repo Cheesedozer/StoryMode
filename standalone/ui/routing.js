@@ -3,11 +3,12 @@
  * Handles tab switching and content loading for the standalone editor
  */
 
-import { renderDetailsTab, extractDetailsValues, validateDetailsTab } from '../editors/details-editor.js';
+import { renderDetailsTab } from '../editors/details-editor.js';
 import { renderScenesTab } from '../editors/scenes-editor.js';
 import { renderCharactersTab } from '../editors/characters-editor.js';
 import { renderCoverTab } from '../editors/cover-editor.js';
 import { renderLorebookTab } from '../editors/lorebook-editor.js';
+import { renderStructureTab } from '../editors/structure-editor.js';
 import { getCurrentBlueprint } from '../handlers/blueprint-actions.js';
 import { sanitizeFilename } from '../../lib/blueprint/utils.js';
 
@@ -29,12 +30,8 @@ const tabContentCache = new Map();
 const TAB_RENDERERS = {
     details: {
         render: renderDetailsTab,
-        options: () => ({
-            storyTypes: [],
-            authorStyles: [],
-            readonly: false,
-        }),
-        cacheFullContent: true,
+        options: () => ({ readonly: false }),
+        cacheFullContent: false,
     },
     scenes: {
         render: renderScenesTab,
@@ -46,8 +43,8 @@ const TAB_RENDERERS = {
         options: () => ({ readonly: false }),
         cacheFullContent: false,
     },
-    lorebook: {
-        render: renderLorebookTab,
+    structure: {
+        render: renderStructureTab,
         options: () => ({ readonly: false }),
         cacheFullContent: false,
     },
@@ -68,9 +65,17 @@ const TAB_RENDERERS = {
 export function initTabNavigation() {
     $(document).on('click', '[data-tab]', handleTabClick);
 
-    // Invalidate cache when blueprint changes so tabs re-render fresh data
+    // Invalidate cache when the blueprint changes so tabs re-render fresh data.
+    // (Details edits fire 'blueprint:edited' instead: that tab is already live.)
+    $(document).on('blueprint:loaded.routing', () => {
+        tabContentCache.clear();
+    });
+    // Re-render the visible tab so additions/removals show immediately
     $(document).on('blueprint:updated.routing', () => {
         tabContentCache.clear();
+        if (activeTab !== 'details' && getCurrentBlueprint()) {
+            setTimeout(() => loadTabContent(activeTab), 0);
+        }
     });
 }
 
@@ -96,7 +101,7 @@ export function switchTab(tabId) {
     $(`.sidebar-link[data-tab="${tabId}"]`).addClass('active');
 
     // Update tab panels (scoped to main content to avoid clobbering settings modal tabs)
-    $('#mainContent > .tab-panel').removeClass('active');
+    $('#editorView > .tab-panel').removeClass('active');
     $(`#${tabId}Tab`).addClass('active');
 
     // Emit custom event for other modules
@@ -169,41 +174,6 @@ export function loadTabContent(tabId) {
     }
 }
 
-/**
- * Load the Details tab content
- * @param {Object} blueprint - Blueprint object
- * @deprecated Use loadTabGeneric instead
- */
-function loadDetailsTab(blueprint) {
-    loadTabGeneric('details', blueprint);
-}
-
-/**
- * Load the Scenes tab content
- * @param {Object} blueprint - Blueprint object
- * @deprecated Use loadTabGeneric instead
- */
-function loadScenesTab(blueprint) {
-    loadTabGeneric('scenes', blueprint);
-}
-
-/**
- * Load the Character Arcs tab content
- * @param {Object} blueprint - Blueprint object
- * @deprecated Use loadTabGeneric instead
- */
-function loadCharactersTab(blueprint) {
-    loadTabGeneric('characters', blueprint);
-}
-
-/**
- * Load the Cover tab content
- * @param {Object} blueprint - Blueprint object
- * @deprecated Use loadTabGeneric instead
- */
-function loadCoverTab(blueprint) {
-    loadTabGeneric('cover', blueprint);
-}
 
 /**
  * Load the Lorebook tab content
@@ -226,8 +196,7 @@ function loadLorebookTab(blueprint) {
     $content.on('lorebook:removed', () => {
         if (blueprint.embedded_lorebook) {
             delete blueprint.embedded_lorebook;
-            loadLorebookTab(blueprint); // Refresh
-            // Trigger save...
+            $(document).trigger('blueprint:updated', { blueprint });
         }
     });
 
@@ -252,21 +221,6 @@ function exportLorebookAsJSON(lorebook) {
     URL.revokeObjectURL(url);
 }
 
-/**
- * Show a placeholder tab for unimplemented features
- * @param {string} tabId - Tab identifier
- * @param {string} title - Tab title
- * @param {string} subtitle - Subtitle text
- */
-function showPlaceholderTab(tabId, title, subtitle) {
-    const $tabPanel = $(`#${tabId}Tab .tab-content`);
-    // Use safe DOM creation instead of template literal to prevent XSS
-    const $content = $('<div>').addClass('empty-state large');
-    $content.append($('<i>').addClass('fa-solid fa-hammer'));
-    $content.append($('<h3>').text(title));
-    $content.append($('<p>').text(subtitle));
-    $tabPanel.empty().append($content);
-}
 
 /**
  * Show empty state for when no blueprint is loaded

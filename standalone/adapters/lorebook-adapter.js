@@ -7,7 +7,7 @@
  */
 
 import { getRequestHeaders, isConnected } from './connection-bridge.js';
-import { showError, showWarning } from './notification-adapter.js';
+import { showWarning } from './notification-adapter.js';
 
 /**
  * Fetch list of available lorebooks from ST
@@ -140,11 +140,3 @@ export function buildEmbeddedLorebook(selectedEntries) {
     };
 }
 
-/**
- * Check if connected to ST and lorebooks are available
- * @returns {Promise<boolean>}
- */
-export async function isLorebookAccessAvailable() {
-    const lorebooks = await getLorebookList();
-    return lorebooks.length > 0;
-}

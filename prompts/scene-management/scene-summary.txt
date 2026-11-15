@@ -9,6 +9,6 @@ You are summarizing a completed scene from an ongoing story. Your summary will b
 **Summary Requirements:**
 {{REQUIREMENTS}}
 
-Generate a concise summary that captures the essential narrative progression of this scene. Focus on plot advancement, character decisions, and significant events that will matter for future scenes. Omit minor details and casual dialogue unless directly relevant to the plot.
+Generate a concise summary that captures the essential narrative progression of this scene. Focus on the protagonist's choices and their consequences, other characters' decisions, and events that will matter for future scenes. Omit minor details and casual dialogue unless directly relevant to the plot.
 
 **Summary:**

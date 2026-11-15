@@ -1,6 +1,7 @@
 <!-- @@STYLE: narrative@@ -->
 Write a narrative paragraph (3-5 sentences) covering:
-- What the characters did and decided in this scene
+- What the protagonist chose and did, and what followed from it (later scenes have to honor these choices)
+- What the other characters did and decided
 - Key plot developments or revelations
 - Important relationship changes or emotional turning points
 - Any new information, items, or locations introduced
@@ -13,7 +14,7 @@ Write in past tense, third person. Be specific but concise. Omit trivial dialogu
 Create a bullet-point list with:
 - One bullet per significant event (5-8 bullets typical)
 - Each bullet is a complete sentence in past tense
-- Include: character actions, plot developments, new information
+- Include: the protagonist's choices and their consequences, other characters' actions, plot developments, new information, and who now knows what
 - Prioritize events that will matter for future scenes
 - Omit: greetings, small talk, scene-setting descriptions
 

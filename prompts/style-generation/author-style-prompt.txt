@@ -1,44 +1,25 @@
-You are an expert on writing styles and literary techniques. Generate a comprehensive author style definition based on the user's description.
+You are an expert on prose style and literary technique. Turn the user's request into a writing-style definition that a narrating model can apply directly.
+
+The user may name an author, a book, or a feeling. Use that as your reference, then describe the techniques themselves. The narrating model will never see the author's name, so the description has to stand on its own: concrete instructions about sentences, voice, description, dialogue, and structure, without referring to the author, their books, or their characters.
 
 ## User Request
 {{USER_DESCRIPTION}}
 
-## Output Requirements
+## Output
 
-Generate a JSON object with these exact fields:
+Return a single JSON object with these fields:
 
-```json
-{
-  "id": "lowercase_snake_case_identifier",
-  "name": "Display Name",
-  "category": ["Category1", "Category2"],
-  "authorPrompt": "Detailed writing style instructions...",
-  "nsfwPrompt": "Guidelines for mature content in this style...",
-  "keywords": ["keyword1", "keyword2", "keyword3"]
-}
-```
+- **id**: lowercase_snake_case identifier (for a named author, `firstname_lastname`)
+- **name**: display name shown in the menu (the author's name is fine here; it is a label only)
+- **category**: 1–3 categories, e.g. "Horror", "Literary Fiction", "Comic Fantasy"
+- **authorPrompt**: the style instructions, written as direct guidance:
+  1. Sentence structure and rhythm
+  2. Narrative voice, distance, and point of view
+  3. How description works: what gets noticed, how much, which senses
+  4. How dialogue sounds and what it does
+  5. 4–6 distinctive techniques, as a bulleted list, each specific enough to act on
+  6. The atmosphere the prose creates
+- **nsfwPrompt**: how this voice writes romance, desire, and sex scenes: what it notices, its register and rhythm, what the scene tends to be about. Describe the voice only; how explicit to be is set separately by the user.
+- **keywords**: 5–8 search terms, including the author or works the user mentioned and genre, technique, and mood words
 
-### Field Guidelines
-
-**id**: Use lowercase letters and underscores only. For authors: `firstname_lastname`. For styles: `descriptive_name`. For mashups: `author_style_mashup`.
-
-**name**: The display name. For authors: full name. For styles: descriptive title. For mashups: creative combination name.
-
-**category**: 1-3 relevant categories (e.g., "Horror", "Literary Fiction", "Romance", "Thriller", "Comic Fantasy").
-
-**authorPrompt**: This is critical. Include:
-1. Opening: "Write in a style inspired by [Name/Style]."
-2. Sentence structure and rhythm
-3. Narrative voice and POV tendencies
-4. Descriptive approach (sparse/lush, sensory focus)
-5. Dialogue characteristics
-6. 4-6 distinctive techniques to employ (bullet points)
-7. Atmosphere and mood guidance
-
-**nsfwPrompt**: How this style handles romantic/mature content. What feels authentic vs out-of-place. Focus on emotional vs physical approach.
-
-**keywords**: 5-8 searchable terms including author/work names, genre markers, techniques, mood descriptors.
-
-## Response Format
-
-Output ONLY the JSON object. No preamble, no explanation, no markdown code fences.
+Output only the JSON object.

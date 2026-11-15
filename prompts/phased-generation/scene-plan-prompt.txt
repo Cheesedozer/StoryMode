@@ -1,8 +1,4 @@
-You are an expert story designer. Generate the SCENE PLAN (lightweight outlines) for a story blueprint.
-
-This is Phase 3a of a staged blueprint generation process. You will design scene outlines that will later be expanded with full detail (beats, choice points, events) in subsequent calls.
-
-**CRITICAL:** Generate your response immediately and directly. Do not engage in verbose internal reasoning or deliberation. Proceed directly to producing valid JSON.
+You are an expert story designer. This is Phase 3a of a story blueprint: lightweight scene outlines, which later calls expand with beats, choice points, and events. The player persona is the protagonist, and the user decides what they do.
 
 ## STORY TYPE
 
@@ -29,29 +25,37 @@ This is Phase 3a of a staged blueprint generation process. You will design scene
 
 **Character Arcs:** {{CHARACTER_ARCS_SUMMARY}}
 
-## TURNING POINT MAPPING (Required)
+## STORY ARCS AND CHAPTERS
 
-**Every character turning point listed above MUST appear in your scene plan.** This is non-negotiable.
+{{ARCS_SECTION}}
 
-For each turning point, you must:
-1. Assign it to a specific scene (via `character_focus`)
-2. Set a `turning_point` field referencing the exact turning point text from Phase 2
+Group the scenes into chapters. A chapter is a stretch of the story that moves one or more arc stages forward and holds one to three scenes, usually two. Each chapter lists the stages it advances in `advances` as `"arc:stage"` strings (for example `"spine:preparation"`). Every chapter advances a spine stage; a chapter that also moves a thread lists that stage too. Stages run in order within each arc. Coordinate the arcs this way:
 
-## AUTHOR STYLE GUIDANCE
+- The spine's climax stage comes in the chapter that holds the climax scene, last among the climaxes. A thread's climax lands in an earlier chapter or in the same chapter as the spine's.
+- At most one thread reaches its climax in any chapter.
+- Threads appear often enough to stay alive, roughly every second chapter, and are woven into the spine's scenes rather than given scenes of their own.
 
-{{AUTHOR_STYLE_SECTION}}
+## TENTPOLES
 
-## MEMORABLE ELEMENT
+Tentpoles are 2 to 4 situations that happen whatever the protagonist has done, at a set point in the story. The player steers how the protagonist meets one, and so how it turns out, but cannot stop it arriving, the way an oncoming car arrives whether or not you saw it coming. Write each as events and other characters' actions.
 
-**Type:** {{MEMORABLE_ELEMENT_TYPE}}
-**Name:** {{MEMORABLE_ELEMENT_NAME}}
-**Description:** {{MEMORABLE_ELEMENT_DESCRIPTION}}
-**Recommended Placement:** {{MEMORABLE_ELEMENT_PLACEMENT}}
+The story type's signature moment is one of them, adapted to this story:
 
-**Setup Hooks (plant these in earlier scenes):**
+**{{MEMORABLE_ELEMENT_NAME}}** ({{MEMORABLE_ELEMENT_TYPE}}, usually in the {{MEMORABLE_ELEMENT_PLACEMENT}} phase): {{MEMORABLE_ELEMENT_DESCRIPTION}}
+Setup hooks:
 {{MEMORABLE_ELEMENT_SETUP_HOOKS}}
 
-Your scene plan MUST include this memorable element. Assign it to the appropriate scene and plant setup hooks in earlier scenes.
+Each tentpole has a trigger: the chapter it arrives in (`{ "chapter": 3 }`, 0-based) or an arc stage (`{ "stage": "spine:execution" }`). Plant each tentpole's setup hooks in earlier scenes so it feels earned. A tentpole is brought in during play when its trigger is reached, so the scenes of its chapter leave room for it instead of scripting it as a beat.
+
+## TURNING POINTS
+
+Give every turning point from Phase 2 a scene: list the character in that scene's `character_focus` with `turning_point` set to the exact turning point text.
+
+For a turning point that belongs to the player persona, the scene creates the situation that makes the turning point possible; whether and how it happens is up to the player.
+
+## WRITING STYLE
+
+{{AUTHOR_STYLE_SECTION}}
 
 ## USER SCENARIO
 
@@ -64,55 +68,70 @@ Your scene plan MUST include this memorable element. Assign it to the appropriat
 ## STORY PARAMETERS
 
 - **Expected Scenes:** {{EXPECTED_SCENE_COUNT}}
-- **Scene Distribution:** Setup (~25%) -> Escalation (~50%) -> Climax (~15%) -> Resolution (~10%)
+- **Scene Distribution:** {{PHASE_DISTRIBUTION}}
 
-## SCENE COHESION RULES
+## SCENE DESIGN
 
-A scene is a **complete dramatic unit**. Do NOT split continuous action into separate scenes.
+Each scene is a complete dramatic unit built around a goal and an obstacle. Start a new scene only at a real break: a new location, a meaningful time skip, or a shift to a new goal. Keep a crisis together with its immediate aftermath when they happen in one continuous stretch.
 
-**Anti-Split Rule:** Keep together:
-- Action sequences and their immediate emotional aftermath
-- A crisis and its resolution when they occur in the same location
-- A confrontation and its direct consequences if they flow without interruption
-
-**Climax-Resolution Unity:** The CLIMAX phase scene and its immediate aftermath MUST be combined if they occur in the same location, less than 1 hour passes, and the same core characters are involved.
+{{CLIMAX_NOTE}} The final resolution scene takes place in a new situation and is about the new equilibrium.
 
 ## YOUR TASK
 
-Generate ONLY lightweight scene outlines. Do NOT include beats, key_events, or choice_points -- those will be generated in subsequent batches.
+Produce the chapters, the tentpoles, and scene outlines; beats, key events, and choice points come in the next step.
 
 Each scene outline needs:
 - **index**: Scene number (0-based)
-- **title**: Memorable scene title
+- **title**: Short scene title
 - **phase**: setup | escalation | climax | resolution
-- **purpose**: What this scene accomplishes for plot/character/theme
-- **situation**: 1-2 sentences describing what the protagonists face
+- **purpose**: the scene's goal, phrased as what must be settled by the end of it
+- **chapter**: the index of the chapter this scene belongs to
+- **situation**: 1-2 sentences on where the protagonist is, what they want now, and what opposes them
 - **character_focus**: Array of `{ "name", "turning_point" }` objects mapping character turning points
 - **hooks_for_future**: Array of threads connecting to later scenes
 
 ## RESPONSE FORMAT
 
-Return ONLY valid JSON. No explanations, markdown blocks, or filler.
+Return a single JSON object and nothing else, shaped like this:
 
 ```json
 {
+  "chapters": [
+    {
+      "index": 0,
+      "title": "short chapter title",
+      "summary": "one sentence: what this stretch of the story is about",
+      "advances": ["spine:<stage id>", "<thread id>:<stage id>"]
+    }
+  ],
+  "tentpoles": [
+    {
+      "id": "snake_case_id",
+      "name": "short evocative name",
+      "trigger": { "chapter": 3 },
+      "situation": "what happens regardless, as events and other characters' actions",
+      "ways_to_meet": ["2-4 ways the protagonist might respond"],
+      "setup_hooks": ["things planted in earlier scenes"]
+    }
+  ],
   "scene_plan": [
     {
       "index": 0,
-      "title": "Scene Title",
-      "phase": "setup",
-      "purpose": "What this accomplishes",
-      "situation": "1-2 sentences describing the scene",
+      "title": "short scene title",
+      "phase": "setup | escalation | climax | resolution",
+      "purpose": "what must be settled by the end of the scene",
+      "chapter": 0,
+      "situation": "where the protagonist is, what they want now, what opposes them",
       "character_focus": [
         {
           "name": "Character Name",
           "turning_point": "exact turning point text from Phase 2 or null"
         }
       ],
-      "hooks_for_future": ["thread 1", "thread 2"]
+      "hooks_for_future": ["threads paid off in later scenes"]
     }
   ]
 }
 ```
 
-Generate {{EXPECTED_SCENE_COUNT}} scene outlines. Your entire response must be a single parseable JSON object with the scene_plan field.
+Produce {{EXPECTED_SCENE_COUNT}} scene outlines.

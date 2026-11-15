@@ -1,0 +1,153 @@
+/* ============================================================================
+   STRUCTURE EDITOR (lib/editor/structure)
+   Shared by the extension's blueprint editor and the standalone editor.
+   Inputs and buttons use each host's own classes; this file only lays out.
+   ============================================================================ */
+
+.sm-structure {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 4px 2px 16px;
+}
+
+.sm-st-section {
+    border: 1px solid var(--SmartThemeBorderColor, var(--border-color, #555));
+    border-radius: 8px;
+    background: var(--black10a, rgba(0, 0, 0, 0.08));
+}
+
+.sm-st-section > summary {
+    cursor: pointer;
+    padding: 10px 12px;
+    font-weight: 600;
+    list-style: revert;
+}
+
+.sm-st-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 12px 12px;
+}
+
+.sm-st-badge {
+    font-weight: 400;
+    font-size: 0.8em;
+    opacity: 0.7;
+    margin-left: 6px;
+}
+
+.sm-st-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    border: 1px solid var(--SmartThemeBorderColor, var(--border-color, #555));
+    border-radius: 6px;
+}
+
+.sm-st-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.sm-st-row > input[type="text"],
+.sm-st-row > select {
+    flex: 1;
+    min-width: 140px;
+}
+
+.sm-st-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sm-st-field input[type="text"],
+.sm-st-field select,
+.sm-st-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.sm-st-label {
+    font-size: 0.85em;
+    opacity: 0.8;
+}
+
+.sm-st-hint {
+    font-size: 0.85em;
+    opacity: 0.7;
+    margin: 0;
+}
+
+.sm-st-grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.sm-st-condition {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-left: 8px;
+    border-left: 2px solid var(--SmartThemeQuoteColor, var(--accent-color, #888));
+}
+
+.sm-st-stagegroup {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 12px;
+    margin-bottom: 4px;
+}
+
+.sm-st-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+.sm-st-sub > summary {
+    cursor: pointer;
+    font-size: 0.9em;
+    opacity: 0.85;
+    margin-bottom: 6px;
+}
+
+.sm-st-assign > span {
+    flex: 1;
+}
+
+.sm-st-assign > select {
+    flex: 0 0 140px;
+    min-width: 0;
+}
+
+.sm-st-problems {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #c9a227;
+    background: rgba(201, 162, 39, 0.12);
+}
+
+.sm-st-problems ul {
+    margin: 6px 0;
+    padding-left: 18px;
+}
+
+.sm-st-vocab {
+    padding: 0 4px;
+}
+
+@media (max-width: 600px) {
+    .sm-st-grid2 {
+        grid-template-columns: 1fr;
+    }
+}

@@ -52,10 +52,13 @@ if (mode === PACING_MODES.SCENARIO) { /* signal-based UI */ }
 
 **Rounds:** Increment on USER message submission (not AI response). Enables group chat where multiple AI characters respond per round. Only used in Story Mode.
 
-**Three-Act Structure:** Fixed 33% phase boundaries (Story Mode only):
-- Setup (0-33%): World-building, character introduction
-- Confrontation (34-66%): Escalating challenges
-- Resolution (67-100%): Climax and conclusion
+**Four Phases:** Shared by Story Mode rounds and blueprint scenes, defined in `lib/core/phases.js`:
+- Setup (~25%): who wants what, why, and what stands in the way
+- Escalation (~50%): attempts, costs, reversals
+- Climax (~15%): the decisive confrontation
+- Resolution (~10%): aftermath
+
+Legacy three-phase data (`confrontation`) is mapped by `normalizePhase()` / `getPhasePrompts()`; a legacy `resolution` phase prompt is reused for the climax.
 
 **Abstract Acts (Scenario Mode):** Based on **StoryVerse** (Wang et al., 2024). Scenes defined by goals, not round counts. Beats are flexible milestones with visual markers: `[✓ done] [→ current] [□ pending] [x skipped]`
 
@@ -70,16 +73,76 @@ if (mode === PACING_MODES.SCENARIO) { /* signal-based UI */ }
      selectedStoryType: "...",
      selectedAuthorStyle: "...",
      pacingMode: "story" | "scenario",  // Which mode is active
-     scenario: {                  // Scenario Mode state
+     scenario: {                  // Play state (createPlayState), the only copy
        currentSceneIndex: 0,
-       beatState: { 0: { status: "complete" }, 1: { status: "pending" } }
-     }
+       beatState: { 0: { status: "complete" }, 1: { status: "pending" } },
+       ledger: [ /* { id, type, text, tags, who_knows, scene, source, mesId, swipeId, sendDate } */ ],
+       trackerFallback: false     // next reply uses inline markers after a secondary-tracker failure
+     },
+     blueprintState: { ... }      // Active blueprint, run copy, scene summaries
    }
    ```
-3. **Blueprint State** (`chat_metadata.blueprint_state`): Active blueprint, scene summaries
-4. **Content Storage** (localForage): Story types and author styles, with JSON fallback
+3. **Content Storage** (File API, see CLAUDE.md migration chain): Story types and author styles
 
-**⚠️ Known Issue:** Scene index is tracked in both `chatState.scenario.currentSceneIndex` AND `blueprintState.currentSceneIndex`. Keep in sync.
+Older chats stored the scene index and completed beats in `blueprintState.currentSceneIndex` / `blueprintState.beatProgress`. `migratePlayState()` folds them into `scenario` on load and deletes them.
+
+## Story Arc Shapes (spine and threads)
+
+A story arc is a group of chapters with a shape. `lib/story/shapes.js` holds the catalogue: Escalation, Mystery, Tournament, Siege, Journey, Journey and return, Heist, Episodic, Kishōtenketsu, Tragedy, Quiet or cumulative, Romance, Comedy of errors. Each shape names its stages and maps every stage onto one of the four pacing slots, so pacing maths stays uniform while guidance is shape-specific. Kishōtenketsu and Quiet have `conflict: false`: their climax slot is labelled *turn* or *resonance* and their guidance describes a moment rather than a confrontation.
+
+A story has one **spine** (carries the main question, decides the ending) and up to two **threads** (`MAX_THREADS`). Story types carry `defaultShape` and optional `suggestedThreads`; types saved before shapes existed are backfilled from the bundled defaults at load (in memory).
+
+- **Story Mode:** Genre & Style → Story Shape and Threads, stored per chat as `chatState.storyShape` (`''` = story type default) and `chatState.threadShapes` (`null` = story type suggestions). Every arc's stage follows the round counter through the slots (`getStagesForPhase`), so thread climaxes converge with the spine's. `<arcs>` replaces the old generic phase goals. The story type's own phase prompts are used only when the spine is the type's default shape, since they were written for it.
+- **Blueprints:** the generate form picks the spine (default from the story type) and threads. Phase 1 returns `arcs` with a question and per-stage notes; the requested shapes always win (`mergeGeneratedArcs`). Phase 3 groups scenes into chapters (below). After Phase 3, `enforceArcConvergence` repairs the blending rules per chapter: a thread's climax lands before the spine's or in the same chapter, and at most one thread peaks per chapter.
+- **Scenario Mode injection:** `<arcs>` sits between `<role>` and `<abstract_act>`. An arc's current stage is the latest one reached at or before the current scene. Threads not advanced in this scene render as one line.
+- **v1 blueprints** (no `arcs`) play as an Escalation spine whose stages follow the scene phases.
+
+## Chapters
+
+A chapter is a stretch of play that advances one or more arc stages and holds one to three scenes (`lib/story/chapters.js`). `blueprint.chapters = [{ index, title, summary, advances: ["spine:preparation", "romance:deepening"] }]`, and each scene has `chapter`. Chapters own the arc stages: an arc's current stage is the latest one advanced at or before the current scene's chapter, and a thread renders in full only in chapters that advance it.
+
+Phase 3 (single call) and Phase 3a (staged plan) return `chapters` and `tentpoles` alongside the scenes; the staged path settles chapters before the batches, and batch merges keep the plan's chapter. If a model returns no chapters, `materializeChapters` makes one per scene so the coordination rules still apply. Blueprints saved before chapters existed get one chapter per scene on read (from step 3 `arc_stages`, or from scene phases); that synthesis is never written back, and the UI only shows chapters for blueprints that have real ones.
+
+## Drama Manager: tentpoles, complications, endings
+
+Blueprint data (normalized in `lib/story/story-events.js`), with conditions over ledger tags, arc stages and chapter (`lib/story/conditions.js`: `tags_all`, `tags_any`, `tags_none`, `stage`, `chapter_min`):
+
+- `tentpoles: [{ id, name, trigger, situation, ways_to_meet, setup_hooks }]`: 2–4 unavoidable situations. The story type's memorable element becomes one in generation. Older blueprints get a tentpole from it only when a scene already mentions it by name.
+- `complications: [{ id, name, when, situation, once }]`: 6–10, generated in Phase 4.
+- Endings carry `id` and `reached_if`. The appended ending scene is titled "The Ending" and plays whichever ending the story leans toward.
+- Choice points carry `tags` (one per approach); Phase 4 receives them as the vocabulary for its conditions.
+
+Runtime (`lib/story/drama.js`, state in `chatState.scenario`: `firedTentpoles`, `usedComplications`, `activeEvents`, `stall`, `endingLean`):
+
+- `evaluateDrama()` runs on `GENERATION_STARTED` after the tracker. It fires the first unfired tentpole whose trigger holds (one at a time), draws a complication when `stall` ≥ the setting (default 4) and nothing else is in motion (most specific matching condition wins, `once` respected), and from climax scenes on scores every ending's `reached_if` against active ledger tags. Primary wins ties and is the fallback. The lean freezes at the resolution.
+- `recordReplyProgress()` runs after each tracked reply (inline in `trackReply`, secondary in `runTracker`): progress (beat change, scene change, new ledger entry) resets `stall`; events age and drop out when the scene changes or after 8 (tentpole) / 4 (complication) replies.
+- Injection: `<happening_now>` after the scene (first reply "bring it in now", then "under way"), `<ending_direction>` during the resolution, the ending scene's situation replaced by the lean ending.
+- Tags: the inline `@@NOTE: ...@@` marker accepts `#tag` tokens; the signals block and the secondary tracker list the tags the story checks (current scene's choice tags first). Tags are editable in the ledger editor.
+- The epilogue request receives the active ledger and the lean ending, with `{{user}}` replaced by the persona name.
+- A regenerated or swiped reply (same message index as the last one counted) does not add to `stall` or age events; it can still reset `stall` by making progress.
+
+### Ledger compaction
+
+Ledger entries record their `chapter`. When play has moved past a chapter that has at least 4 active entries (settings: `ledger.compactChapters`, `ledger.compactMinEntries`), `evaluateDrama` folds them in the background: the Summary API profile (or the main API) condenses them into one `summary` entry carrying the union of their tags and `who_knows`, inserted where the chapter began. The originals stay stored with `compactedInto` and leave the prompt; deleting the summary in the ledger editor ("Unfold") restores them.
+
+## Structure Editor
+
+`lib/editor/structure/` is one editor for every v2 field, shared by the extension's blueprint editor (Structure tab, mounted into a placeholder after the tab renders) and the standalone editor (Structure tab via `standalone/editors/structure-editor.js`). It needs jQuery only and takes the host's input/button classes so each host styles it natively.
+
+- `model.js`: pure operations (arc shape changes prune stage references after a confirm, add/remove threads, create/add/remove/move chapters with scenes and stages following, scene → chapter assignment, `checkStructure` and `fixArcConvergence`, add/remove tentpoles and complications, condition cleanup).
+- `sections.js`: HTML for Story Arcs, Chapters (with scene assignment), Tentpoles, Complications, Ending Conditions and Choice Tags, plus a shared condition editor; a structure check banner offers "Apply arc rules".
+- `structure-editor.js`: write-through events (`data-path`/`data-kind`) and structural actions (`data-action`), calling the host's `onChange`.
+
+Saved PNGs carry `schema_version: 2` in the blueprint JSON (the PNG container version is unchanged); older extension versions ignore the new fields.
+
+## Story Tracker and Ledger
+
+After every AI reply, something decides which beats played out, whether the scene's goal is settled, and what to remember (`lib/story/tracker.js`). Settings → Scenario Blueprint Settings → Story Tracking & Ledger picks how:
+
+- **Narrating model (inline, default):** the scenario injection asks for `@@BEAT:N@@`, `@@SKIP:N@@`, `@@NEXT_SCENE@@`, `@@STORY_COMPLETE@@` and `@@NOTE: ...@@` markers. `trackReply()` strips them and applies them through `applyStorySignals()`.
+- **Secondary model:** no markers are requested. After every reply a separate Connection Manager profile reads the scene, the ledger and the latest exchange and returns JSON (`beats_completed`, `beats_skipped`, `scene_complete`, `story_complete`, `ledger_add`). Calls queue in order; `GENERATION_STARTED` waits for them, bounded by the timeout setting. If a call fails, `trackerFallback` is set and the next reply uses inline markers, after which the secondary model is tried again. It also runs in Story Mode, where it only fills the ledger.
+
+The **ledger** (`lib/story/ledger.js`) records choices, promises, secrets, relationship shifts, items and world changes. Every turn `buildFullInjection()` adds the active entries as `<what_is_true_now>`, newest kept within the token budget. Entries from the tracker or narrator remember their message, swipe and send date, so swiping or deleting a reply retires what it recorded and swiping back restores it. Entries the player adds or edits are always active. The ledger is hidden by default; "Show Story Ledger" adds a controller panel section and an editor popout (`lib/ui/ledger-panel.js`). Hiding it does not stop it being sent.
 
 ## Data Flow
 
@@ -92,10 +155,10 @@ User message → onUserMessageRendered() → handleUserMessageStep()
 
 **Scenario Mode (Signal-Based):**
 ```
-LLM response → onMessageReceived() → handleAIMessageChecks()
-  → processStorySignals() → parseStorySignals()
-  → Update beatState/sceneIndex → saveChatStoryState()
-  → Strip signals from display → refreshUI()
+LLM response → onMessageReceived() → handleAIMessageChecks() → trackReply()
+  → processStorySignals(): strip markers (apply them only for inline replies)
+  → applyStorySignals(): beatState/sceneIndex/ledger → saveChatStoryState() → refreshUI()
+  → secondary mode: startSecondaryTracker() → JSON → applyStorySignals()
 ```
 
 ## Round-Based Progression (Story Mode)
@@ -264,7 +327,6 @@ return result.text || result.content || '';
 extension_settings[MODULE_NAME].blueprintSettings = {
     enabled, useScenePrompts, sceneTransitionNotify,
     generationApi: string,  // Profile ID for blueprint generation
-    masterPrompt: string | null
 };
 ```
 

@@ -4,7 +4,11 @@ Quick reference for developing the standalone blueprint editor.
 
 ## Overview
 
-The standalone editor is a browser-based blueprint editor that operates independently of SillyTavern, with optional connectivity for advanced features. It uses an adapter pattern to bridge SillyTavern dependencies while reusing core business logic.
+The standalone editor is a full-page blueprint editor that SillyTavern serves from the extension folder (Story Mode → Fullscreen Editor). It shares the extension's library and code:
+
+- **Storage**: it imports the extension's own storage modules (`lib/blueprint/library-adapter.js`, `file-storage.js`, `manifest.js`, `codec.js`) so the manifest and blueprint PNGs are written in exactly the extension's format. Their SillyTavern imports (`/script.js`, `/scripts/popup.js`) are redirected to `shims/` by the import map in `index.html`.
+- **Generation and SillyTavern state**: AI generation, cover generation, characters, personas and the user's story types/styles come from an open SillyTavern tab over a same-origin BroadcastChannel (`adapters/host-bridge.js` ↔ `lib/bridge/standalone-host.js`). Generation therefore uses the user's real connection profiles and image source.
+- **Cross-tab consistency**: every library write is announced on the bridge; the other side reloads its cached manifest instead of overwriting the change.
 
 ## Architecture
 
@@ -12,19 +16,21 @@ The standalone editor is a browser-based blueprint editor that operates independ
 
 ```
 standalone/
-├── index.html                    # Entry point, CDN dependencies
+├── index.html                    # Entry point, import map, ST-served libraries
 ├── app.js                        # Main orchestrator, event wiring
 ├── settings-system.js            # Settings + theme management
 │
+├── shims/                        # Import-map targets for lib/ modules
+│   ├── script.js                 # getRequestHeaders, eventSource
+│   └── popup.js                  # callGenericPopup, POPUP_TYPE
+│
 ├── adapters/                     # ST dependency bridges
+│   ├── host-bridge.js            # BroadcastChannel client to the ST tab
 │   ├── popup-adapter.js          # Modal system (replaces ST Popup)
-│   ├── connection-bridge.js      # ST backend detection
+│   ├── connection-bridge.js      # CSRF, style lists, generation entry points
 │   ├── notification-adapter.js   # Toast messages (wraps toastr)
-│   ├── storage-adapter.js        # localStorage/FileStorage switch
-│   ├── profile-adapter.js        # Connection Manager profiles
 │   ├── character-adapter.js      # Read-only character access
-│   ├── library-storage-adapter.js # Blueprint library file API wrapper
-│   └── utils-adapter.js          # Utility function adapters
+│   └── library-storage-adapter.js # Blueprint library file API wrapper
 │
 ├── ui/                           # UI components
 │   ├── routing.js                # Tab navigation
@@ -32,18 +38,17 @@ standalone/
 │   ├── modals.js                 # Settings modal management
 │   └── library-view.js           # Blueprint library grid UI
 │
-├── form/                         # Form component library
-│   ├── dropdown.js               # Enum dropdowns
-│   ├── nested-form.js            # Nested objects
-│   ├── array-editor.js           # Arrays (alternate_endings, scenes)
-│   ├── collapsible.js            # Collapsible sections
-│   └── validation.js             # Field validation
+├── form/
+│   └── collapsible.js            # Collapsible sections
 │
-├── editors/                      # Tab-specific editors
-│   ├── details-editor.js         # Details tab orchestration
-│   ├── scenes-editor.js          # Scene CRUD + modals
+├── editors/                      # Tab-specific editors (real blueprint schema)
+│   ├── details-editor.js         # Top-level fields, write-through by path
+│   ├── scenes-editor.js          # Scene CRUD, beats, reordering
 │   ├── characters-editor.js      # Character arc CRUD
-│   └── cover-editor.js           # Cover gallery + actions
+│   ├── structure-editor.js       # Structure tab: mounts lib/editor/structure
+│   ├── cover-editor.js           # Cover tab UI
+│   ├── cover-model.js            # metadata.coverGallery model (shared format)
+│   └── form-fields.js            # Modal form builder/reader
 │
 ├── handlers/                     # Action handlers
 │   └── blueprint-actions.js      # Blueprint CRUD operations
@@ -72,10 +77,8 @@ The standalone editor uses adapters to bridge SillyTavern dependencies:
 |--------------|---------|------------------------|
 | `Popup` class | `popup-adapter.js` | Creates DOM-based modals, `okButton: false` for custom actions |
 | `extension_settings` | `settings-system.js` | Uses localStorage, separate namespace |
-| `saveBase64AsFile` | `storage-adapter.js` | Direct `localStorage`, or ST API if connected |
 | `characters` array | `character-adapter.js` | Returns empty array unless connected |
 | `toastr` | `notification-adapter.js` | Wraps toastr.js directly |
-| Connection profiles | `profile-adapter.js` | Loads from ST API, caches locally |
 | Library operations | `library-storage-adapter.js` | File API wrapper for blueprint manifest and PNG storage |
 
 ### Module Reuse Strategy
@@ -146,39 +149,14 @@ const THEMES = {
 };
 ```
 
-## Backend Availability
+## Connections
 
-### Checking Connection
-
-```javascript
-import { getApiUrl, isValidApiUrl } from './settings-system.js';
-
-const apiUrl = getApiUrl();
-const isConfigured = isValidApiUrl(apiUrl);
-
-// Attempt connection
-try {
-    const response = await fetch(`${apiUrl}/api/storymode/status`);
-    if (response.ok) {
-        // Connected - backend features available
-    }
-} catch {
-    // Offline mode - degrade gracefully
-}
-```
-
-### Graceful Degradation
-
-Features that require connection:
-- **Library view** → Requires ST file API for blueprint storage
-- Blueprint generation wizard → Requires LLM API
-- Cover image generation → Requires SD API
-- Character linking → Requires character data access
-
-Features that work offline (future):
-- Blueprint editing (in-memory)
-- Theme switching
-- Settings management
+| Needs | Provided by | Without it |
+|-------|-------------|-----------|
+| Library load/save/import | SillyTavern server (CSRF + `/api/files/*`) | Editing and PNG export still work; nothing is saved |
+| AI generation, covers, personas | An open SillyTavern tab with Story Mode | Wizard and Generate Cover explain that a tab is needed |
+| Characters | ST tab, else `POST /api/characters/all` | Empty list |
+| Story types / styles | ST tab, else `user/files/storymode-*.json`, else bundled defaults | Bundled defaults |
 
 ## File Size Limits
 
@@ -189,93 +167,19 @@ Per project guidelines, no file should exceed 400 lines. Split large files:
 export function renderDetailsTab() { /* huge function */ }
 
 // ✅ CORRECT - Split into focused modules
-// editors/details-editor.js (orchestration)
-// form/nested-form.js (nested object handling)
-// form/validation.js (field validation)
-```
-
-## Differences from Main Extension
-
-| Feature | Main Extension | Standalone |
-|---------|---------------|------------|
-| Settings storage | `extension_settings` | localStorage |
-| Theme source | ST theme system | Self-contained |
-| Modals | `Popup` class | popup-adapter |
-| File storage | ST `/api/files/` | localStorage or ST API |
-| Character data | Live from `characters` | Via character-adapter |
-| LLM calls | Direct to ST API | Via connection bridge |
-
-## Features Implemented
-
-### Library View (v1.0)
-- **Grid layout** with blueprint cards showing covers, titles, and metadata
-- **Search** functionality for filtering blueprints by title or story type
-- **Filters**: All Blueprints, Favorites, Recently Used
-- **Favorite toggle** with persistence to manifest
-- **Blueprint selection** loads blueprint into editor
-- **Connection-aware**: Shows error state when ST is unreachable
-
-### Storage Architecture
-- **Manifest-based**: `storymode-manifest.json` tracks all blueprints
-- **File API integration**: Uses ST's `/api/files/` endpoints
-- **PNG storage**: Blueprints stored as PNG files (codec placeholder)
-- **Automatic refresh**: Library reloads on blueprint operations
-
-## Known Limitations
-
-1. **PNG codec not implemented** - Currently stores JSON, needs PNG encoding/decoding
-2. **No offline mode** - Library view requires ST connection
-3. **Settings not synced with extension** - Separate localStorage namespace
-4. **Blueprint generation wizard incomplete** - Requires LLM API integration
-5. **No character linking in standalone mode** - Manual entry required
-
-## Development Workflow
-
-1. **Test in browser directly** - Open `standalone/index.html` as file
-2. **Use mock data** - Test with `window.StoryModeApp.handleNewBlueprint()`
-3. **Verify theme switching** - All themes should work without ST CSS
-4. **Check console for errors** - No dependencies on `window.getContext()` or similar
-
-## Debug Commands
-
-```javascript
-// Settings system
-window.StoryModeSettings.getSettings()
-window.StoryModeSettings.applyTheme('light')
-window.StoryModeSettings.resetSettings()
-
-// App state
-window.StoryModeApp.currentBlueprint()
-window.StoryModeApp.isConnected()
-window.StoryModeApp.switchTab('scenes')
+// editors/scenes-editor.js (tab + CRUD)
+// editors/form-fields.js (shared modal form helper)
 ```
 
 ## Testing Checklist
 
-### Library View (v1.0) ✓
-- [x] Library grid displays on app launch
-- [x] Search filters blueprints by title/type
-- [x] Filter tabs (All/Favorites/Recent) work
-- [x] Favorite toggle persists to manifest
-- [x] Blueprint cards show covers and metadata
-- [x] Clicking card loads blueprint into editor
-- [x] Connection error shows helpful message
-- [x] Theme preview changes live in settings
-- [x] Theme reverts if settings cancelled
-
-### Settings & Theme System ✓
-- [x] Page loads without errors
-- [x] Theme toggle works (dark/light/rpg)
-- [x] Theme preview applies immediately
-- [x] Theme reverts on cancel
-- [x] Settings persist to localStorage
-- [x] Connection status displays correctly
-
-### Blueprint Editor (TODO)
-- [ ] All 47+ Details fields editable
-- [ ] Scene CRUD functional
-- [ ] Character arc CRUD functional
-- [ ] Cover gallery works
-- [ ] PNG import/export works
-- [ ] No files exceed 400 lines
-- [ ] Zero console errors
+- [ ] Opens from Story Mode → Fullscreen Editor with no console errors
+- [ ] Banner shows "AI generation available" while the SillyTavern tab is open, and the library-only message when it is closed
+- [ ] Generate AI: persona preselected, characters listed, progress shown, result opens unsaved
+- [ ] Details edits change the blueprint (unsaved dot appears); Save writes it; the SillyTavern library shows the change
+- [ ] Scenes: add, edit (beats), reorder, delete; edited scenes keep fields not shown in the form
+- [ ] Characters: add, edit, delete arcs
+- [ ] Structure: edit arcs, chapters, tentpoles, complications, ending conditions, choice tags; Save keeps them
+- [ ] Cover: upload, generate, select, delete; saved PNG keeps the chosen cover
+- [ ] Import PNG (duplicate dialog), Export PNG, Export JSON, library card export
+- [ ] Saving in SillyTavern refreshes the editor's library, and vice versa

@@ -6,49 +6,24 @@ import {
     eventSource,
     event_types,
     saveSettingsDebounced,
-    setExtensionPrompt,
-    extension_prompt_types,
-    extension_prompt_roles,
     chat,
-    chat_metadata,
-    saveMetadata,
-    generateRaw,
-    addOneMessage,
-    animation_duration,
-    sendSystemMessage,
-    system_message_types,
     saveChatConditional,
-    main_api,
-    characters,
-    this_chid,
 } from '/script.js';
 
-import {
-    extension_settings,
-    getContext,
-} from '/scripts/extensions.js';
-import { groups, selected_group } from '/scripts/group-chats.js';
+import { extension_settings } from '/scripts/extensions.js';
 import { callGenericPopup, Popup, POPUP_TYPE, POPUP_RESULT } from '/scripts/popup.js';
 
 // Import Blueprint module (Story Blueprints feature)
 import * as BlueprintModule from './lib/blueprint/module.js';
 import { getBlueprintState } from './lib/blueprint/storage.js';
+import { initBlueprintIntegration } from './lib/blueprint/integration.js';
+import { initStandaloneBridgeHost } from './lib/bridge/standalone-host.js';
+import { waitForTracker } from './lib/story/tracker.js';
+import { evaluateDrama } from './lib/story/drama.js';
 
 // Import Blueprint Editor module
-import { openBlueprintEditor, generateCoverFromSD, addCoverToGallery, setCoverImageUrl } from './lib/editor/blueprint-editor.js';
 
 // Import Blueprint Integration module (Library API + PNG Storage)
-import {
-    getLibrary,
-    initBlueprintIntegration,
-    createBlueprint,
-    editLibraryBlueprint,
-    deleteLibraryBlueprint,
-    searchBlueprints,
-    getBlueprintsFromFolder,
-    setBlueprintFavorite,
-    encodeBlueprintAsPNG,
-} from './lib/blueprint/integration.js';
 
 // Import Scene Image Generation modules
 import * as SceneImageStorage from './lib/scene/image-storage.js';
@@ -60,21 +35,13 @@ import { updateControllerPanel } from './lib/ui/controller-panel.js';
 import {
     MODULE_NAME,
     extensionBaseUrl,
-    defaultSettings,
     getStoryTypes,
     getAuthorStyles,
-    setStoryTypes as setStoryTypesInManager,
-    setAuthorStyles as setAuthorStylesInManager,
-    getFuseStoryTypes,
     getFuseAuthorStyles,
     loadSettings,
-    getSettings,
     getChatStoryState,
-    saveChatStoryState,
     loadStoryTypes,
     loadAuthorStyles,
-    saveStoryTypesToStorage,
-    saveAuthorStylesToStorage,
     loadFuseJS,
     loadOriginalStoryTypes,
     loadOriginalAuthorStyles,
@@ -88,13 +55,7 @@ import { initFileBackedData } from './lib/core/file-backed-data.js';
 import { promptAndUpgrade } from './lib/core/data-migration-v3.js';
 
 // Import Arc Engine module
-import {
-    getPhaseInfo,
-    buildStoryBlueprint,
-    buildPhaseInjection,
-    buildFullInjection,
-    updateStoryPrompt,
-} from './lib/core/arc-engine.js';
+import { getPhaseInfo, updateStoryPrompt } from './lib/core/arc-engine.js';
 
 // Import Wand Menu module
 import {
@@ -106,11 +67,6 @@ import {
 import {
     renderMainPanel,
     renderBlueprintPreview,
-    buildStoryArcSubtab,
-    buildAuthorStyleSubtab,
-    buildBlueprintSettingsSubtab,
-    buildPostArcOptionsSubtab,
-    buildAPIOptionsSubtab,
     buildOverviewTabContent,
     buildGenreStyleTabContent,
     buildSettingsTabContent,
@@ -126,66 +82,21 @@ import {
 } from './lib/ui/components.js';
 
 // Import Type Editors module
-import {
-    showStoryTypesEditor,
-    showAuthorStylesEditor,
-    addStoryType,
-    editStoryType,
-    deleteStoryType,
-    addAuthorStyle,
-    editAuthorStyle,
-    deleteAuthorStyle,
-    showStoryTypeEditForm,
-    showAuthorStyleEditForm,
-    importStoryTypes,
-    exportStoryTypes,
-    importAuthorStyles,
-    exportAuthorStyles,
-    refreshStoryTypesList,
-    refreshAuthorStylesList,
-} from './lib/editor/type-editors.js';
 
 // Import Event Handlers module
 import {
     onMessageReceived,
     onUserMessageRendered,
-    handleUserMessageStep,
-    handleAIMessageChecks,
-    handleArcCompletion,
     pushStoryMessage,
-    generateEpilogueForStory,
-    summarizeChatMainForStory,
     setRegenerating,
     setLoadingChat,
-    isRegenerating as getIsRegenerating,
-    isLoadingChat as getIsLoadingChat,
-    jumpToRound,
 } from './lib/core/event-handlers.js';
 
 // Import Wizard module
-import {
-    launchWizardModal,
-    updateWizardProgress,
-    updateWizardPreview,
-} from './lib/dialog/wizard.js';
+import { updateWizardProgress, updateWizardPreview } from './lib/dialog/wizard.js';
 
 // Import Library View module
-import {
-    debounce,
-    refreshLibraryView,
-    loadBlueprintsForFolder,
-    sortLibraryBlueprints,
-    searchLibraryBlueprints,
-    renderBlueprintGrid,
-    loadBlueprintFromLibrary,
-    playBlueprintFromLibrary,
-    editBlueprintFromLibrary,
-    toggleBlueprintFavorite,
-    deleteBlueprintFromLibrary,
-    exportBlueprintFromLibrary,
-    refreshSidebar,
-    returnToLibraryIfNeeded,
-} from './lib/dialog/library-view.js';
+import { refreshLibraryView, loadBlueprintsForFolder } from './lib/dialog/library-view.js';
 
 // Import Settings Handlers module
 import { setupUnifiedDialogEventListeners } from './lib/dialog/settings-handlers.js';
@@ -193,14 +104,12 @@ import { setupUnifiedDialogEventListeners } from './lib/dialog/settings-handlers
 // Convenience accessors that return the arrays directly for existing code
 let storyTypes = [];
 let authorStyles = [];
-let fuseStoryTypes = null;
 let fuseAuthorStyles = null;
 
 // Function to sync local references with state manager
 function syncDataReferences() {
     storyTypes = getStoryTypes();
     authorStyles = getAuthorStyles();
-    fuseStoryTypes = getFuseStoryTypes();
     fuseAuthorStyles = getFuseAuthorStyles();
 }
 
@@ -229,8 +138,6 @@ async function showSettingsDialog(initialTab = 'overview') {
         } catch { /* popup may already be closing */ }
     }
 
-    const settings = extension_settings[MODULE_NAME];
-    const chatState = getChatStoryState();
     const blueprintState = getBlueprintState();
     const hasBlueprint = blueprintState?.blueprint && blueprintState.useBlueprint;
     const blueprintTabDisabled = !hasBlueprint ? 'disabled' : '';
@@ -440,9 +347,10 @@ function populateConnectionProfiles(content) {
         { selector: '#summary_api', settingsKey: 'summaryApi' },
         { selector: '#next_adventure_api', settingsKey: 'nextAdventureApi' },
         { selector: '#style_generation_api', settingsKey: 'utilityApis.styleGeneration' },
+        { selector: '#tracker_profile', settingsKey: 'tracker.profileId', emptyLabel: 'Choose a profile' },
     ];
 
-    dropdowns.forEach(({ selector, settingsKey }) => {
+    dropdowns.forEach(({ selector, settingsKey, emptyLabel = 'Default API' }) => {
         const dropdown = content.find(selector);
         if (dropdown.length === 0) return;
 
@@ -455,7 +363,7 @@ function populateConnectionProfiles(content) {
         selectedProfileId = selectedProfileId || '';
 
         dropdown.empty();
-        dropdown.append('<option value="">Default API</option>');
+        dropdown.append($('<option>').val('').text(emptyLabel));
 
         if (profiles.length === 0) {
             dropdown.append('<option value="" disabled>No profiles available</option>');
@@ -542,7 +450,7 @@ function setupEventListeners() {
     $('#open_story_mode_settings').on('click', () => showSettingsDialog());
     // Open fullscreen standalone editor
     $('#open_fullscreen_editor_panel_btn').on('click', () => {
-        const editorUrl = new URL('scripts/extensions/third-party/Extension-StoryMode/standalone/index.html', window.location.origin);
+        const editorUrl = new URL('standalone/index.html', extensionBaseUrl);
         window.open(editorUrl.href, '_blank');
     });
 
@@ -684,9 +592,6 @@ function updateStatusDisplay() {
 }
 
 
-
-
-
 /**
 * Refresh the blueprint preview section in the main panel.
 * Updates or adds/removes the blueprint preview based on current blueprint state.
@@ -717,116 +622,6 @@ window.refreshBlueprintPreview = refreshBlueprintPreview;
 window.updateControllerPanel = updateControllerPanel;
 window.updateWandMenuStatus = updateWandMenuStatus;
 
-/**
-* Update the story type dropdown in the settings dialog.
-* Populates options from the storyTypes array with the current selection preserved.
-*
-* @param {jQuery} content - The jQuery content object containing the dialog.
-* @returns {void}
-*/
-function updateStoryTypeDropdownInDialog(content) {
-    const dropdown = content.find('#story_type_select');
-    const chatState = getChatStoryState();
-    const selected = chatState.selectedStoryType; // Read from chat state
-    dropdown.empty();
-    dropdown.append('<option value="">None</option>');
-    // Sort story types alphabetically by name
-    const sortedTypes = [...storyTypes].sort((a, b) => a.name.localeCompare(b.name));
-    sortedTypes.forEach(type => {
-        const option = $('<option></option>')
-            .val(type.id)
-            .text(type.name + ' (' + type.category.join(', ') + ')');
-        if (type.id === selected) {
-            option.prop('selected', true);
-        }
-        dropdown.append(option);
-    });
-    // Update story type description
-    const selectedStoryType = storyTypes.find(t => t.id === selected);
-    const description = selectedStoryType ? selectedStoryType.storyPrompt : 'Select a story type to see its description';
-    const descriptionEl = content.find('#story_type_description');
-    if (descriptionEl.length > 0) {
-        descriptionEl.text(description);
-    }
-}
-/**
-* Update the author style dropdown in the settings dialog.
-* Supports optional fuzzy search via the searchQuery parameter.
-*
-* @param {jQuery} content - The jQuery content object containing the dialog.
-* @param {string} [searchQuery=''] - Optional search query for filtering styles.
-* @returns {void}
-*/
-function updateAuthorStyleDropdownInDialog(content, searchQuery = '') {
-    const dropdown = content.find('#author_style_select');
-    const chatState = getChatStoryState();
-    const selected = chatState.selectedAuthorStyle; // Read from chat state
-    dropdown.empty();
-    dropdown.append('<option value="">None</option>');
-    let filteredStyles = authorStyles;
-    // Apply fuzzy search if query provided
-    if (searchQuery && fuseAuthorStyles) {
-        const results = fuseAuthorStyles.search(searchQuery);
-        filteredStyles = results.map(r => r.item);
-    } else {
-        // Sort alphabetically by name when not searching
-        filteredStyles = [...authorStyles].sort((a, b) => a.name.localeCompare(b.name));
-    }
-    filteredStyles.forEach(style => {
-        const option = $('<option></option>')
-            .val(style.id)
-            .text(style.name + ' (' + style.category.join(', ') + ')');
-        if (style.id === selected) {
-            option.prop('selected', true);
-        }
-        dropdown.append(option);
-    });
-    // Update author style description
-    const selectedAuthorStyle = authorStyles.find(s => s.id === selected);
-    const description = selectedAuthorStyle ? selectedAuthorStyle.authorPrompt : 'Select an author style to see its guidance';
-    const descriptionEl = content.find('#author_style_description');
-    if (descriptionEl.length > 0) {
-        descriptionEl.text(description);
-    }
-
-    // Also populate the default author style dropdown
-    const defaultDropdown = content.find('#default_author_style_select');
-    if (defaultDropdown.length > 0) {
-        const settings = extension_settings[MODULE_NAME];
-        const defaultSelected = settings.defaultAuthorStyle;
-        defaultDropdown.empty();
-        defaultDropdown.append('<option value="">None</option>');
-        filteredStyles.forEach(style => {
-            const option = $('<option></option>')
-                .val(style.id)
-                .text(style.name + ' (' + style.category.join(', ') + ')');
-            if (style.id === defaultSelected) {
-                option.prop('selected', true);
-            }
-            defaultDropdown.append(option);
-        });
-    }
-}
-
-/**
-* Update the arc progress badge in the settings dialog.
-* Displays current step, arc length, and current phase.
-*
-* @param {jQuery} content - The jQuery content object containing the dialog.
-* @returns {void}
-*/
-function updateArcBadgeInDialog(content) {
-    const chatState = getChatStoryState();
-    const badge = content.find('#arc_progress_badge');
-    if (chatState.currentStep === 0) {
-        badge.text(`Round 0/${chatState.arcLength} | Not Started`);
-    } else if (chatState.currentStep >= chatState.arcLength) {
-        badge.text(`Arc Complete (${chatState.arcLength}/${chatState.arcLength})`);
-    } else {
-        const phaseInfo = getPhaseInfo(chatState.currentStep, chatState.arcLength);
-        badge.text(`Step ${chatState.currentStep}/${chatState.arcLength} | ${phaseInfo.phase}`);
-    }
-}
 
 /**
 * Update story type dropdown
@@ -885,21 +680,6 @@ function updateAuthorStyleDropdown(searchQuery = '') {
 // Make updateAuthorStyleDropdown globally accessible for type-editors.js
 window.updateAuthorStyleDropdown = updateAuthorStyleDropdown;
 
-/**
-* Update arc progress badge
-*/
-function updateArcBadge() {
-    const chatState = getChatStoryState();
-    const badge = $('#arc_progress_badge');
-    if (chatState.currentStep === 0) {
-        badge.text(`Round 0/${chatState.arcLength} | Not Started`);
-    } else if (chatState.currentStep >= chatState.arcLength) {
-        badge.text(`Arc Complete (${chatState.arcLength}/${chatState.arcLength})`);
-    } else {
-        const phaseInfo = getPhaseInfo(chatState.currentStep, chatState.arcLength);
-        badge.text(`Step ${chatState.currentStep}/${chatState.arcLength} | ${phaseInfo.phase}`);
-    }
-}
 
 // Type editor functions now imported from type-editors.js
 // Event handler functions now imported from event-handlers.js
@@ -970,8 +750,12 @@ jQuery(async function () {
     await BlueprintModule.initBlueprintSettings();
     console.log('[Story Mode] Blueprint module initialized');
 
-    // Initialize Loading Indicator module
-    console.log('[Story Mode] Loading Indicator module initialized');
+    // One-time v2 migration: IndexedDB blueprint library -> File API.
+    // No-op when already migrated or when no IndexedDB library exists.
+    await initBlueprintIntegration();
+
+    // Answer requests from the standalone blueprint editor tab
+    initStandaloneBridgeHost();
 
     // Initialize Scene Image Storage (with graceful degradation)
     try {
@@ -996,9 +780,17 @@ jQuery(async function () {
     registerWandMenuEntry();
 
     // Register event hooks
-    eventSource.on(event_types.GENERATION_STARTED, () => {
+    eventSource.on(event_types.GENERATION_STARTED, async (type, options, dryRun) => {
         // Clear the loading flag when generation starts
         setLoadingChat(false);
+
+        // Let the secondary tracker finish with the previous reply, so this
+        // prompt reflects it (bounded by the tracker timeout)
+        if (!dryRun) {
+            await waitForTracker();
+            // Fire due tentpoles, draw a complication on a stall, update the ending lean
+            await evaluateDrama().catch(error => console.error('[Story Mode] Drama manager error:', error));
+        }
         if (chat.length > 0) {
             setRegenerating(false); // fresh generation
             console.debug('[Story Mode] Generation started (normal)');
@@ -1037,7 +829,7 @@ jQuery(async function () {
      */
     eventSource.on('STORY_MODE_PHASE_UPDATE', (data) => {
         console.log('[Story Mode] Phase update received:', data);
-        const { phase, progress, blueprint } = data;
+        const { phase, blueprint } = data;
 
         // Update wizard progress indicator
         updateWizardProgress(phase);

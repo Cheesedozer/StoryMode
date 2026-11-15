@@ -18,8 +18,6 @@ You are writing the **opening message** for an interactive story. This message w
 **Story Arc:**
 - Opening Hook: {{ARC_OPENING}}
 - How Tension Builds: {{ARC_ESCALATION}}
-- Climax Nature: {{ARC_CLIMAX}}
-- Resolution Style: {{ARC_RESOLUTION}}
 
 **Tone & Style:**
 - Primary Tone: {{TONE_PRIMARY}}
@@ -69,9 +67,11 @@ Write the **opening narrative message** that establishes Scene 1 for the player.
 
 6. **Length**: Aim for 400-600 words. Be vivid but focused.
 
-7. **NO QUESTIONS**: Do NOT end with a question or explicit prompt to the player. The message should feel like the natural start of a story, not a game prompt.
+7. **The player's character belongs to the player**: Narrate the world and the other characters. Describe what the player's character can see, hear, and is confronted with, and leave their words, actions, and feelings for the player to write.
 
-8. **Pure Narrative**: Write ONLY the narrative message itself. No preamble like "Here is the opening:" or meta-commentary. Start directly with the scene.
+8. **End on a story beat**: Stop on something happening — a character addressing the player's character, an arrival, a discovery, a threat — so the player has something concrete to respond to. End in narration rather than with a question to the player.
+
+9. **Pure Narrative**: Write only the narrative message itself, starting directly with the scene.
 
 ### Example Structure (adapt as needed):
 
