@@ -540,6 +540,10 @@ lib/scenario/
 ├── beats.js (imports state-manager)
 └── character-injection.js (imports blueprint/characters/*, scenario/injection)
 
+lib/story/
+├── ledger.js (imports state-manager)
+└── tracker.js (imports state-manager, blueprint/storage, generation/orchestration, ledger)
+
 lib/utils/
 └── import-helpers.js (no deps - pure functions)
 
@@ -691,6 +695,8 @@ const url = new URL('../../data/author_styles.json', import.meta.url);
 | Controller: structure | `lib/ui/controller-panel-structure.js` | `drag.js` |
 | Controller: popups | `lib/ui/controller-panel-popups.js` | `ui/components` |
 | Controller: summary | `lib/ui/controller-panel-summary.js` | `blueprint/module` |
+| Story tracker (inline / secondary model) | `lib/story/tracker.js` | `core/event-handlers.js` (`trackReply`, `applyStorySignals`), `index.js` (`waitForTracker`) |
+| Story ledger | `lib/story/ledger.js` | `core/arc-engine.js` (injection), `ui/ledger-panel.js` (panel + editor) |
 | Scenario Mode | `lib/scenario/injection.js` | `beats.js`, `character-injection.js`, `blueprint/module.js` |
 | Scenario characters | `lib/ui/components/scenario-characters.js` | `scenario-characters-popup.js`, `resource-import.js` |
 | Resource import | `lib/ui/components/resource-import.js` | `blueprint/characters/*` |

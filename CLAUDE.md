@@ -22,6 +22,10 @@ Story Mode is a SillyTavern extension providing narrative structure through four
 - **Story Mode**: Round-based, `currentStep++` on user message, four phases (25/50/15/10, `lib/core/phases.js`)
 - **Scenario Mode**: Signal-based (`@@BEAT:N@@`, `@@NEXT_SCENE@@`), blueprint-driven
 
+**Play state:** `chatState.scenario` (`createPlayState()` in `lib/core/state-manager.js`) is the only copy of scene index, beat statuses, the ledger and the tracker fallback flag. Legacy `blueprintState.currentSceneIndex`/`beatProgress` are migrated away on load.
+
+**Tracker and ledger:** `lib/story/tracker.js` (inline markers or a secondary model after every reply), `lib/story/ledger.js` (what the story has established, swipe-aware), `lib/ui/ledger-panel.js` (panel section + editor, hidden by default). See ARCHITECTURE.md.
+
 **Key Entry Points:**
 - `index.js` - Main entry, UI setup, event wiring
 - `lib/core/event-handlers.js` - Message events, signal parsing
@@ -232,6 +236,13 @@ window.StoryModeDebug.auditHandlers({ showAll: true })
 8. Verify signals stripped from displayed message
 9. Controller panel shows Act X/Y (not Round)
 
+### Tracker & Ledger
+- Inline mode: `@@NOTE: ...@@` becomes a ledger entry and is stripped from the message
+- Secondary mode: no markers in the prompt; tracker profile called after every reply; next generation waits for it
+- Secondary call fails → warning toast, next reply uses inline markers, then secondary resumes
+- Swipe a reply → its ledger entries go inactive; swipe back → active again
+- Ledger hidden by default; "Show Story Ledger" → panel section and editor (add/edit/delete)
+
 ### General
 10. Test wand menu controls
 11. Verify persistence across chat changes
@@ -287,8 +298,6 @@ window.StoryModeDebug.auditHandlers({ showAll: true })
 ## Known Limitations
 
 ### Architecture Issues (v1)
-- **Dual scene index storage:** `chatState.scenario.currentSceneIndex` and `blueprintState.currentSceneIndex` can drift out of sync
-- **Beat state duplication:** `scenario.beatState` (new) vs `beatProgress` (legacy) track differently
 - **No UI for mode switching:** Users cannot toggle between Story/Scenario modes manually
 
 ### Stub Functions (v2 placeholders)

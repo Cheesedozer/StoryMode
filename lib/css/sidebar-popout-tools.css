@@ -4,7 +4,8 @@
    ============================================================================ */
 
 /* Default Story Mode theme - variables for light/dark/rpg-companion themes in shared CSS */
-.storymode-summary-popout {
+.storymode-summary-popout,
+.storymode-ledger-popout {
     --popout-bg: var(--SmartThemeBlurTintColor);
     --popout-header-bg: var(--sm-accent);
     --popout-text: var(--SmartThemeBodyColor);
@@ -141,6 +142,49 @@
     text-align: center;
     opacity: 0.7;
     padding: 20px;
+}
+
+/* Story ledger popout (reuses the summary popout header/body/card styles) */
+.storymode-ledger-intro {
+    margin: 0 0 12px;
+    font-size: 0.85em;
+    opacity: 0.75;
+}
+
+.storymode-ledger-card.inactive {
+    opacity: 0.5;
+}
+
+.storymode-ledger-card .storymode-summary-textarea {
+    min-height: 48px;
+    box-sizing: border-box;
+}
+
+.storymode-ledger-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 6px;
+    font-size: 0.85em;
+}
+
+.storymode-ledger-row select,
+.storymode-ledger-row input {
+    background: var(--popout-bg);
+    color: var(--popout-text);
+    border: 1px solid var(--popout-border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: inherit;
+}
+
+.storymode-ledger-row input {
+    flex: 1;
+    min-width: 0;
+}
+
+.storymode-ledger-card .storymode-summary-card-actions {
+    gap: 6px;
 }
 
 /* Prompt Inspector Panel */

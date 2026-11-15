@@ -73,16 +73,27 @@ Legacy three-phase data (`confrontation`) is mapped by `normalizePhase()` / `get
      selectedStoryType: "...",
      selectedAuthorStyle: "...",
      pacingMode: "story" | "scenario",  // Which mode is active
-     scenario: {                  // Scenario Mode state
+     scenario: {                  // Play state (createPlayState), the only copy
        currentSceneIndex: 0,
-       beatState: { 0: { status: "complete" }, 1: { status: "pending" } }
-     }
+       beatState: { 0: { status: "complete" }, 1: { status: "pending" } },
+       ledger: [ /* { id, type, text, tags, who_knows, scene, source, mesId, swipeId, sendDate } */ ],
+       trackerFallback: false     // next reply uses inline markers after a secondary-tracker failure
+     },
+     blueprintState: { ... }      // Active blueprint, run copy, scene summaries
    }
    ```
-3. **Blueprint State** (`chat_metadata.blueprint_state`): Active blueprint, scene summaries
-4. **Content Storage** (localForage): Story types and author styles, with JSON fallback
+3. **Content Storage** (File API, see CLAUDE.md migration chain): Story types and author styles
 
-**⚠️ Known Issue:** Scene index is tracked in both `chatState.scenario.currentSceneIndex` AND `blueprintState.currentSceneIndex`. Keep in sync.
+Older chats stored the scene index and completed beats in `blueprintState.currentSceneIndex` / `blueprintState.beatProgress`. `migratePlayState()` folds them into `scenario` on load and deletes them.
+
+## Story Tracker and Ledger
+
+After every AI reply, something decides which beats played out, whether the scene's goal is settled, and what to remember (`lib/story/tracker.js`). Settings → Scenario Blueprint Settings → Story Tracking & Ledger picks how:
+
+- **Narrating model (inline, default):** the scenario injection asks for `@@BEAT:N@@`, `@@SKIP:N@@`, `@@NEXT_SCENE@@`, `@@STORY_COMPLETE@@` and `@@NOTE: ...@@` markers. `trackReply()` strips them and applies them through `applyStorySignals()`.
+- **Secondary model:** no markers are requested. After every reply a separate Connection Manager profile reads the scene, the ledger and the latest exchange and returns JSON (`beats_completed`, `beats_skipped`, `scene_complete`, `story_complete`, `ledger_add`). Calls queue in order; `GENERATION_STARTED` waits for them, bounded by the timeout setting. If a call fails, `trackerFallback` is set and the next reply uses inline markers, after which the secondary model is tried again. It also runs in Story Mode, where it only fills the ledger.
+
+The **ledger** (`lib/story/ledger.js`) records choices, promises, secrets, relationship shifts, items and world changes. Every turn `buildFullInjection()` adds the active entries as `<what_is_true_now>`, newest kept within the token budget. Entries from the tracker or narrator remember their message, swipe and send date, so swiping or deleting a reply retires what it recorded and swiping back restores it. Entries the player adds or edits are always active. The ledger is hidden by default; "Show Story Ledger" adds a controller panel section and an editor popout (`lib/ui/ledger-panel.js`). Hiding it does not stop it being sent.
 
 ## Data Flow
 
@@ -95,10 +106,10 @@ User message → onUserMessageRendered() → handleUserMessageStep()
 
 **Scenario Mode (Signal-Based):**
 ```
-LLM response → onMessageReceived() → handleAIMessageChecks()
-  → processStorySignals() → parseStorySignals()
-  → Update beatState/sceneIndex → saveChatStoryState()
-  → Strip signals from display → refreshUI()
+LLM response → onMessageReceived() → handleAIMessageChecks() → trackReply()
+  → processStorySignals(): strip markers (apply them only for inline replies)
+  → applyStorySignals(): beatState/sceneIndex/ledger → saveChatStoryState() → refreshUI()
+  → secondary mode: startSecondaryTracker() → JSON → applyStorySignals()
 ```
 
 ## Round-Based Progression (Story Mode)

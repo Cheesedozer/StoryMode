@@ -18,6 +18,7 @@ import * as BlueprintModule from './lib/blueprint/module.js';
 import { getBlueprintState } from './lib/blueprint/storage.js';
 import { initBlueprintIntegration } from './lib/blueprint/integration.js';
 import { initStandaloneBridgeHost } from './lib/bridge/standalone-host.js';
+import { waitForTracker } from './lib/story/tracker.js';
 
 // Import Blueprint Editor module
 
@@ -345,9 +346,10 @@ function populateConnectionProfiles(content) {
         { selector: '#summary_api', settingsKey: 'summaryApi' },
         { selector: '#next_adventure_api', settingsKey: 'nextAdventureApi' },
         { selector: '#style_generation_api', settingsKey: 'utilityApis.styleGeneration' },
+        { selector: '#tracker_profile', settingsKey: 'tracker.profileId', emptyLabel: 'Choose a profile' },
     ];
 
-    dropdowns.forEach(({ selector, settingsKey }) => {
+    dropdowns.forEach(({ selector, settingsKey, emptyLabel = 'Default API' }) => {
         const dropdown = content.find(selector);
         if (dropdown.length === 0) return;
 
@@ -360,7 +362,7 @@ function populateConnectionProfiles(content) {
         selectedProfileId = selectedProfileId || '';
 
         dropdown.empty();
-        dropdown.append('<option value="">Default API</option>');
+        dropdown.append($('<option>').val('').text(emptyLabel));
 
         if (profiles.length === 0) {
             dropdown.append('<option value="" disabled>No profiles available</option>');
@@ -777,9 +779,15 @@ jQuery(async function () {
     registerWandMenuEntry();
 
     // Register event hooks
-    eventSource.on(event_types.GENERATION_STARTED, () => {
+    eventSource.on(event_types.GENERATION_STARTED, async (type, options, dryRun) => {
         // Clear the loading flag when generation starts
         setLoadingChat(false);
+
+        // Let the secondary tracker finish with the previous reply, so this
+        // prompt reflects it (bounded by the tracker timeout)
+        if (!dryRun) {
+            await waitForTracker();
+        }
         if (chat.length > 0) {
             setRegenerating(false); // fresh generation
             console.debug('[Story Mode] Generation started (normal)');

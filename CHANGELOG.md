@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (story tracking and ledger)
+- **Story ledger:** a record of the player's choices, promises, secrets, relationship shifts, items and world changes, sent to the narrator every turn as `<what_is_true_now>` so earlier choices keep shaping the story. Entries follow swipes: swiping or deleting a reply retires what it recorded. Hidden by default; turn on "Show Story Ledger" to see it in the controller panel and add, edit or delete entries (edited entries are kept regardless of swipes)
+- **Secondary-model tracker:** beat tracking, scene advancement and the ledger can run on a separate, cheaper connection profile after every reply instead of inline markers. The next generation waits for it (configurable timeout); if a call fails, the next reply falls back to inline markers
+- Inline `@@NOTE: ...@@` marker lets the narrating model add ledger entries
+- Settings → Scenario Blueprint Settings → Story Tracking & Ledger
+
+### Changed (state)
+- One play state per chat (`chat_metadata.story_mode.scenario`): scene index, beat statuses, ledger and tracker fallback. The duplicate `blueprintState.currentSceneIndex` and `beatProgress` copies are migrated on load and no longer written, which removes the scene-index drift and beat-state duplication
+
 ### Fixed
 - Signal markers (`@@BEAT:N@@`, `@@NEXT_SCENE@@`, ...) are now stripped through the host's own message renderer, so the message keeps its markdown formatting (it was previously replaced with raw text), and the active swipe is cleaned too
 - Signal parsing tolerates common model formatting drift (`@@ BEAT: 2 @@`, `@@NEXT SCENE@@`, markers wrapped in backticks or bold)
