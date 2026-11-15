@@ -33,6 +33,12 @@ The story type defines the genre, framework, and conventions for this narrative.
 
 - **Expected scenes:** {{EXPECTED_SCENE_COUNT}}
 
+## STORY ARCS
+
+The story is built from these arcs. Each has a shape, and each shape moves through its own stages; the id in backticks names a stage, and the word in brackets is the pacing phase it falls in.
+
+{{ARCS_SECTION}}
+
 ## YOUR TASK
 
 Design the foundation every later phase builds on. The protagonist is the player's persona (see PERSONA DATA, if provided); everything here should create pressure on them.
@@ -55,6 +61,7 @@ A short, specific title.
 ```
 
 ### 4. antagonistic_forces (object)
+Whatever pushes back against what the protagonist wants. In quiet or kishōtenketsu stories it can be small or internal: time, habit, a fear.
 ```json
 {
   "description": "who or what opposes the protagonist, and what they control",
@@ -64,17 +71,33 @@ A short, specific title.
 }
 ```
 
-### 5. arc_structure (object)
+### 5. arcs (array)
+One entry per arc listed in STORY ARCS, in the same order, keeping each arc's `id`, `role` and `shape`:
+```json
+[
+  {
+    "id": "spine",
+    "role": "spine",
+    "shape": "the shape id given above",
+    "question": "the question this arc asks, specific to this story and open (for example 'Can they get the ledger out of the vault?')",
+    "stage_notes": { "<stage id>": "one sentence on how this stage plays out in this story" }
+  }
+]
+```
+Give every stage of every arc a note. Threads should touch the spine: a romance between two members of the crew, a mystery about who opened the gate.
+
+### 6. arc_structure (object)
+A summary of the spine in four lines:
 ```json
 {
   "opening_hook": "the catalyst: what happens that the protagonist cannot ignore",
-  "escalation_pattern": "how the opposition and the protagonist's own choices make the goal harder to reach",
-  "climax_nature": "the situation of the decisive confrontation: who faces whom, over what, with what at risk (not who wins)",
+  "escalation_pattern": "how pressure, inquiry, or closeness builds through the middle, as the spine's shape does it",
+  "climax_nature": "the situation at the spine's climax stage: who is there, what is at stake or at issue (not how it turns out)",
   "resolution_style": "the emotional register of the ending, which can hold for several different outcomes"
 }
 ```
 
-### 6. content_boundaries (object)
+### 7. content_boundaries (object)
 The intensity this story intends, within whatever the user's content settings allow (they decide how explicit anything can be; these fields describe the story's own intent):
 ```json
 {
@@ -83,7 +106,7 @@ The intensity this story intends, within whatever the user's content settings al
 }
 ```
 
-### 7. tone_and_style (object)
+### 8. tone_and_style (object)
 ```json
 {
   "primary_tone": "overall mood, drawn from the story type, scenario, and writing style",

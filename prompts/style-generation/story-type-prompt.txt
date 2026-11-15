@@ -21,10 +21,13 @@ Return a single JSON object with these fields:
   - `***Structure:***` how events are typically organised (investigation, journey, escalating siege…)
   - `***Priority:***` the top three things to get right, in order
 - **progressTemplate**: `Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).`
+- **defaultShape**: the story arc shape this genre usually takes, one of the ids below. A shape is how the chapters are organised:
+{{SHAPE_LIST}}
+- **suggestedThreads**: optional array of 0–2 shape ids for secondary arcs that often run alongside the main one in this genre (for example a romance thread in a heist). Omit it when nothing fits naturally.
 - **phasePrompts**: an object with `setup`, `escalation`, `climax` and `resolution`, 1–2 sentences each, describing the pressure this genre applies in that phase:
   - setup (~25% of the story): who wants what, why, and what stands in the way
   - escalation (~50%): how attempts fail, cost, or reveal; how pressure rises
-  - climax (~15%): the shape of the decisive confrontation
+  - climax (~15%): the decisive moment of the default shape (a confrontation for most shapes; a turn or a moment of resonance for kishotenketsu and quiet stories)
   - resolution (~10%): what the aftermath focuses on
   Leave outcomes open: describe the situation each phase creates, and let the player's choices decide how it turns out.
 - **memorableElement**: the signature moment this genre builds toward, written as a situation that will happen to the protagonist no matter what, which they can steer but not prevent (like a car coming head-on: they can't stop it arriving, only choose how to swerve):

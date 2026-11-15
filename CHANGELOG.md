@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (story arc shapes)
+- **13 arc shapes:** Escalation, Mystery, Tournament, Siege, Journey, Journey and return, Heist, Episodic, Kishōtenketsu, Tragedy, Quiet or cumulative, Romance and Comedy of errors. Each has its own stages mapped onto the four pacing phases
+- **Spine and threads:** a story has one main arc and up to two threads (a romance inside a heist, a mystery inside a siege). Generated blueprints keep thread climaxes before or together with the main climax, and at most one thread peaks per scene
+- Story Mode: Story Shape and Threads pickers in Genre & Style; the narrator gets the current stage of each arc instead of generic phase goals
+- Blueprint generation: Story Shape and Threads on the generate form; Phase 1 writes each arc's question and how each stage plays out; scenes record the arc stages they advance; Scenario Mode injects `<arcs>`
+- Story types gain a default shape and suggested threads (editable in the story type editor, produced by the story type generator)
+
+### Changed (arc shapes)
+- Quiet and kishōtenketsu stories build to a moment of resonance or a turn, never a confrontation, in Story Mode and in generated blueprints
+- A story type's phase prompts are only used when the story keeps that type's default shape
+- Blueprints without arcs play as an Escalation spine that follows their scene phases
+
 ### Added (story tracking and ledger)
 - **Story ledger:** a record of the player's choices, promises, secrets, relationship shifts, items and world changes, sent to the narrator every turn as `<what_is_true_now>` so earlier choices keep shaping the story. Entries follow swipes: swiping or deleting a reply retires what it recorded. Hidden by default; turn on "Show Story Ledger" to see it in the controller panel and add, edit or delete entries (edited entries are kept regardless of swipes)
 - **Secondary-model tracker:** beat tracking, scene advancement and the ledger can run on a separate, cheaper connection profile after every reply instead of inline markers. The next generation waits for it (configurable timeout); if a call fails, the next reply falls back to inline markers

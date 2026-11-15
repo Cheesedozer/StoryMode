@@ -68,6 +68,7 @@ Each scene needs:
 - **title**: Keep from outline (may refine slightly)
 - **phase**: Keep from outline
 - **purpose**: Keep from outline (may refine slightly)
+- **arc_stages**: Keep from outline
 - **situation**: 1-2 sentences on where the protagonist is, what they want now, and what opposes them
 - **key_events_if_unchallenged**: 3-5 things the opposition and other characters will do in this scene if the protagonist doesn't intervene
 - **choice_points**: 0-2 per scene (story-altering decisions only)
@@ -129,6 +130,7 @@ Return a single JSON object and nothing else, shaped like this:
       "title": "scene title from the outline",
       "phase": "phase from the outline",
       "purpose": "purpose from the outline",
+      "arc_stages": ["arc stages from the outline"],
       "situation": "where the protagonist is, what they want now, what opposes them",
       "key_events_if_unchallenged": ["what the opposition or others do if the protagonist doesn't intervene"],
       "choice_points": [],

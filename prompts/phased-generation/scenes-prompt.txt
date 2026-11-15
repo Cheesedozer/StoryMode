@@ -25,6 +25,16 @@ You are an expert story designer. This is Phase 3 of 4 of a story blueprint: the
 
 **Character Arcs:** {{CHARACTER_ARCS_SUMMARY}}
 
+## STORY ARCS
+
+{{ARCS_SECTION}}
+
+Every scene advances at least one stage of the spine, listed in `arc_stages` as `"arc:stage"` (for example `"spine:preparation"`). A scene that also moves a thread lists that stage too. Stages run in order within each arc. Coordinate the arcs this way:
+
+- The spine's climax stage comes in the climax scene, last among the climaxes. A thread's climax lands in an earlier scene or in the same scene as the spine's.
+- At most one thread reaches its climax in any scene.
+- Threads appear often enough to stay alive, roughly every second or third scene, and are woven into the spine's scenes rather than given scenes of their own.
+
 ## TURNING POINTS
 
 Give every turning point from Phase 2 a place in the scene plan: assign it to a scene through `character_focus`, add a beat that creates the conditions for it, and set an `emotional_beat_target` for its impact. A character with four turning points therefore appears in four beats across different scenes.
@@ -67,6 +77,7 @@ Place this moment in a scene in the recommended phase, adapted to this story, an
 Each scene is a complete dramatic unit built around a goal and an obstacle:
 
 - **purpose**: the scene's goal, phrased as what must be settled by the end of it (for instance "win the magistrate's support" or "get out of the city before dawn").
+- **arc_stages**: the arc stages this scene advances, as `"arc:stage"` strings.
 - **situation**: 1–2 sentences on where the protagonist is, what they want right now, and what opposes them in this scene.
 - **key_events_if_unchallenged**: 3–5 things the opposition and other characters will do in this scene if the protagonist doesn't intervene. The world keeps moving; the player's choices change or stop these events.
 - **choice_points**: 0–2 story-altering decisions, with example approaches the player might take and where each would lead.
@@ -80,7 +91,7 @@ Beats describe what the world and the non-player characters do, reveal, or deman
 
 **Scene boundaries.** Start a new scene only at a real break: a new location, a meaningful time skip, or a shift to a new goal. Keep a crisis together with its immediate aftermath and consequences when they happen in one continuous stretch; a bridge collapse and the scramble to escape it are one scene.
 
-**Climax and resolution.** The climax scene contains the decisive confrontation and its immediate aftermath. The final resolution scene takes place in a new situation (later, elsewhere, or clearly separated), and is about the new equilibrium rather than the climax's last minutes.
+**Climax and resolution.** {{CLIMAX_NOTE}} The final resolution scene takes place in a new situation (later, elsewhere, or clearly separated), and is about the new equilibrium rather than the climax's last minutes.
 
 ## YOUR TASK
 
@@ -92,7 +103,8 @@ Return a JSON object with **scene_plan**: an array of {{EXPECTED_SCENE_COUNT}} s
   "title": "short scene title",
   "phase": "setup | escalation | climax | resolution",
   "purpose": "what must be settled by the end of the scene",
-  "situation": "where the protagonist is, what they want now, what opposes them",
+  "arc_stages": ["spine:<stage id>", "<thread id>:<stage id>"],
+  "situation": ""where the protagonist is, what they want now, what opposes them",
   "key_events_if_unchallenged": ["what the opposition or others do if the protagonist doesn't intervene"],
   "choice_points": [
     {

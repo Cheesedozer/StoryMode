@@ -25,6 +25,16 @@ You are an expert story designer. This is Phase 3a of a story blueprint: lightwe
 
 **Character Arcs:** {{CHARACTER_ARCS_SUMMARY}}
 
+## STORY ARCS
+
+{{ARCS_SECTION}}
+
+Every scene advances at least one stage of the spine, listed in `arc_stages` as `"arc:stage"` (for example `"spine:preparation"`). A scene that also moves a thread lists that stage too. Stages run in order within each arc. Coordinate the arcs this way:
+
+- The spine's climax stage comes in the climax scene, last among the climaxes. A thread's climax lands in an earlier scene or in the same scene as the spine's.
+- At most one thread reaches its climax in any scene.
+- Threads appear often enough to stay alive, roughly every second or third scene, and are woven into the spine's scenes rather than given scenes of their own.
+
 ## TURNING POINTS
 
 Give every turning point from Phase 2 a scene: list the character in that scene's `character_focus` with `turning_point` set to the exact turning point text.
@@ -64,7 +74,7 @@ Place this moment in a scene in the recommended phase, adapted to this story, an
 
 Each scene is a complete dramatic unit built around a goal and an obstacle. Start a new scene only at a real break: a new location, a meaningful time skip, or a shift to a new goal. Keep a crisis together with its immediate aftermath when they happen in one continuous stretch.
 
-The climax scene contains the decisive confrontation and its immediate aftermath. The final resolution scene takes place in a new situation and is about the new equilibrium.
+{{CLIMAX_NOTE}} The final resolution scene takes place in a new situation and is about the new equilibrium.
 
 ## YOUR TASK
 
@@ -75,6 +85,7 @@ Each scene outline needs:
 - **title**: Short scene title
 - **phase**: setup | escalation | climax | resolution
 - **purpose**: the scene's goal, phrased as what must be settled by the end of it
+- **arc_stages**: the arc stages this scene advances, as `"arc:stage"` strings
 - **situation**: 1-2 sentences on where the protagonist is, what they want now, and what opposes them
 - **character_focus**: Array of `{ "name", "turning_point" }` objects mapping character turning points
 - **hooks_for_future**: Array of threads connecting to later scenes
@@ -91,6 +102,7 @@ Return a single JSON object and nothing else, shaped like this:
       "title": "short scene title",
       "phase": "setup | escalation | climax | resolution",
       "purpose": "what must be settled by the end of the scene",
+      "arc_stages": ["spine:<stage id>", "<thread id>:<stage id>"],
       "situation": "where the protagonist is, what they want now, what opposes them",
       "character_focus": [
         {

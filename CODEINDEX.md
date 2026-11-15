@@ -541,6 +541,8 @@ lib/scenario/
 └── character-injection.js (imports blueprint/characters/*, scenario/injection)
 
 lib/story/
+├── shapes.js (imports core/phases only; usable by the standalone editor)
+├── arcs.js (imports shapes, core/phases)
 ├── ledger.js (imports state-manager)
 └── tracker.js (imports state-manager, blueprint/storage, generation/orchestration, ledger)
 
@@ -695,6 +697,8 @@ const url = new URL('../../data/author_styles.json', import.meta.url);
 | Controller: structure | `lib/ui/controller-panel-structure.js` | `drag.js` |
 | Controller: popups | `lib/ui/controller-panel-popups.js` | `ui/components` |
 | Controller: summary | `lib/ui/controller-panel-summary.js` | `blueprint/module` |
+| Arc shapes catalogue | `lib/story/shapes.js` | `data/story_types.json` (`defaultShape`), `editor/story-type-form.js` |
+| Spine/threads at runtime and in generation | `lib/story/arcs.js` | `core/arc-engine.js`, `scenario/injection.js`, `generation/prompts.js`, `generation/orchestration.js`, `blueprint/normalization.js` |
 | Story tracker (inline / secondary model) | `lib/story/tracker.js` | `core/event-handlers.js` (`trackReply`, `applyStorySignals`), `index.js` (`waitForTracker`) |
 | Story ledger | `lib/story/ledger.js` | `core/arc-engine.js` (injection), `ui/ledger-panel.js` (panel + editor) |
 | Scenario Mode | `lib/scenario/injection.js` | `beats.js`, `character-injection.js`, `blueprint/module.js` |

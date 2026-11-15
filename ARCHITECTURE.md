@@ -86,6 +86,19 @@ Legacy three-phase data (`confrontation`) is mapped by `normalizePhase()` / `get
 
 Older chats stored the scene index and completed beats in `blueprintState.currentSceneIndex` / `blueprintState.beatProgress`. `migratePlayState()` folds them into `scenario` on load and deletes them.
 
+## Story Arc Shapes (spine and threads)
+
+A story arc is a group of chapters with a shape. `lib/story/shapes.js` holds the catalogue: Escalation, Mystery, Tournament, Siege, Journey, Journey and return, Heist, Episodic, Kishōtenketsu, Tragedy, Quiet or cumulative, Romance, Comedy of errors. Each shape names its stages and maps every stage onto one of the four pacing slots, so pacing maths stays uniform while guidance is shape-specific. Kishōtenketsu and Quiet have `conflict: false`: their climax slot is labelled *turn* or *resonance* and their guidance describes a moment rather than a confrontation.
+
+A story has one **spine** (carries the main question, decides the ending) and up to two **threads** (`MAX_THREADS`). Story types carry `defaultShape` and optional `suggestedThreads`; types saved before shapes existed are backfilled from the bundled defaults at load (in memory).
+
+- **Story Mode:** Genre & Style → Story Shape and Threads, stored per chat as `chatState.storyShape` (`''` = story type default) and `chatState.threadShapes` (`null` = story type suggestions). Every arc's stage follows the round counter through the slots (`getStagesForPhase`), so thread climaxes converge with the spine's. `<arcs>` replaces the old generic phase goals. The story type's own phase prompts are used only when the spine is the type's default shape, since they were written for it.
+- **Blueprints:** the generate form picks the spine (default from the story type) and threads. Phase 1 returns `arcs` with a question and per-stage notes; the requested shapes always win (`mergeGeneratedArcs`). Phase 3 (single-call and staged; the staged merge keeps the plan's assignments) gives every scene `arc_stages: ["spine:preparation", "romance:deepening"]`. After Phase 3, `enforceArcConvergence` repairs the blending rules: a thread's climax lands before the spine's or in the same scene, and at most one thread peaks per scene.
+- **Scenario Mode injection:** `<arcs>` sits between `<role>` and `<abstract_act>`. An arc's current stage is the latest one reached at or before the current scene. Threads not advanced in this scene render as one line.
+- **v1 blueprints** (no `arcs`) play as an Escalation spine whose stages follow the scene phases.
+
+Chapters as a layer between arcs and scenes are not built yet; scenes declare stages directly.
+
 ## Story Tracker and Ledger
 
 After every AI reply, something decides which beats played out, whether the scene's goal is settled, and what to remember (`lib/story/tracker.js`). Settings → Scenario Blueprint Settings → Story Tracking & Ledger picks how:

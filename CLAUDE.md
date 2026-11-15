@@ -24,6 +24,8 @@ Story Mode is a SillyTavern extension providing narrative structure through four
 
 **Play state:** `chatState.scenario` (`createPlayState()` in `lib/core/state-manager.js`) is the only copy of scene index, beat statuses, the ledger and the tracker fallback flag. Legacy `blueprintState.currentSceneIndex`/`beatProgress` are migrated away on load.
 
+**Arc shapes:** `lib/story/shapes.js` (catalogue, no SillyTavern imports) and `lib/story/arcs.js` (spine + up to 2 threads, current stages, `<arcs>` block, generation rules). See ARCHITECTURE.md.
+
 **Tracker and ledger:** `lib/story/tracker.js` (inline markers or a secondary model after every reply), `lib/story/ledger.js` (what the story has established, swipe-aware), `lib/ui/ledger-panel.js` (panel section + editor, hidden by default). See ARCHITECTURE.md.
 
 **Key Entry Points:**
@@ -236,6 +238,13 @@ window.StoryModeDebug.auditHandlers({ showAll: true })
 8. Verify signals stripped from displayed message
 9. Controller panel shows Act X/Y (not Round)
 
+### Arc Shapes
+- Story Mode, Slice of Life at the climax → phase shows RESONANCE, no confrontation guidance
+- Change Story Shape away from the type's default → the type's phase prompts are left out
+- Threads: story type suggestions preselected; None removes them; never more than 2
+- Generate Heist + Romance → every scene has `arc_stages`; romance crisis is not after the spine's climax
+- v1 blueprint → `<arcs>` shows an Escalation spine following scene phases
+
 ### Tracker & Ledger
 - Inline mode: `@@NOTE: ...@@` becomes a ledger entry and is stripped from the message
 - Secondary mode: no markers in the prompt; tracker profile called after every reply; next generation waits for it
@@ -318,8 +327,9 @@ Bad Request {"error":{"message":"Invalid option: expected one of \"xhigh\"|\"hig
 **Manual Fix:** Edit connection profile preset, change reasoning effort from "auto" to "high".
 
 ### General
-- Phase proportions are fixed (25/50/15/10) and shared with blueprint scenes
-- No nested/branching arcs
+- Phase proportions are fixed (25/50/15/10) and shared with blueprint scenes; shapes map their stages onto these slots
+- No chapter layer yet: scenes declare the arc stages they advance
+- No sequential arcs (Journey then Siege) yet; one spine plus up to two threads
 - Story types manually selected
 - Regeneration edge cases partially addressed
 - **Concurrent tab editing:** Two tabs editing story types/styles → last-write-wins (same as manifest.js)

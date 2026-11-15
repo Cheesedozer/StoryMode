@@ -5,6 +5,7 @@
     "category": [
       "Mystery"
     ],
+    "defaultShape": "mystery",
     "storyPrompt": "A detective works a case through a city where institutions are compromised and every witness has a reason to lie. Truth is available, but never free.\n***Thematic Hook:*** A morally gray detective investigates a tangled case where corruption runs deep and truth is elusive in the shadows of a rain-soaked city.\n***Narrative Scope:*** Intimate, Urban.\n***Tone:*** Cynical, Atmospheric, Melancholic, Gritty.\n***Literary Devices:*** Foreshadowing: Heavy, Symbolism: Noir imagery (rain, shadows, neon), Irony: Dark.\n***Subgenre:*** Character-driven mystery, Atmospheric.\n***Pacing:*** Moderate with bursts of tension, Dialogue-heavy.\n***Structure:*** Investigation-based, Non-linear revelations.\n***Priority:*** Atmosphere > Character depth > Mystery resolution.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -31,6 +32,7 @@
     "category": [
       "Horror"
     ],
+    "defaultShape": "mystery",
     "storyPrompt": "Unfathomable entities beyond human comprehension lurk at the edges of reality. Investigating forbidden knowledge leads to madness and the realization of humanity's cosmic insignificance.\n***Thematic Hook:*** Investigators uncover eldritch truths that shatter their understanding of reality, revealing humanity's terrifying insignificance in a vast, indifferent cosmos.\n***Narrative Scope:*** Cosmic, Existential.\n***Tone:*** Dreadful, Atmospheric, Nihilistic, Unsettling.\n***Literary Devices:*** Foreshadowing: Subtle and ominous, Symbolism: Non-Euclidean geometry, Irony: Tragic.\n***Subgenre:*** Lovecraftian horror, Slow-burn dread.\n***Pacing:*** Slow build with mounting tension, Atmospheric over action.\n***Structure:*** Escalating revelations, Journal/document-based framing optional.\n***Priority:*** Atmosphere > Dread > Plot coherence.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -57,6 +59,7 @@
     "category": [
       "Fantasy"
     ],
+    "defaultShape": "journey",
     "storyPrompt": "Grand quests across magical realms where heroes rise to face ancient evils. Magic, prophecy, and legendary artifacts shape destinies in battles between light and darkness.\n***Thematic Hook:*** A chosen hero embarks on an epic quest to defeat ancient evil, wielding magic and prophecy to determine the fate of kingdoms and the balance of light and darkness.\n***Narrative Scope:*** Epic, World-spanning.\n***Tone:*** Heroic, Grand, Hopeful with darker undercurrents.\n***Literary Devices:*** Foreshadowing: Prophecies and omens, Symbolism: Light vs darkness, Irony: Moderate.\n***Subgenre:*** High fantasy, Quest-driven.\n***Pacing:*** Moderate to fast, Action and journey balanced.\n***Structure:*** Quest-based with acts and milestones.\n***Priority:*** World-building > Character arcs > Plot beats.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -83,6 +86,10 @@
     "category": [
       "Sci-Fi",
       "Thriller"
+    ],
+    "defaultShape": "escalation",
+    "suggestedThreads": [
+      "mystery"
     ],
     "storyPrompt": "Corporations own the infrastructure and most of the people. Hackers, mercenaries, and the desperate survive by selling skills, secrets, or parts of themselves.\n***Thematic Hook:*** In a dystopian future ruled by mega-corporations, a skilled hacker or mercenary uncovers a dangerous conspiracy that blurs the line between human and machine.\n***Narrative Scope:*** Urban dystopia, High-stakes conspiracy.\n***Tone:*** Gritty, Cynical, Neon-soaked, Tense.\n***Literary Devices:*** Foreshadowing: Tech clues, Symbolism: Humanity vs technology, Irony: Heavy.\n***Subgenre:*** Tech-noir, Fast-paced thriller.\n***Pacing:*** Fast and relentless, Action-heavy with technical detail.\n***Structure:*** Heist/mission-based with escalating stakes.\n***Priority:*** Atmosphere > Action > Tech authenticity.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
@@ -111,6 +118,7 @@
       "Romance",
       "Drama"
     ],
+    "defaultShape": "romance",
     "storyPrompt": "Intense emotional journeys exploring love in its many forms. Characters navigate desire, heartbreak, passion, and connection against obstacles both internal and external.\n***Thematic Hook:*** Two characters forge a deep emotional connection while navigating personal obstacles, societal pressures, and internal fears that test their relationship.\n***Narrative Scope:*** Intimate, Personal.\n***Tone:*** Emotional, Tender, Bittersweet, Hopeful.\n***Literary Devices:*** Foreshadowing: Subtle emotional cues, Symbolism: Seasons/places, Irony: Situational.\n***Subgenre:*** Character-driven, Emotionally intimate, Low-to-moderate spice.\n***Pacing:*** Moderate, Introspective with emotional peaks.\n***Structure:*** Relationship arc with emotional beats.\n***Priority:*** Character depth > Emotional authenticity > Plot.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -137,6 +145,7 @@
     "category": [
       "Mystery"
     ],
+    "defaultShape": "mystery",
     "storyPrompt": "A puzzling murder demands solving. Detectives, amateur sleuths, or investigators follow clues, interrogate suspects, and unravel alibis to unmask the killer.\n***Thematic Hook:*** A clever detective or amateur sleuth must piece together cryptic clues and interrogate suspects to solve a baffling murder before the truth is buried forever.\n***Narrative Scope:*** Contained, Puzzle-focused.\n***Tone:*** Suspenseful, Cerebral, Tense, Satisfying.\n***Literary Devices:*** Foreshadowing: Clues planted early, Symbolism: Minimal, Irony: Plot twists.\n***Subgenre:*** Whodunit, Clue-driven.\n***Pacing:*** Measured with mounting tension, Dialogue and investigation-heavy.\n***Structure:*** Investigation phases leading to grand reveal.\n***Priority:*** Puzzle logic > Character dynamics > Atmosphere.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -162,6 +171,10 @@
     "name": "Space Opera",
     "category": [
       "Sci-Fi"
+    ],
+    "defaultShape": "escalation",
+    "suggestedThreads": [
+      "romance"
     ],
     "storyPrompt": "Galaxy-spanning adventures with starships, alien civilizations, and interstellar conflicts. Heroes navigate cosmic politics, ancient mysteries, and battles that determine the fate of worlds.\n***Thematic Hook:*** Starship crews and interstellar heroes navigate galactic politics, ancient alien mysteries, and epic space battles that will decide the fate of entire civilizations.\n***Narrative Scope:*** Galaxy-spanning, Epic.\n***Tone:*** Grand, Adventurous, Hopeful, Dramatic.\n***Literary Devices:*** Foreshadowing: Political/technological, Symbolism: Unity vs division, Irony: Moderate.\n***Subgenre:*** Military sci-fi, Adventure-driven.\n***Pacing:*** Fast-paced with spectacle, Action and politics balanced.\n***Structure:*** Mission/arc-based with escalating scope.\n***Priority:*** Spectacle > World-building > Character arcs.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
@@ -189,6 +202,7 @@
     "category": [
       "Thriller"
     ],
+    "defaultShape": "mystery",
     "storyPrompt": "Mind games and paranoia dominate as characters question reality, identity, and trust. What's real? What's illusion? Tension builds through atmosphere and psychological manipulation.\n***Thematic Hook:*** A protagonist spirals into paranoia and doubt as they question what's real, what's manipulation, and whether they can even trust their own mind.\n***Narrative Scope:*** Intimate, Claustrophobic.\n***Tone:*** Paranoid, Tense, Unsettling, Ambiguous.\n***Literary Devices:*** Foreshadowing: Subtle psychological cues, Symbolism: Fractured reality, Irony: Heavy.\n***Subgenre:*** Mind-bending, Slow-burn tension.\n***Pacing:*** Slow to moderate with mounting dread.\n***Structure:*** Reality-fracturing reveals, Non-linear optional.\n***Priority:*** Psychological tension > Character psyche > Plot coherence.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -215,6 +229,7 @@
     "category": [
       "Comedy"
     ],
+    "defaultShape": "comedy_of_errors",
     "storyPrompt": "Morbid humor meets absurd situations. Characters bungle crimes, navigate ridiculous predicaments, or face serious stakes with inappropriate levity. Tragedy and comedy intertwine.\n***Thematic Hook:*** Flawed characters stumble through darkly absurd situations, finding humor in tragedy and chaos in the most inappropriate moments.\n***Narrative Scope:*** Intimate to moderate, Absurdist.\n***Tone:*** Darkly humorous, Sardonic, Absurd, Irreverent.\n***Literary Devices:*** Foreshadowing: Comedic setup, Symbolism: Minimal, Irony: Pervasive.\n***Subgenre:*** Black comedy, Caper or character-driven.\n***Pacing:*** Moderate to fast, Dialogue and situational humor-heavy.\n***Structure:*** Escalating mishaps, Cause-and-effect chaos.\n***Priority:*** Humor > Character flaws > Dark stakes.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -242,6 +257,7 @@
       "Horror",
       "Thriller"
     ],
+    "defaultShape": "siege",
     "storyPrompt": "Trapped with limited resources against relentless threats. Characters must survive against monsters, zombies, or killers, making desperate choices as dread and scarcity mount.\n***Thematic Hook:*** Survivors trapped in a hostile environment must battle relentless threats with dwindling resources, making desperate choices as hope fades and death closes in.\n***Narrative Scope:*** Contained, Isolated.\n***Tone:*** Tense, Desperate, Grim, Claustrophobic.\n***Literary Devices:*** Foreshadowing: Death flags, Symbolism: Decay and scarcity, Irony: Tragic.\n***Subgenre:*** Resource-management horror, Tense thriller.\n***Pacing:*** Tense with action bursts, Escalating desperation.\n***Structure:*** Escalating threats, Resource depletion.\n***Priority:*** Tension > Survival stakes > Character depth.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -269,6 +285,10 @@
       "Mystery",
       "Adventure"
     ],
+    "defaultShape": "mystery",
+    "suggestedThreads": [
+      "romance"
+    ],
     "storyPrompt": "Curious minds discover mysterious clues hidden in everyday places. Friends, family, or neighbors follow puzzles and riddles through charming locales, uncovering delightful secrets without danger or darkness.\n***Thematic Hook:*** A mysterious note, hidden object, or cryptic message launches ordinary people on a charming puzzle-solving adventure filled with curiosity, teamwork, and wholesome discoveries.\n***Narrative Scope:*** Personal to local, Intimate.\n***Tone:*** Wholesome, Curious, Playful, Light-hearted, Cozy.\n***Literary Devices:*** Foreshadowing: Gentle clues, Symbolism: Keys and maps, Irony: Light and delightful.\n***Subgenre:*** Cozy mystery, Puzzle-focused, Low-stakes.\n***Pacing:*** Moderate and comfortable, Exploration and discovery-focused.\n***Structure:*** Clue-by-clue progression, Puzzle chains, Satisfying reveals.\n***Priority:*** Wonder and curiosity > Puzzle-solving > Character bonds.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -295,6 +315,7 @@
     "category": [
       "Adventure"
     ],
+    "defaultShape": "journey",
     "storyPrompt": "Bold adventurers seek legendary treasures, lost civilizations, or ancient knowledge. Exploration, clever problem-solving, and thrilling discoveries drive journeys through exotic locales filled with wonder and excitement.\n***Thematic Hook:*** Explorers embark on a grand quest to discover lost treasures, forgotten ruins, or hidden knowledge, facing thrilling challenges and solving ancient puzzles in exotic locations.\n***Narrative Scope:*** Expansive, Journey-based.\n***Tone:*** Adventurous, Thrilling, Optimistic, Exciting, Wondrous.\n***Literary Devices:*** Foreshadowing: Maps and legends, Symbolism: Keys and artifacts, Irony: Moderate twists.\n***Subgenre:*** Pulp adventure, Treasure hunt, Archaeological thriller.\n***Pacing:*** Fast-paced with exploration beats, Action and discovery balanced.\n***Structure:*** Journey with milestones, Location-based acts, Puzzle sequences.\n***Priority:*** Discovery and wonder > Action and obstacles > Character dynamics.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -322,6 +343,7 @@
       "Historical",
       "Drama"
     ],
+    "defaultShape": "escalation",
     "storyPrompt": "Rich period settings bring history to life through compelling characters navigating real historical events, social customs, and the constraints of their era. Detailed authenticity meets emotional drama.\n***Thematic Hook:*** Characters navigate love, ambition, and survival within the vivid constraints and social structures of a specific historical period, where historical events shape personal destinies.\n***Narrative Scope:*** Intimate to epic, Period-specific.\n***Tone:*** Evocative, Romantic, Dramatic, Authentic.\n***Literary Devices:*** Foreshadowing: Historical inevitability, Symbolism: Period-appropriate, Irony: Dramatic and historical.\n***Subgenre:*** Varied - can be romance, drama, or epic.\n***Pacing:*** Moderate, Character and setting-focused.\n***Structure:*** Linear or epistolary, Period-grounded.\n***Priority:*** Historical authenticity > Character drama > Period atmosphere.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -349,6 +371,7 @@
       "Drama",
       "YA"
     ],
+    "defaultShape": "episodic",
     "storyPrompt": "A young protagonist navigates the transition from childhood to adulthood, facing challenges that force growth, self-discovery, and the loss of innocence through formative experiences.\n***Thematic Hook:*** A young person confronts experiences that challenge their worldview and force them to grow, discovering who they are and who they want to become through loss, friendship, and self-realization.\n***Narrative Scope:*** Personal, Intimate.\n***Tone:*** Reflective, Emotional, Bittersweet, Hopeful.\n***Literary Devices:*** Foreshadowing: Coming trials, Symbolism: Growth metaphors, Irony: Youthful vs mature perspective.\n***Subgenre:*** YA drama, Literary bildungsroman.\n***Pacing:*** Moderate, Introspective with emotional peaks.\n***Structure:*** Character arc-focused, Key formative moments.\n***Priority:*** Character growth > Emotional authenticity > Thematic depth.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -376,6 +399,10 @@
       "Crime",
       "Thriller"
     ],
+    "defaultShape": "heist",
+    "suggestedThreads": [
+      "romance"
+    ],
     "storyPrompt": "A skilled team assembles to pull off an elaborate, seemingly impossible heist. Intricate planning, clever cons, unexpected complications, and last-minute improvisation drive high-stakes robbery adventures.\n***Thematic Hook:*** A charismatic leader assembles a crew of specialists to execute an ingenious heist against a well-protected target, where meticulous planning meets unexpected chaos.\n***Narrative Scope:*** Contained, Team-focused.\n***Tone:*** Clever, Stylish, Tense, Fun.\n***Literary Devices:*** Foreshadowing: Setup and payoff, Symbolism: Minimal, Irony: Twists and reveals.\n***Subgenre:*** Caper, Crime thriller, Ensemble.\n***Pacing:*** Fast with deliberate planning sequences.\n***Structure:*** Plan reveal, execution, complications, twist.\n***Priority:*** Clever plot mechanics > Character dynamics > Stylish execution.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -402,6 +429,7 @@
     "category": [
       "Fantasy"
     ],
+    "defaultShape": "mystery",
     "storyPrompt": "Magic exists hidden within the modern world. Supernatural beings, secret societies, and mystical threats lurk beneath the surface of contemporary cities where the fantastic and mundane collide.\n***Thematic Hook:*** A protagonist discovers or navigates a hidden magical world existing alongside modern reality, where supernatural politics, ancient threats, and mystical rules govern the shadows of the city.\n***Narrative Scope:*** Urban, Contemporary with magic.\n***Tone:*** Gritty, Mysterious, Contemporary, Atmospheric.\n***Literary Devices:*** Foreshadowing: Magical hints, Symbolism: Urban decay vs magic, Irony: Mundane meets supernatural.\n***Subgenre:*** Paranormal detective, Magic in the modern world.\n***Pacing:*** Fast-paced with world-building beats.\n***Structure:*** Mystery/case-based with magical escalation.\n***Priority:*** Magic system + world rules > Atmosphere > Plot.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -428,6 +456,10 @@
     "category": [
       "Romance",
       "Fantasy"
+    ],
+    "defaultShape": "romance",
+    "suggestedThreads": [
+      "mystery"
     ],
     "storyPrompt": "Passionate romance blooms between mortal and supernatural beings—vampires, werewolves, fae, or other creatures. Love transcends the boundaries between human and otherworldly, forbidden and dangerous.\n***Thematic Hook:*** A mortal falls for a supernatural being, navigating the dangerous attraction, forbidden nature, and complications of loving someone from another world with different rules and eternal consequences.\n***Narrative Scope:*** Intimate, Supernatural.\n***Tone:*** Passionate, Dark, Romantic, Intense.\n***Literary Devices:*** Foreshadowing: Fated mates, Symbolism: Light/dark duality, Irony: Love as danger.\n***Subgenre:*** Supernatural romance, Varies on heat level.\n***Pacing:*** Moderate with emotional and sensual peaks.\n***Structure:*** Romance arc with supernatural obstacles.\n***Priority:*** Romantic chemistry > Supernatural elements > Emotional intensity.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
@@ -456,6 +488,7 @@
       "Western",
       "Adventure"
     ],
+    "defaultShape": "escalation",
     "storyPrompt": "Gunslingers, cowboys, and settlers navigate the harsh frontier where law is scarce and survival demands grit. Moral codes, revenge, redemption, and justice play out against vast, unforgiving landscapes.\n***Thematic Hook:*** A lone gunslinger or frontier character confronts outlaws, pursues justice, or seeks redemption in the lawless American West where personal codes matter more than civilization.\n***Narrative Scope:*** Frontier, Expansive yet personal.\n***Tone:*** Gritty, Stoic, Moral, Atmospheric.\n***Literary Devices:*** Foreshadowing: Coming confrontation, Symbolism: Frontier vs civilization, Irony: Moral.\n***Subgenre:*** Classic Western, Revisionist Western.\n***Pacing:*** Slow-burn tension with explosive action.\n***Structure:*** Journey or confrontation-based.\n***Priority:*** Atmosphere > Moral stakes > Action.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -482,6 +515,10 @@
     "category": [
       "Thriller",
       "Action"
+    ],
+    "defaultShape": "mystery",
+    "suggestedThreads": [
+      "romance"
     ],
     "storyPrompt": "Secret agents navigate a world of espionage, double-crosses, and international intrigue. Covert operations, high-tech gadgets, and moral ambiguity drive fast-paced missions where trust is a liability.\n***Thematic Hook:*** An elite intelligence operative undertakes a dangerous mission involving international conspiracies, double agents, and deadly secrets where loyalty is tested and no one is who they seem.\n***Narrative Scope:*** International, High-stakes.\n***Tone:*** Tense, Sophisticated, Paranoid, Fast-paced.\n***Literary Devices:*** Foreshadowing: Planted clues, Symbolism: Masks and mirrors, Irony: Heavy twists.\n***Subgenre:*** Espionage thriller, Action-spy hybrid.\n***Pacing:*** Fast and relentless with strategic pauses.\n***Structure:*** Mission-based with escalating reveals.\n***Priority:*** Twists and suspense > Action > Spy craft authenticity.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
@@ -510,6 +547,7 @@
       "Drama",
       "Contemporary"
     ],
+    "defaultShape": "quiet",
     "storyPrompt": "Everyday moments become meaningful through intimate character focus. Ordinary people navigate relationships, work, personal growth, and small victories in contemporary settings without major plot stakes.\n***Thematic Hook:*** Characters experience the beauty, humor, and poignancy of everyday life—relationships, personal reflection, small choices, and quiet moments that shape who we are without grand events or danger.\n***Narrative Scope:*** Intimate, Personal.\n***Tone:*** Warm, Reflective, Gentle, Authentic.\n***Literary Devices:*** Foreshadowing: Minimal, Symbolism: Everyday objects, Irony: Gentle situational.\n***Subgenre:*** Contemporary drama, Character study.\n***Pacing:*** Slow and contemplative, Moment-focused.\n***Structure:*** Episodic or thematic, Low plot arc.\n***Priority:*** Character authenticity > Emotional resonance > Atmosphere.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -536,6 +574,10 @@
     "category": [
       "Romance",
       "Gothic"
+    ],
+    "defaultShape": "romance",
+    "suggestedThreads": [
+      "mystery"
     ],
     "storyPrompt": "An isolated house, a family history no one will discuss, and a person who is impossible to read. Attraction and dread grow from the same source.\n***Thematic Hook:*** A young woman arrives at a mysterious estate or encounters a brooding stranger, finding herself drawn into dark secrets, forbidden attraction, and atmospheric danger where romance and dread intertwine.\n***Narrative Scope:*** Contained, Estate or location-bound.\n***Tone:*** Atmospheric, Dark, Romantic, Mysterious, Brooding.\n***Literary Devices:*** Foreshadowing: Ominous hints, Symbolism: Gothic imagery, Irony: Dark romantic.\n***Subgenre:*** Gothic, Dark romance.\n***Pacing:*** Slow-burn atmospheric with mounting dread.\n***Structure:*** Mystery revelation with romantic arc.\n***Priority:*** Atmosphere > Mystery > Romance.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
@@ -564,6 +606,7 @@
       "Action",
       "Sci-Fi"
     ],
+    "defaultShape": "escalation",
     "storyPrompt": "Powered individuals balance extraordinary abilities with personal struggles. Heroes confront villains, protect cities, and grapple with the responsibility of power while maintaining secret identities.\n***Thematic Hook:*** A powered individual must master their abilities, face supervillain threats, and wrestle with the burden of heroic responsibility while protecting those they love and maintaining their humanity.\n***Narrative Scope:*** Urban to global, High-stakes.\n***Tone:*** Heroic, Dynamic, Hopeful, Action-packed.\n***Literary Devices:*** Foreshadowing: Villain's plan, Symbolism: Hero iconography, Irony: Power vs humanity.\n***Subgenre:*** Superhero action, Varies tone.\n***Pacing:*** Fast with action sequences and character moments.\n***Structure:*** Villain threat escalation, Final battle.\n***Priority:*** Action and spectacle > Character arc > Power dynamics.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -591,6 +634,7 @@
       "Sci-Fi",
       "Drama"
     ],
+    "defaultShape": "journey",
     "storyPrompt": "Civilization has collapsed. Survivors navigate the ruins, building communities, facing raiders and environmental dangers while grappling with what it means to rebuild humanity after the end.\n***Thematic Hook:*** Survivors navigate a devastated world, seeking safety, community, and hope while confronting raiders, environmental dangers, and moral choices about rebuilding civilization from the ashes.\n***Narrative Scope:*** Varied—journey or settlement-based.\n***Tone:*** Grim, Hopeful resilience, Survivalist, Contemplative.\n***Literary Devices:*** Foreshadowing: Environmental/social, Symbolism: Rebirth from ruin, Irony: Progress vs collapse.\n***Subgenre:*** Post-apocalyptic drama, Rebuilding narrative.\n***Pacing:*** Moderate with tension and reflection.\n***Structure:*** Journey or settlement arc.\n***Priority:*** World-building > Character resilience > Themes of humanity.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -618,6 +662,7 @@
       "Sci-Fi",
       "Drama"
     ],
+    "defaultShape": "escalation",
     "storyPrompt": "Oppressive societies control every aspect of life through surveillance, propaganda, and totalitarian rule. Characters navigate conformity, resistance, and the cost of freedom in dehumanizing systems.\n***Thematic Hook:*** An individual confronts the crushing weight of totalitarian society, awakening to oppression and facing impossible choices between conformity, resistance, or survival in a dehumanizing system.\n***Narrative Scope:*** Societal, Personal within system.\n***Tone:*** Oppressive, Bleak, Thought-provoking, Tense.\n***Literary Devices:*** Foreshadowing: System's reach, Symbolism: Control mechanisms, Irony: Heavy political.\n***Subgenre:*** Dystopian, Political drama.\n***Pacing:*** Moderate, Tension with philosophical weight.\n***Structure:*** Awakening, resistance, consequence.\n***Priority:*** Thematic depth > Atmosphere > Character awakening.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -645,6 +690,7 @@
       "Sci-Fi",
       "Fantasy"
     ],
+    "defaultShape": "escalation",
     "storyPrompt": "Victorian aesthetics meet fantastical steam-powered technology. Airships, clockwork automatons, and brass gears define adventure in industrial-age alternate histories where invention and exploration reign.\n***Thematic Hook:*** Inventors, adventurers, and rebels navigate a Victorian-era world transformed by steam technology, where airships soar, automatons walk, and class tensions boil beneath brass-and-copper innovation.\n***Narrative Scope:*** Varied—adventure or political.\n***Tone:*** Adventurous, Industrial, Whimsical, Victorian.\n***Literary Devices:*** Foreshadowing: Technical, Symbolism: Gears and progress, Irony: Progress vs cost.\n***Subgenre:*** Steampunk adventure or political.\n***Pacing:*** Moderate to fast, Adventure-focused.\n***Structure:*** Invention/discovery arc or quest.\n***Priority:*** World-building > Aesthetic > Adventure.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -671,6 +717,7 @@
     "category": [
       "Sci-Fi"
     ],
+    "defaultShape": "mystery",
     "storyPrompt": "Rigorous scientific accuracy grounds speculative technology and space exploration. Characters confront realistic challenges of physics, biology, and engineering in plausible futures where science drives the narrative.\n***Thematic Hook:*** Scientists, engineers, or explorers face challenges grounded in real science—space travel physics, biological evolution, technological consequences—where scientific accuracy shapes every possibility and limitation.\n***Narrative Scope:*** Varied—can be intimate or cosmic.\n***Tone:*** Cerebral, Realistic, Speculative, Detailed.\n***Literary Devices:*** Foreshadowing: Scientific principles, Symbolism: Minimal, Irony: Unintended consequences.\n***Subgenre:*** Hard sci-fi, Realistic speculation.\n***Pacing:*** Moderate, Idea and problem-focused.\n***Structure:*** Problem-solution, Scientific discovery arc.\n***Priority:*** Scientific accuracy > Problem-solving > World-building.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -697,6 +744,7 @@
     "category": [
       "Horror"
     ],
+    "defaultShape": "mystery",
     "storyPrompt": "Rural isolation meets ancient pagan traditions and unsettling communities. Outsiders discover sinister rituals, cult-like behavior, and the horrifying power of old beliefs in remote, insular settings.\n***Thematic Hook:*** An outsider arrives in an isolated rural community only to discover ancient pagan practices, sinister traditions, and the horrifying realization that old beliefs hold terrifying power over the land and its people.\n***Narrative Scope:*** Isolated, Rural community.\n***Tone:*** Unsettling, Atmospheric, Dread-filled, Pagan.\n***Literary Devices:*** Foreshadowing: Ritual symbols, Symbolism: Nature and paganism, Irony: Tradition as horror.\n***Subgenre:*** Folk horror, Occult rural.\n***Pacing:*** Slow-burn with mounting dread.\n***Structure:*** Arrival, discovery, ritual climax.\n***Priority:*** Atmosphere > Dread > Cultural horror.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -724,6 +772,7 @@
       "Action",
       "Thriller"
     ],
+    "defaultShape": "escalation",
     "storyPrompt": "An ordinary person is caught in a crisis that cannot be waited out, and survival depends on resourcefulness under escalating physical danger.\n***Thematic Hook:*** An ordinary person or action hero finds themselves in extreme danger—terrorists, disasters, or criminal plots—and must use resourcefulness, guts, and relentless determination to survive and save others.\n***Narrative Scope:*** Contained crisis or expanding threat.\n***Tone:*** Intense, Fast-paced, Explosive, Heroic.\n***Literary Devices:*** Foreshadowing: Action setup, Symbolism: Minimal, Irony: Situational tension.\n***Subgenre:*** Action thriller, Die-hard style.\n***Pacing:*** Relentless and explosive.\n***Structure:*** Escalating action set-pieces.\n***Priority:*** Action spectacle > Tension > Hero determination.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -751,6 +800,7 @@
       "Drama",
       "Sports"
     ],
+    "defaultShape": "tournament",
     "storyPrompt": "Athletes pursue excellence and face adversity, finding meaning in competition, commitment, and what the sport asks of them and their relationships.\n***Thematic Hook:*** An athlete or team faces overwhelming odds, personal demons, or fierce competition, finding redemption, growth, and triumph through dedication, training, and the transformative power of sport.\n***Narrative Scope:*** Personal to team-based.\n***Tone:*** Inspirational, Determined, Emotional, Triumphant.\n***Literary Devices:*** Foreshadowing: Game preparation, Symbolism: Sport as metaphor, Irony: Victory in loss.\n***Subgenre:*** Sports drama, Inspirational.\n***Pacing:*** Moderate with competition peaks.\n***Structure:*** Training arc leading to competition.\n***Priority:*** Character growth > Sports authenticity > Inspirational themes.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -777,6 +827,7 @@
     "category": [
       "Drama"
     ],
+    "defaultShape": "episodic",
     "storyPrompt": "Doctors, nurses, and medical professionals navigate life-and-death decisions in hospital settings. Personal dramas intertwine with medical cases, ethical dilemmas, and the emotional weight of healing and loss.\n***Thematic Hook:*** Medical professionals confront challenging cases, ethical dilemmas, and personal crises within hospital walls, where every decision carries life-or-death weight and healing comes with emotional cost.\n***Narrative Scope:*** Hospital-based, Case-driven.\n***Tone:*** Intense, Emotional, Realistic, Hopeful yet heavy.\n***Literary Devices:*** Foreshadowing: Symptoms, Symbolism: Healing metaphors, Irony: Life vs death.\n***Subgenre:*** Medical drama, Hospital procedural.\n***Pacing:*** Moderate with crisis peaks.\n***Structure:*** Case-based with personal subplots.\n***Priority:*** Medical authenticity > Character drama > Emotional resonance.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -803,6 +854,7 @@
     "category": [
       "Drama"
     ],
+    "defaultShape": "mystery",
     "storyPrompt": "Lawyers navigate courtrooms, depositions, and legal strategy in pursuit of justice or victory. Complex cases, moral ambiguity, and dramatic testimony explore the law's power and limitations.\n***Thematic Hook:*** Lawyers take on challenging cases that test their ethics, skill, and dedication, navigating legal strategy and courtroom drama where justice, truth, and victory hang in the balance.\n***Narrative Scope:*** Case-based, Courtroom-focused.\n***Tone:*** Tense, Intellectual, Dramatic, Morally complex.\n***Literary Devices:*** Foreshadowing: Evidence, Symbolism: Justice scales, Irony: Legal vs moral.\n***Subgenre:*** Legal drama, Courtroom procedural.\n***Pacing:*** Moderate with courtroom peaks.\n***Structure:*** Case investigation leading to trial.\n***Priority:*** Legal strategy > Character ethics > Dramatic reveals.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -830,6 +882,7 @@
       "Sci-Fi",
       "Adventure"
     ],
+    "defaultShape": "mystery",
     "storyPrompt": "Characters journey through time confronting paradoxes, historical events, and the consequences of changing the past. Temporal mechanics, butterfly effects, and causality create mind-bending adventures across eras.\n***Thematic Hook:*** Time travelers navigate the past, future, or alternate timelines, facing temporal paradoxes, the temptation to change history, and the profound consequences of tampering with causality itself.\n***Narrative Scope:*** Cross-temporal, Variable scale.\n***Tone:*** Mind-bending, Adventurous, Philosophical, Paradoxical.\n***Literary Devices:*** Foreshadowing: Temporal hints, Symbolism: Clocks and circles, Irony: Causality loops.\n***Subgenre:*** Time travel adventure or drama.\n***Pacing:*** Varied by era, Tension with wonder.\n***Structure:*** Non-linear or era-jumping.\n***Priority:*** Temporal mechanics > Historical/future detail > Character agency.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -857,6 +910,7 @@
       "Fantasy",
       "Adventure"
     ],
+    "defaultShape": "journey_return",
     "storyPrompt": "Ordinary people are transported to magical worlds through mysterious portals. They navigate fantastical realms, discover their role in another world's destiny, and grapple with leaving or belonging.\n***Thematic Hook:*** A person from our world crosses into a magical realm through a mysterious portal, discovering wonder, danger, and a destiny they never imagined while questioning whether they belong here or home.\n***Narrative Scope:*** Cross-world, Fantasy realm.\n***Tone:*** Wondrous, Adventurous, Coming-of-age, Magical.\n***Literary Devices:*** Foreshadowing: Portal hints, Symbolism: Threshold crossing, Irony: Home vs belonging.\n***Subgenre:*** Portal fantasy, Isekai.\n***Pacing:*** Moderate with adventure peaks.\n***Structure:*** Discovery, quest, return dilemma.\n***Priority:*** World-building > Character growth > Adventure.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -884,6 +938,7 @@
       "Fantasy",
       "Romance"
     ],
+    "defaultShape": "journey_return",
     "storyPrompt": "Classic fairy tales reimagined with new perspectives, darker twists, or modern settings. Familiar archetypes—princes, witches, curses—gain complexity, subversion, or contemporary relevance.\n***Thematic Hook:*** A beloved fairy tale unfolds anew with fresh perspective—villain's viewpoint, darker truths, modern context, or subverted expectations—revealing complexity beneath the archetypal story.\n***Narrative Scope:*** Varied, Tale-dependent.\n***Tone:*** Varies—can be dark, romantic, subversive, or whimsical.\n***Literary Devices:*** Foreshadowing: Fairy tale echoes, Symbolism: Archetypal, Irony: Subversion.\n***Subgenre:*** Fairy tale retelling, Fantasy romance.\n***Pacing:*** Moderate, Story-dependent.\n***Structure:*** Familiar beats with twists.\n***Priority:*** Fresh perspective > Original tale echoes > Character depth.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -911,6 +966,7 @@
       "Drama",
       "Crime"
     ],
+    "defaultShape": "escalation",
     "storyPrompt": "A fallen character seeks redemption for a defining mistake, navigating temptation, mistrust, and sacrifice to prove they can change—even if no one believes them.\n***Narrative Scope:*** Personal, Intimate.\n***Tone:*** Somber, Hopeful, Reflective, Tense.\n***Literary Devices:*** Foreshadowing: Guilt-laden callbacks, Symbolism: Stains/cleansing, Irony: Good deeds born from past sins.\n***Subgenre:*** Character-driven drama, Crime redemption, Neo-noir drama.\n***Pacing:*** Moderate with emotional spikes around moral choices.\n***Structure:*** Past sin revealed, Attempts at atonement, Climactic moral test.\n***Priority:*** Character growth > Moral tension > External plot.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -939,6 +995,7 @@
       "Drama",
       "Slice of Life"
     ],
+    "defaultShape": "quiet",
     "storyPrompt": "Lonely, misfit, or estranged characters gradually form a close-knit group that becomes their true family. Shared struggles, in-jokes, and small acts of care forge bonds stronger than blood.\n***Thematic Hook:*** Strangers and outcasts discover belonging in each other, creating a chosen family as they weather conflict, support one another, and learn they deserve connection.\n***Narrative Scope:*** Personal, Group-focused.\n***Tone:*** Warm, Bittersweet, Heartfelt, Gentle with occasional angst.\n***Literary Devices:*** Foreshadowing: Early gestures of care, Symbolism: Shared spaces and rituals, Irony: People who thought they were unlovable becoming beloved.\n***Subgenre:*** Contemporary drama, Cozy ensemble, Light-hearted character study.\n***Pacing:*** Moderate, Relationship-focused with low-to-moderate external stakes.\n***Structure:*** Meeting and forming group, Conflicts and tests, Affirmation of chosen family.\n***Priority:*** Character bonds > Emotional comfort > External plot.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -967,6 +1024,7 @@
       "Crime",
       "Fantasy"
     ],
+    "defaultShape": "tragedy",
     "storyPrompt": "The central character is an antihero or outright villain. They scheme, manipulate, and commit morally dark acts in pursuit of power, revenge, or obsession, dragging the audience along for the ride.\n***Thematic Hook:*** A charismatic but dangerous protagonist pursues selfish or destructive goals, raising the question of whether they can change, will be stopped, or will drag everyone down with them.\n***Narrative Scope:*** Personal with collateral impact.\n***Tone:*** Dark, Sharply ironic, Tense, Seductive.\n***Literary Devices:*** Foreshadowing: Hubris and fatal flaw, Symbolism: Thrones, masks, and mirrors, Irony: Audience rooting for someone they know is wrong.\n***Subgenre:*** Psychological thriller, Crime saga, Dark fantasy.\n***Pacing:*** Moderate to fast, Plot and scheme-driven with introspective moments.\n***Structure:*** Rise in power, Escalating atrocities and opposition, Climactic reckoning.\n***Priority:*** Psychological depth > Moral tension > Plot twists.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -995,6 +1053,10 @@
       "Fantasy",
       "Historical"
     ],
+    "defaultShape": "escalation",
+    "suggestedThreads": [
+      "mystery"
+    ],
     "storyPrompt": "Courts, senates, councils, and boardrooms seethe with hidden agendas. Alliances, blackmail, and betrayals quietly shift the balance of power long before any sword is drawn.\n***Thematic Hook:*** Ambitious players navigate a treacherous web of politics, using manipulation, negotiation, and espionage to gain influence while risking scandal, ruin, or revolution.\n***Narrative Scope:*** Institutional, Multi-faction.\n***Tone:*** Tense, Sophisticated, Paranoid, Slow-burn.\n***Literary Devices:*** Foreshadowing: Offhand comments and minor votes, Symbolism: Seals, sigils, and seats of power, Irony: Public virtue hiding private corruption.\n***Subgenre:*** Court intrigue, Political drama, Corporate thriller.\n***Pacing:*** Moderate, Dialogue and maneuver-heavy with sharp spikes at key events.\n***Structure:*** Rising schemes and counter-schemes, Crisis point, Power reconfiguration.\n***Priority:*** Scheming and tension > World-building > Action.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -1022,6 +1084,7 @@
       "Drama",
       "Contemporary"
     ],
+    "defaultShape": "journey",
     "storyPrompt": "Characters travel together toward a shared destination, trapped in cars, buses, trains, or caravans with their secrets, grudges, and unspoken feelings. Each stop along the way changes them.\n***Thematic Hook:*** A journey across distances becomes a journey through relationships and self-discovery, as shared experiences and crises on the road force characters to confront what they are running from or toward.\n***Narrative Scope:*** Linear journey, Episodic stops.\n***Tone:*** Reflective, Bittersweet, Sometimes comedic, Grounded.\n***Literary Devices:*** Foreshadowing: Route choices and detours, Symbolism: Roads, maps, and crossroads, Irony: Trying to escape problems that ride along inside the car.\n***Subgenre:*** Character drama, Dramedy, Travel fiction.\n***Pacing:*** Moderate, Alternating quieter stretches with intense emotional beats.\n***Structure:*** Departure, Transformative waypoints, Arrival and confrontation.\n***Priority:*** Character relationships > Thematic reflection > External plot.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -1049,6 +1112,7 @@
       "Drama",
       "Sports"
     ],
+    "defaultShape": "tournament",
     "storyPrompt": "An underestimated team or athlete trains, stumbles, and grows while chasing a seemingly impossible victory. The real win lies in who they become along the way.\n***Thematic Hook:*** A struggling athlete or team faces stronger opponents, internal doubts, and personal obstacles on the road to a big game or tournament where their heart matters more than the scoreboard.\n***Narrative Scope:*** Season or tournament arc.\n***Tone:*** Inspiring, Emotional, Grounded, Sometimes comedic.\n***Literary Devices:*** Foreshadowing: Early glimpses of potential, Symbolism: Jerseys, trophies, and fields, Irony: A loss that feels like a victory or a win that costs dearly.\n***Subgenre:*** Sports drama, Team ensemble.\n***Pacing:*** Moderate to fast, Game sequences punctuating character beats.\n***Structure:*** Early season struggle, Mid-season crisis, Climactic match.\n***Priority:*** Character growth > Emotional payoff > Game mechanics.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -1076,6 +1140,7 @@
       "Romance",
       "Slice of Life"
     ],
+    "defaultShape": "romance",
     "storyPrompt": "Two people slowly build a gentle, supportive relationship. Conflicts are soft, communication is honest, and the focus stays on comfort, everyday moments, and mutual care.\n***Thematic Hook:*** Rather than tearing the couple apart, life nudges them closer as they navigate small misunderstandings, personal growth, and cozy routines that deepen their bond.\n***Narrative Scope:*** Intimate, Everyday.\n***Tone:*** Warm, Tender, Calm, Hopeful.\n***Literary Devices:*** Foreshadowing: Tiny gestures hinting at deeper feelings, Symbolism: Shared mugs, blankets, and spaces, Irony: Big love expressed through small, ordinary acts.\n***Subgenre:*** Low-angst contemporary romance, Cozy slice-of-life romance.\n***Pacing:*** Gentle and steady, Relationship-focused.\n***Structure:*** Meeting and connection, Deepening everyday intimacy, Affirming commitment.\n***Priority:*** Emotional comfort > Character chemistry > External plot.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -1104,6 +1169,10 @@
       "Horror",
       "Superhero"
     ],
+    "defaultShape": "episodic",
+    "suggestedThreads": [
+      "mystery"
+    ],
     "storyPrompt": "Each new threat, case, or creature brings a fresh crisis to solve. Behind the episodic battles and investigations, a slow-burning mystery or emotional arc quietly grows.\n***Thematic Hook:*** A small team or lone hunter tackles a series of supernatural, criminal, or supervillain threats, learning more about themselves and an overarching danger with every encounter.\n***Narrative Scope:*** Episodic, Serial thread.\n***Tone:*** Variable—can be pulpy, dark, or playful—but consistently adventure-focused.\n***Literary Devices:*** Foreshadowing: Background hints about the meta-plot, Symbolism: Repeating imagery tied to the overarching threat, Irony: Saving the day while losing ground in personal life.\n***Subgenre:*** Procedural urban fantasy, Superhero episodic, Occult detective.\n***Pacing:*** Fast-paced per episode, moderate for long-term arcs.\n***Structure:*** Case-of-the-day arcs embedded in a longer season arc.\n***Priority:*** Fun episodic threats > Team dynamics > Slow-burn overarching story.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
@@ -1131,6 +1200,7 @@
       "Horror",
       "Thriller"
     ],
+    "defaultShape": "siege",
     "storyPrompt": "A small group is trapped in an isolated location—cabin, island, oil rig, research station, or similar—cut off from help as something hunts them. Every noise, shadow, and creaking floorboard tightens the noose as trust frays and survival demands terrible choices.\n***Thematic Hook:*** Survivors trapped in a remote, inescapable setting must confront an escalating threat, dwindling resources, and mounting paranoia as they realize that no rescue is coming and not everyone will make it out alive.\n***Narrative Scope:*** Contained, Location-bound.\n***Tone:*** Claustrophobic, Tense, Grim, Paranoid.\n***Literary Devices:*** Foreshadowing: Ominous noises, missing supplies, strange signs. Symbolism: Flickering lights, locked doors, encroaching darkness. Irony: Safety measures becoming traps.\n***Subgenre:*** Survival horror, Siege horror, Remote outpost horror.\n***Pacing:*** Tense with bursts of violence or panic; quiet stretches of dread between incidents.\n***Structure:*** Initial arrival or entrapment, escalating attacks and paranoia, final stand or escape attempt.\n***Priority:*** Atmosphere and tension > Survival stakes > Mystery of the threat.",
     "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
     "phasePrompts": {
