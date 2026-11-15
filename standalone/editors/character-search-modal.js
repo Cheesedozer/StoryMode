@@ -13,6 +13,7 @@ import { Popup } from '../adapters/popup-adapter.js';
  */
 export async function showCharacterSearch($input, onSelect) {
     const characters = await getCharacters();
+    let popup = null;
 
     const $content = $('<div>').addClass('character-search');
 
@@ -60,8 +61,7 @@ export async function showCharacterSearch($input, onSelect) {
                     onSelect(char, name);
                 } else {
                     $input.val(name);
-                    // Close the popup
-                    $('.modal-overlay').last().hide();
+                    popup?.close();
                 }
             });
             $results.append($item);
@@ -75,7 +75,7 @@ export async function showCharacterSearch($input, onSelect) {
         renderResults($(this).val());
     });
 
-    const popup = new Popup($content, 'TEXT', 'Select Character', {
+    popup = new Popup($content, 'TEXT', 'Select Character', {
         wide: true,
         okButton: false,
         cancelButton: true,
@@ -84,19 +84,3 @@ export async function showCharacterSearch($input, onSelect) {
     popup.show();
 }
 
-/**
- * Get the arc type label for display
- * @param {string} arcType - Arc type
- * @returns {string} Display label
- */
-export function getArcTypeLabel(arcType) {
-    const labels = {
-        'hero': 'Hero',
-        'anti-hero': 'Anti-Hero',
-        'mentor': 'Mentor',
-        'ally': 'Ally',
-        'antagonist': 'Antagonist',
-        'neutral': 'Neutral',
-    };
-    return labels[arcType] || 'Unknown';
-}

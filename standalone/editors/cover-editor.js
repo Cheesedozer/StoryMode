@@ -4,11 +4,12 @@
  */
 
 import { showSuccess, showInfo, showError } from '../adapters/notification-adapter.js';
-import { getConnectionStatus } from '../adapters/connection-bridge.js';
+import { generateCover } from '../adapters/connection-bridge.js';
+import { isHostAvailable } from '../adapters/host-bridge.js';
 import { openUploadModal, uploadCoverFile } from './cover-upload-modal.js';
 import { openGenerateModal } from './cover-generate-modal.js';
-import { generateCover } from '../adapters/connection-bridge.js';
-import { getCurrentBlueprint } from '../handlers/blueprint-actions.js';
+import { getCurrentBlueprint, markDirty } from '../handlers/blueprint-actions.js';
+import * as Covers from './cover-model.js';
 
 // ============================================================================
 // COVER TAB RENDERING
@@ -22,8 +23,9 @@ import { getCurrentBlueprint } from '../handlers/blueprint-actions.js';
  */
 export function renderCoverTab(blueprint, options = {}) {
     const { readonly = false } = options;
-    const covers = blueprint.covers || [];
-    const currentCover = blueprint.cover || covers[0] || null;
+    const covers = Covers.getGallery(blueprint);
+    const selectedIndex = Covers.getSelectedIndex(blueprint);
+    const currentCover = Covers.getCurrentCoverUrl(blueprint);
 
     const $content = $('<div>').addClass('cover-editor');
 
@@ -38,9 +40,8 @@ export function renderCoverTab(blueprint, options = {}) {
         .html('<i class="fa-solid fa-upload"></i> Upload Cover')
         .prop('disabled', readonly));
 
-    // Generate button (only if connected)
-    const isConnected = getConnectionStatus() === 'connected';
-    if (isConnected && !readonly) {
+    // Generate button (needs an open SillyTavern tab for the image source)
+    if (isHostAvailable() && !readonly) {
         $actions.append($('<button>')
             .addClass('btn btn-primary')
             .attr('data-action', 'generate-cover')
@@ -81,8 +82,8 @@ export function renderCoverTab(blueprint, options = {}) {
         $gallery.append($('<p>').addClass('text-muted').text('No cover images in gallery.'));
     } else {
         const $grid = $('<div>').addClass('cover-grid');
-        covers.forEach((coverUrl, index) => {
-            $grid.append(renderGalleryThumbnail(coverUrl, index, currentCover === coverUrl, readonly));
+        covers.forEach((cover, index) => {
+            $grid.append(renderGalleryThumbnail(cover.url, index, index === selectedIndex, readonly));
         });
         $gallery.append($grid);
     }
@@ -207,67 +208,38 @@ function handleGenerateClick() {
 }
 
 /**
- * Generate a cover using the backend API
+ * Generate a cover in the open SillyTavern tab, with its image source
  * @param {Object} blueprint - Blueprint object
- * @param {Object} params - Generation parameters
+ * @param {Object} params - { prompt, negative_prompt } from the generate modal
  */
 async function generateCoverFromApi(blueprint, params) {
     try {
-        // Show loading state
         showInfo('Generating cover image... This may take 30-60 seconds.');
-
-        // Build generation request
-        const request = {
-            blueprint_id: blueprint.blueprint_id,
-            blueprint_title: blueprint.userMetadata?.title || blueprint.blueprint_title || blueprint.core_premise?.substring(0, 50),
-            prompt: params.prompt,
-            negative_prompt: params.negative_prompt || 'text, watermark, signature, blurry, low quality, distorted, ugly',
-            steps: params.steps || 20,
-            cfg_scale: params.cfg_scale || 7,
-            width: 600,
-            height: 900,
-            story_type: blueprint.story_type_name,
-            genre: blueprint.tone_and_style?.primary_tone,
-        };
-
-        // Call the backend API
-        const imageData = await generateCover(request);
-
-        // Add to blueprint
-        addCoverToBlueprint(imageData);
+        const imageUrl = await generateCover(blueprint, params.prompt, params.negative_prompt);
+        Covers.addCover(blueprint, imageUrl, { prompt: params.prompt || null, source: 'generated' });
+        coverChanged(blueprint);
         showSuccess('Cover generated successfully!');
-
     } catch (error) {
         console.error('[Cover Editor] Generation failed:', error);
-        // Show user-friendly error message
-        if (error.message.includes('not connected') || error.message.includes('No API URL')) {
-            showError('Not connected to SillyTavern. Please configure your connection in Settings.');
-        } else if (error.message.includes('Stable Diffusion') || error.message.includes('SD')) {
-            showError('Stable Diffusion not available. Please ensure SD is configured in SillyTavern.');
-        } else {
-            showError('Failed to generate cover: ' + error.message);
-        }
+        showError('Failed to generate cover: ' + error.message);
     }
 }
 
+function coverChanged(blueprint) {
+    markDirty();
+    $(document).trigger('blueprint:updated', { blueprint });
+    $(document).trigger('cover:changed', { cover: Covers.getCurrentCoverUrl(blueprint) });
+}
+
 /**
- * Add a cover to the blueprint
- * @param {string} coverData - Base64 image data
+ * Add an uploaded cover (data URL) to the blueprint
+ * @param {string} coverData - Image data URL
  */
 function addCoverToBlueprint(coverData) {
     const blueprint = getCurrentBlueprint();
     if (!blueprint) return;
-
-    if (!blueprint.covers) blueprint.covers = [];
-    blueprint.covers.push(coverData);
-
-    // Set as current if no current cover
-    if (!blueprint.cover) {
-        blueprint.cover = coverData;
-    }
-
-    $(document).trigger('blueprint:updated', { blueprint });
-    $(document).trigger('cover:changed', { cover: blueprint.cover, covers: blueprint.covers });
+    Covers.addCover(blueprint, coverData, { source: 'upload' });
+    coverChanged(blueprint);
 }
 
 /**
@@ -276,12 +248,9 @@ function addCoverToBlueprint(coverData) {
  */
 function setCurrentCover(index) {
     const blueprint = getCurrentBlueprint();
-    if (!blueprint || !blueprint.covers) return;
-
-    blueprint.cover = blueprint.covers[index];
-
-    $(document).trigger('blueprint:updated', { blueprint });
-    $(document).trigger('cover:changed', { cover: blueprint.cover, covers: blueprint.covers });
+    if (!blueprint) return;
+    Covers.selectCover(blueprint, index);
+    coverChanged(blueprint);
 }
 
 /**
@@ -290,33 +259,19 @@ function setCurrentCover(index) {
  */
 function deleteCover(index) {
     const blueprint = getCurrentBlueprint();
-    if (!blueprint || !blueprint.covers) return;
-
-    const coverUrl = blueprint.covers[index];
-
-    // Check if this is the current cover
-    if (blueprint.cover === coverUrl) {
-        blueprint.cover = null;
-    }
-
-    // Remove from gallery
-    blueprint.covers.splice(index, 1);
-
-    $(document).trigger('blueprint:updated', { blueprint });
-    $(document).trigger('cover:changed', { cover: blueprint.cover, covers: blueprint.covers });
+    if (!blueprint) return;
+    Covers.deleteCover(blueprint, index);
+    coverChanged(blueprint);
 }
 
 /**
- * Remove the current cover
+ * Remove the current cover (a default cover is generated on save)
  */
 function removeCurrentCover() {
     const blueprint = getCurrentBlueprint();
     if (!blueprint) return;
-
-    blueprint.cover = null;
-
-    $(document).trigger('blueprint:updated', { blueprint });
-    $(document).trigger('cover:changed', { cover: null, covers: blueprint.covers || [] });
+    Covers.clearCover(blueprint);
+    coverChanged(blueprint);
 }
 
 // ============================================================================

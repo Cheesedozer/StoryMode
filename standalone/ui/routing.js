@@ -29,12 +29,8 @@ const tabContentCache = new Map();
 const TAB_RENDERERS = {
     details: {
         render: renderDetailsTab,
-        options: () => ({
-            storyTypes: [],
-            authorStyles: [],
-            readonly: false,
-        }),
-        cacheFullContent: true,
+        options: () => ({ readonly: false }),
+        cacheFullContent: false,
     },
     scenes: {
         render: renderScenesTab,
@@ -43,11 +39,6 @@ const TAB_RENDERERS = {
     },
     characters: {
         render: renderCharactersTab,
-        options: () => ({ readonly: false }),
-        cacheFullContent: false,
-    },
-    lorebook: {
-        render: renderLorebookTab,
         options: () => ({ readonly: false }),
         cacheFullContent: false,
     },
@@ -68,9 +59,17 @@ const TAB_RENDERERS = {
 export function initTabNavigation() {
     $(document).on('click', '[data-tab]', handleTabClick);
 
-    // Invalidate cache when blueprint changes so tabs re-render fresh data
+    // Invalidate cache when the blueprint changes so tabs re-render fresh data.
+    // (Details edits fire 'blueprint:edited' instead: that tab is already live.)
+    $(document).on('blueprint:loaded.routing', () => {
+        tabContentCache.clear();
+    });
+    // Re-render the visible tab so additions/removals show immediately
     $(document).on('blueprint:updated.routing', () => {
         tabContentCache.clear();
+        if (activeTab !== 'details' && getCurrentBlueprint()) {
+            setTimeout(() => loadTabContent(activeTab), 0);
+        }
     });
 }
 
@@ -96,7 +95,7 @@ export function switchTab(tabId) {
     $(`.sidebar-link[data-tab="${tabId}"]`).addClass('active');
 
     // Update tab panels (scoped to main content to avoid clobbering settings modal tabs)
-    $('#mainContent > .tab-panel').removeClass('active');
+    $('#editorView > .tab-panel').removeClass('active');
     $(`#${tabId}Tab`).addClass('active');
 
     // Emit custom event for other modules
@@ -191,8 +190,7 @@ function loadLorebookTab(blueprint) {
     $content.on('lorebook:removed', () => {
         if (blueprint.embedded_lorebook) {
             delete blueprint.embedded_lorebook;
-            loadLorebookTab(blueprint); // Refresh
-            // Trigger save...
+            $(document).trigger('blueprint:updated', { blueprint });
         }
     });
 

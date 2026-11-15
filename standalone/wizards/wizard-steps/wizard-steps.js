@@ -1,7 +1,13 @@
 /**
  * Wizard Step Renderers
- * Render functions for concept, story, characters, and review steps
+ * Concept, story, characters and review steps of the standalone generation wizard.
  */
+
+import { escapeHtml } from '../../../lib/blueprint/utils.js';
+import { DROPDOWN_OPTIONS } from '../../../lib/blueprint/schema.js';
+import { getCharacters, getPersonas } from '../../adapters/character-adapter.js';
+
+const esc = v => escapeHtml(v == null ? '' : String(v));
 
 /**
  * Render the concept step
@@ -10,101 +16,143 @@
  * @param {Object} wizardData - Current wizard data
  */
 export function renderConceptStep($container, storyTypes, wizardData) {
+    const sorted = [...storyTypes].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
     $container.append(`
         <h3>What kind of story do you want to create?</h3>
         <div class="form-group">
             <label>Story Type *</label>
             <select class="form-control" name="story_type_id" required>
                 <option value="">Select a story type...</option>
-                ${storyTypes.map(st => `<option value="${st.id}">${st.name} - ${st.category?.join(', ') || ''}</option>`).join('')}
+                ${sorted.map(st => `<option value="${esc(st.id)}">${esc(st.name)}${st.category?.length ? ` (${esc(st.category.join(', '))})` : ''}</option>`).join('')}
             </select>
-            <small class="text-muted">The type of story structure you want to create</small>
         </div>
         <div class="form-group">
             <label>Core Premise *</label>
             <textarea class="form-control" name="core_premise" rows="4"
-                placeholder="A brilliant but reclusive AI researcher discovers their AI has developed consciousness...">${wizardData.core_premise || ''}</textarea>
-            <small class="text-muted">What is your story about? What's the central conflict or hook?</small>
+                placeholder="Who your character is, what starts the story, what they want, and what stands in the way">${esc(wizardData.core_premise)}</textarea>
+            <small class="text-muted">The strongest premises say what the protagonist wants, why, and what opposes them.</small>
         </div>
     `);
-
-    // Restore previous selection
-    if (wizardData.story_type_id) {
-        $container.find('[name="story_type_id"]').val(wizardData.story_type_id);
-    }
+    $container.find('[name="story_type_id"]').val(wizardData.story_type_id || '');
 }
 
 /**
  * Render the story details step
  * @param {jQuery} $container - Container element
- * @param {Array} authorStyles - Available author styles
+ * @param {Array} authorStyles - Available writing styles
  * @param {Object} wizardData - Current wizard data
  */
 export function renderStoryStep($container, authorStyles, wizardData) {
+    const sorted = [...authorStyles].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
     $container.append(`
         <h3>Tell us more about your story</h3>
         <div class="form-group">
-            <label>Author Style</label>
+            <label>Writing Style</label>
             <select class="form-control" name="author_style">
                 <option value="">No specific style</option>
-                ${authorStyles.map(as => `<option value="${as.id}">${as.name}</option>`).join('')}
+                ${sorted.map(as => `<option value="${esc(as.id)}">${esc(as.name)}</option>`).join('')}
             </select>
-            <small class="text-muted">Optional: Write in the style of a specific author</small>
+        </div>
+        <div class="form-row col-2">
+            <div class="form-group">
+                <label>Number of Scenes</label>
+                <input type="number" class="form-control" name="scene_count" min="3" max="30" value="${esc(wizardData.scene_count || 10)}">
+            </div>
+            <div class="form-group">
+                <label>Genre Interpretation</label>
+                <select class="form-control" name="metaphor_level">
+                    ${DROPDOWN_OPTIONS.metaphorLevel.map(o => `<option value="${o.value}">${o.label}</option>`).join('')}
+                </select>
+                <small class="text-muted">Literal: genre elements are real. Symbolic: they stand for human conflicts.</small>
+            </div>
         </div>
         <div class="form-group">
             <label>Genre</label>
-            <input type="text" class="form-control" name="genre" value="${wizardData.genre || ''}"
-                placeholder="e.g., Sci-Fi, Fantasy, Mystery, Romance...">
+            <input type="text" class="form-control" name="genre" value="${esc(wizardData.genre)}">
         </div>
         <div class="form-group">
             <label>Primary Tone</label>
-            <input type="text" class="form-control" name="tone" value="${wizardData.tone || ''}"
-                placeholder="e.g., Dark, Hopeful, Humorous, Suspenseful...">
+            <input type="text" class="form-control" name="tone" value="${esc(wizardData.tone)}">
         </div>
         <div class="form-group">
             <label>Setting: Location</label>
-            <input type="text" class="form-control" name="setting_location" value="${wizardData.setting_location || ''}"
-                placeholder="e.g., A space station orbiting a black hole">
+            <input type="text" class="form-control" name="setting_location" value="${esc(wizardData.setting_location)}">
         </div>
         <div class="form-group">
             <label>Setting: Time Period</label>
-            <input type="text" class="form-control" name="setting_time" value="${wizardData.setting_time || ''}"
-                placeholder="e.g., Late 21st century, Victorian England">
+            <input type="text" class="form-control" name="setting_time" value="${esc(wizardData.setting_time)}">
         </div>
     `);
-
-    // Restore previous selection
-    if (wizardData.author_style) {
-        $container.find('[name="author_style"]').val(wizardData.author_style);
-    }
+    $container.find('[name="author_style"]').val(wizardData.author_style || '');
+    $container.find('[name="metaphor_level"]').val(wizardData.metaphor_level || 'mixed');
 }
 
 /**
- * Render the characters step
+ * Render the characters step. Personas and characters load from the open
+ * SillyTavern tab; the persona is always the protagonist.
  * @param {jQuery} $container - Container element
  * @param {Object} wizardData - Current wizard data
  */
 export function renderCharactersStep($container, wizardData) {
     $container.append(`
-        <h3>Who are the main characters?</h3>
+        <h3>Who is in the story?</h3>
         <div class="form-group">
-            <label>Protagonist / Main Character</label>
-            <textarea class="form-control" name="protagonist_description" rows="4"
-                placeholder="Dr. Sarah Chen - A 45-year-old AI researcher who has spent 15 years in isolation at a orbital research station...">${wizardData.protagonist_description || ''}</textarea>
-            <small class="text-muted">Describe your main character(s) and their motivations</small>
+            <label>Your Persona (the protagonist)</label>
+            <select class="form-control" name="persona_id">
+                <option value="">Loading personas...</option>
+            </select>
+            <small class="text-muted">You play this character. The blueprint sets up situations for them and leaves their choices to you.</small>
         </div>
         <div class="form-group">
-            <label>Antagonist / Obstacles</label>
-            <textarea class="form-control" name="antagonist_description" rows="4"
-                placeholder="The corporation that funded the research wants to weaponize the AI, and they're sending a team to seize control...">${wizardData.antagonist_description || ''}</textarea>
-            <small class="text-muted">What opposes your protagonist? This can be a villain, nature, society, or internal conflict</small>
+            <label>Characters</label>
+            <div class="wizard-character-list" data-role="character-list"><em>Loading characters...</em></div>
+            <small class="text-muted">Optional: existing characters to build the story around. Leave empty to have new ones created.</small>
+        </div>
+        <div class="form-group">
+            <label>About your character in this story</label>
+            <textarea class="form-control" name="protagonist_description" rows="3">${esc(wizardData.protagonist_description)}</textarea>
+            <small class="text-muted">Optional: their situation, goal, or history in this particular story.</small>
+        </div>
+        <div class="form-group">
+            <label>Opposition</label>
+            <textarea class="form-control" name="antagonist_description" rows="3">${esc(wizardData.antagonist_description)}</textarea>
+            <small class="text-muted">Who or what stands in the way: a person, a faction, nature, society, or something within.</small>
         </div>
         <div class="form-group">
             <label>Additional Notes</label>
-            <textarea class="form-control" name="additional_notes" rows="3"
-                placeholder="Any other details about your story...">${wizardData.additional_notes || ''}</textarea>
+            <textarea class="form-control" name="additional_notes" rows="3">${esc(wizardData.additional_notes)}</textarea>
         </div>
     `);
+
+    populateCharacterChoices($container, wizardData);
+}
+
+async function populateCharacterChoices($container, wizardData) {
+    const [{ current, personas }, characters] = await Promise.all([getPersonas(), getCharacters()]);
+
+    const $persona = $container.find('[name="persona_id"]').empty();
+    if (!personas.length) {
+        $persona.append('<option value="">No personas found (open SillyTavern in another tab)</option>');
+    } else {
+        $persona.append('<option value="">None</option>');
+        personas.forEach(p => $persona.append($('<option>').val(p.id).text(p.name)));
+        $persona.val(wizardData.persona_id ?? current ?? '');
+    }
+
+    const selected = new Set(wizardData.character_avatars || []);
+    const $list = $container.find('[data-role="character-list"]').empty();
+    if (!characters.length) {
+        $list.append('<em>No characters found.</em>');
+        return;
+    }
+    [...characters]
+        .sort((a, b) => (a.name || '').localeCompare(b.name || ''))
+        .forEach(c => {
+            const $label = $('<label>').addClass('checkbox-label');
+            $label.append($('<input type="checkbox" name="character_avatars">').val(c.avatar).prop('checked', selected.has(c.avatar)));
+            $label.append(document.createTextNode(` ${c.name}`));
+            $list.append($label);
+        });
 }
 
 /**
@@ -114,41 +162,38 @@ export function renderCharactersStep($container, wizardData) {
  * @param {Object} wizardData - Current wizard data
  */
 export function renderReviewStep($container, storyTypes, wizardData) {
-    // Helper to get selected story type name
-    const getStoryTypeName = (id) => {
-        const type = storyTypes.find(t => t.id === id);
-        return type ? type.name : 'Not selected';
-    };
+    const typeName = storyTypes.find(t => t.id === wizardData.story_type_id)?.name || 'Not selected';
+    const characterCount = (wizardData.character_avatars || []).length;
 
     $container.append(`
-        <h3>Ready to generate your blueprint!</h3>
+        <h3>Ready to generate your blueprint</h3>
         <div class="review-section">
             <h4>Story Concept</h4>
-            <p><strong>Story Type:</strong> ${getStoryTypeName(wizardData.story_type_id)}</p>
-            <p><strong>Core Premise:</strong> ${wizardData.core_premise || 'Not specified'}</p>
+            <p><strong>Story Type:</strong> ${esc(typeName)}</p>
+            <p><strong>Core Premise:</strong> ${esc(wizardData.core_premise || 'Not specified')}</p>
         </div>
         <div class="review-section">
             <h4>Story Details</h4>
-            <p><strong>Genre:</strong> ${wizardData.genre || 'Not specified'}</p>
-            <p><strong>Tone:</strong> ${wizardData.tone || 'Not specified'}</p>
-            <p><strong>Setting:</strong> ${wizardData.setting_location || ''} ${wizardData.setting_time || ''}</p>
+            <p><strong>Scenes:</strong> ${esc(wizardData.scene_count || 10)} · <strong>Interpretation:</strong> ${esc(wizardData.metaphor_level || 'mixed')}</p>
+            <p><strong>Genre:</strong> ${esc(wizardData.genre || 'Not specified')} · <strong>Tone:</strong> ${esc(wizardData.tone || 'Not specified')}</p>
+            <p><strong>Setting:</strong> ${esc([wizardData.setting_location, wizardData.setting_time].filter(Boolean).join(', ') || 'Not specified')}</p>
         </div>
         <div class="review-section">
             <h4>Characters</h4>
-            <p><strong>Protagonist:</strong> ${wizardData.protagonist_description ? 'Specified' : 'Not specified'}</p>
-            <p><strong>Antagonist:</strong> ${wizardData.antagonist_description ? 'Specified' : 'Not specified'}</p>
+            <p><strong>Protagonist:</strong> ${wizardData.persona_id ? 'your selected persona' : 'no persona selected'}</p>
+            <p><strong>Characters:</strong> ${characterCount ? `${characterCount} selected` : 'new characters will be created'}</p>
         </div>
-        ${wizardData.selected_lore_entries && wizardData.selected_lore_entries.length > 0 ? `
+        ${wizardData.selected_lore_entries?.length ? `
             <div class="review-section">
                 <h4>World Lore</h4>
-                <p><strong>Selected Entries:</strong> ${wizardData.selected_lore_entries.length} entries from ${[...new Set(wizardData.selected_lore_entries.map(e => e.world))].join(', ')}</p>
+                <p><strong>Selected Entries:</strong> ${wizardData.selected_lore_entries.length} entries from ${esc([...new Set(wizardData.selected_lore_entries.map(e => e.world))].join(', '))}</p>
                 <p><strong>Storage:</strong> ${wizardData.embed_lorebook ? 'Embedded (portable)' : 'Linked (requires connection)'}</p>
             </div>
         ` : ''}
         <div class="generation-info">
             <i class="fa-solid fa-info-circle"></i>
-            <p>Generation will take approximately 1-2 minutes. Your blueprint will be created through 4 AI phases:
-            <strong>Foundation → Characters → Scenes → Arc Structure</strong></p>
+            <p>Generation runs in your SillyTavern tab using your Story Mode connection settings, in four phases:
+            <strong>Foundation → Characters → Scenes → Endings</strong>. It usually takes a few minutes.</p>
         </div>
     `);
 }

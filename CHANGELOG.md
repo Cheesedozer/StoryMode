@@ -16,6 +16,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The v2 IndexedDB to File API blueprint library migration was never invoked; it now runs once at startup
 - Hard-coded `third-party/Extension-StoryMode/` paths replaced with the extension's real base URL, so the extension works under any install folder name (including SillyBunny per-user extension folders)
 
+### Added (standalone editor)
+- **The Fullscreen Editor is finished and re-enabled.** It shares the extension's library code through an import map and small shims, so blueprints it saves are byte-compatible with the extension's
+- AI generation, cover generation, personas and characters run through the open SillyTavern tab over a BroadcastChannel bridge (`lib/bridge/standalone-host.js`), using your real connection profiles and image source
+- Save to Library (Ctrl+S) with unsaved-change tracking; library changes in either tab refresh the other
+- Details tab rewritten to edit the real blueprint fields (title, story type, writing style, premise, setting, protagonists, opposition, arc structure, tone, content, opening message, endings) with write-through
+- Scenes and Characters tabs rewritten for the real scene/arc schema (goal, situation, beats, turning points); edits merge into existing records so unseen fields survive; scenes can be reordered
+- Wizard: pick your persona (the protagonist) and existing characters, scene count and genre interpretation; live progress from the SillyTavern tab
+- Library card export, help dialog, connection status panel; libraries are served by SillyTavern instead of CDNs
+
+### Fixed (standalone editor)
+- Saving wrote JSON into `.png` library files and a manifest with a string version, which the extension would have treated as invalid and replaced with an empty library; the extension now also repairs such manifests instead of discarding them
+- Wizard steps wiped earlier steps' answers; the success path never resolved because jQuery `.remove()` cleared the stored callback
+- Tabs never switched (wrong container selector); added items didn't appear until switching tabs; the lorebook tab's buttons were unbound
+- Covers were stored in fields the codec ignores; the Details tab never wrote changes back
+- Unescaped user text in wizard HTML
+
 ### Changed (story structure, styles, content)
 - **Four phases everywhere**: Story Mode rounds and blueprint scenes now share setup / escalation / climax / resolution (25/50/15/10%) from `lib/core/phases.js`. Legacy three-phase story types and blueprints are mapped automatically
 - All 43 built-in story types: phase guidance rewritten for four phases around goal, motivation and conflict, with outcomes left to the player (no more "justice is served" / "love triumphs"); trope lists removed; the most cliché taglines rewritten

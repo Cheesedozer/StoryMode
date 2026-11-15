@@ -26,7 +26,8 @@ Extension-StoryMode/
 │   │   ├── notification-adapter.js # Toast notifications (wraps toastr)
 │   │   ├── character-adapter.js  # Read-only character access
 │   │   ├── lorebook-adapter.js   # ST worldinfo/lorebook API access (v1.2+)
-│   │   └── library-storage-adapter.js # Blueprint library file API wrapper
+│   │   ├── host-bridge.js        # BroadcastChannel client to the ST tab
+│   │   └── library-storage-adapter.js # Wraps lib/blueprint/library-adapter.js
 │   ├── editors/             # Tab-specific editors (Details, Scenes, Characters, Cover, Lorebook)
 │   │   ├── details-editor.js          # Details tab form (reuses shared renderers)
 │   │   ├── details-field-renderers.js # Individual field rendering

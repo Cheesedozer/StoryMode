@@ -5,7 +5,8 @@
 
 import { Popup } from '../adapters/popup-adapter.js';
 import { getStoryTypes, getAuthorStyles, generateBlueprint } from '../adapters/connection-bridge.js';
-import { getConnectionStatus } from '../adapters/connection-bridge.js';
+import { connectToHost, isHostAvailable } from '../adapters/host-bridge.js';
+import { escapeHtml } from '../../lib/blueprint/utils.js';
 import { showSuccess, showError, showWarning } from '../adapters/notification-adapter.js';
 import { setCurrentBlueprint } from '../handlers/blueprint-actions.js';
 import { renderLoreStep, extractLoreData } from './wizard-steps/lore-step.js';
@@ -36,6 +37,10 @@ const DEFAULT_WIZARD_DATA = {
     story_type_id: '',
     author_style: '',
     core_premise: '',
+    scene_count: 10,
+    metaphor_level: 'mixed',
+    persona_id: null,
+    character_avatars: [],
     genre: '',
     tone: '',
     setting_location: '',
@@ -63,20 +68,15 @@ let currentStep = 0;
  * @returns {Promise<Object|null>} Generated blueprint or null if cancelled
  */
 export async function showBlueprintWizard() {
-    // Check if connected to backend
-    if (getConnectionStatus() !== 'connected') {
-        showWarning('Please connect to SillyTavern to generate blueprints');
-        // Offer to open settings
-        const confirmed = confirm('Would you like to configure your connection?');
-        if (confirmed) {
-            $(document).trigger('open-settings');
-        }
+    // Generation runs in the SillyTavern tab, so one must be open
+    if (!isHostAvailable() && !(await connectToHost())) {
+        showWarning('Open SillyTavern (with Story Mode enabled) in another tab to generate blueprints. It uses your Story Mode connection settings.');
         return null;
     }
 
     // Reset state
     currentStep = 0;
-    wizardData = { ...DEFAULT_WIZARD_DATA };
+    wizardData = structuredClone(DEFAULT_WIZARD_DATA);
 
     // Load story types and author styles
     const [storyTypes, authorStyles] = await Promise.all([
@@ -297,8 +297,15 @@ async function validateCurrentStep($wizard) {
 function collectWizardData($wizard) {
     const $content = $wizard.find('#wizardContent');
 
+    // Only read fields rendered on the current step; the others keep their values
     WIZARD_FIELDS.forEach(field => {
-        wizardData[field] = $content.find(`[name="${field}"]`).val() || '';
+        const $field = $content.find(`[name="${field}"]`);
+        if (!$field.length) return;
+        if ($field.is(':checkbox')) {
+            wizardData[field] = $field.filter(':checked').map((_, el) => el.value).get();
+        } else {
+            wizardData[field] = $field.val() ?? '';
+        }
     });
 }
 
@@ -318,6 +325,10 @@ function buildGenerationRequest() {
         story_type_id: wizardData.story_type_id,
         author_style: wizardData.author_style,
         core_premise: wizardData.core_premise,
+        scene_count: wizardData.scene_count,
+        metaphor_level: wizardData.metaphor_level,
+        persona_id: wizardData.persona_id || null,
+        character_avatars: wizardData.character_avatars || [],
         genre: wizardData.genre,
         tone: wizardData.tone,
         setting: {
@@ -364,7 +375,7 @@ function showGenerationError($content, $wizard, error) {
         <div class="generation-error">
             <i class="fa-solid fa-circle-exclamation"></i>
             <h3>Generation Failed</h3>
-            <p>${error.message}</p>
+            <p>${escapeHtml(error.message)}</p>
             <button class="btn btn-secondary" id="wizardRetry">Try Again</button>
             <button class="btn btn-secondary" id="wizardBackToReview">Back to Review</button>
         </div>
@@ -395,18 +406,32 @@ async function generateBlueprintFromWizard($wizard) {
     $nav.find('button').prop('disabled', true);
     showGenerationProgress($content);
 
+    const PHASE_PROGRESS = { 1: 10, 2: 25, 3: 40, 4: 70 };
+    const onProgress = (event, data) => {
+        if (event === 'phase-update') {
+            const pct = data.progress ?? PHASE_PROGRESS[data.phase] ?? 0;
+            $content.find('.progress-fill').css('width', `${pct}%`);
+            $content.find('.progress-text').text(`Phase ${data.phase} of 4`);
+        } else if (event === 'generation-status' && data?.message) {
+            const $log = $content.find('.phase-status');
+            $log.append($('<div>').addClass(`status-${data.type || 'info'}`).text(data.message));
+            $log.scrollTop($log.prop('scrollHeight'));
+        }
+    };
+
     try {
         const request = buildGenerationRequest();
-        const blueprint = await generateBlueprint(request);
+        const blueprint = await generateBlueprint(request, onProgress);
 
-        // Close popup and update state
-        $wizard.closest('.modal-container').hide();
-        setCurrentBlueprint(blueprint);
-        $(document).trigger('blueprint:loaded', { blueprint });
-        showSuccess('Blueprint generated successfully!');
-
-        // Resolve promise
+        // Read the resolver before removing the popup: jQuery's remove() clears .data()
         const resolve = $wizard.data('resolve');
+
+        // Close popup and update state (unsaved until the user saves it)
+        $wizard.closest('.modal-overlay').remove();
+        setCurrentBlueprint(blueprint, { dirty: true });
+        $(document).trigger('blueprint:loaded', { blueprint });
+        showSuccess('Blueprint generated. Review it, then Save to Library.');
+
         if (resolve) resolve(blueprint);
 
     } catch (error) {

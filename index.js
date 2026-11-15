@@ -17,6 +17,7 @@ import { callGenericPopup, Popup, POPUP_TYPE, POPUP_RESULT } from '/scripts/popu
 import * as BlueprintModule from './lib/blueprint/module.js';
 import { getBlueprintState } from './lib/blueprint/storage.js';
 import { initBlueprintIntegration } from './lib/blueprint/integration.js';
+import { initStandaloneBridgeHost } from './lib/bridge/standalone-host.js';
 
 // Import Blueprint Editor module
 
@@ -749,6 +750,9 @@ jQuery(async function () {
     // One-time v2 migration: IndexedDB blueprint library -> File API.
     // No-op when already migrated or when no IndexedDB library exists.
     await initBlueprintIntegration();
+
+    // Answer requests from the standalone blueprint editor tab
+    initStandaloneBridgeHost();
 
     // Initialize Scene Image Storage (with graceful degradation)
     try {

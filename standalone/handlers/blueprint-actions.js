@@ -1,166 +1,172 @@
 /**
  * Blueprint Action Handlers
- * Handles blueprint CRUD operations (create, import, export)
+ * Create, open, save, import and export blueprints, and track unsaved changes.
+ *
+ * PNG encoding/decoding and library storage use the extension's own modules
+ * (lib/blueprint/codec.js, library-adapter.js) so files are interchangeable.
  */
 
 import { showSuccess, showError, showWarning } from '../adapters/notification-adapter.js';
-
-// PNG codec is loaded lazily via dynamic import() to avoid pulling in the
-// entire SillyTavern dependency chain at module-parse time.  The chain is:
-// storage.js → utils.js → file-api.js → script.js → lib.js (bare "lodash")
-// which fails outside ST's Webpack-served environment.
-let _pngCodec = null;
-
-/**
- * Lazily load the PNG codec module
- * @returns {Promise<{decodeBlueprintFromPNG: Function, encodeBlueprintAsPNG: Function}>}
- */
-async function getPngCodec() {
-    if (!_pngCodec) {
-        try {
-            _pngCodec = await import('../../lib/blueprint/storage.js');
-        } catch (err) {
-            console.warn('[Blueprint] PNG codec unavailable (expected outside SillyTavern):', err.message);
-            throw new Error('PNG import/export requires SillyTavern backend. Use JSON export instead.');
-        }
-    }
-    return _pngCodec;
-}
-
-// ============================================================================
-// UTILITY FUNCTIONS
-// ============================================================================
-
-/**
- * Download a blob as a file
- * @param {Blob} blob - Blob to download
- * @param {string} filename - Filename for download
- */
-function downloadBlob(blob, filename) {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-}
+import { encodeBlueprintAsPNG, decodeBlueprintFromPNG } from '../../lib/blueprint/codec.js';
+import { createBlankBlueprint } from '../../lib/blueprint/blank-blueprint.js';
+import { saveBlueprint, importPngToLibrary, extractCoverAsCanvas } from '../adapters/library-storage-adapter.js';
+import { getConnectionStatus } from '../adapters/connection-bridge.js';
+import { switchTab } from '../ui/routing.js';
+import { hideLibrary } from '../ui/library-view.js';
 
 // ============================================================================
 // STATE
 // ============================================================================
 
 let currentBlueprint = null;
+let dirty = false;
 
-// ============================================================================
-// BLUEPRINT ACCESSORS
-// ============================================================================
+// Any edit in any tab marks the blueprint as changed
+$(document).on('blueprint:updated.blueprint-actions blueprint:edited.blueprint-actions', () => markDirty());
 
-/**
- * Get the current blueprint
- * @returns {Object|null} Current blueprint or null
- */
+// Warn before closing the tab with unsaved changes
+window.addEventListener('beforeunload', (e) => {
+    if (dirty) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+});
+
+/** @returns {Object|null} Current blueprint */
 export function getCurrentBlueprint() {
     return currentBlueprint;
 }
 
 /**
- * Set the current blueprint
- * @param {Object|null} blueprint - Blueprint to set
+ * Set the current blueprint (e.g. opened from the library or generated).
+ * @param {Object|null} blueprint
+ * @param {Object} [options]
+ * @param {boolean} [options.dirty=false] - Whether it still needs saving
  */
-export function setCurrentBlueprint(blueprint) {
+export function setCurrentBlueprint(blueprint, { dirty: isDirty = false } = {}) {
     currentBlueprint = blueprint;
+    dirty = isDirty;
+    updateSaveIndicator();
 }
 
-/**
- * Check if there are unsaved changes
- * @returns {boolean} True if has unsaved changes
- */
+/** @returns {boolean} True if there are changes not yet saved to the library */
 export function hasUnsavedChanges() {
-    // Placeholder - will be implemented with proper change tracking
-    return false;
+    return dirty;
+}
+
+/** Mark the current blueprint as changed. */
+export function markDirty() {
+    if (!currentBlueprint) return;
+    dirty = true;
+    updateSaveIndicator();
+}
+
+function updateSaveIndicator() {
+    $('#saveLink').toggleClass('has-changes', dirty);
+    $('#saveLink .unsaved-dot').toggle(dirty);
+}
+
+function confirmDiscard(action) {
+    return !dirty || window.confirm(`You have unsaved changes. ${action} anyway?`);
 }
 
 // ============================================================================
-// BLUEPRINT ACTIONS
+// ACTIONS
 // ============================================================================
 
+function openBlueprint(blueprint, { isDirty = false } = {}) {
+    setCurrentBlueprint(blueprint, { dirty: isDirty });
+    $(document).trigger('blueprint:loaded', { blueprint });
+    hideLibrary();
+    updateUIState();
+    switchTab('details');
+}
+
 /**
- * Handle new blueprint creation
- * @returns {boolean} True if created successfully
+ * Create a new blank blueprint (unsaved until Save).
+ * @returns {boolean}
  */
 export function handleNewBlueprint() {
-    if (currentBlueprint && hasUnsavedChanges()) {
-        if (!confirm('You have unsaved changes. Create new blueprint anyway?')) {
-            return false;
-        }
-    }
-
-    // Create blank blueprint
-    currentBlueprint = createBlankBlueprint();
-
-    // Emit event for other modules
-    $(document).trigger('blueprint:loaded', { blueprint: currentBlueprint });
-
-    // Update UI
-    updateUIState();
-    showTabContent();
-
-    showSuccess('New blueprint created');
+    if (!confirmDiscard('Create a new blueprint')) return false;
+    openBlueprint(createBlankBlueprint(), { isDirty: true });
+    showSuccess('New blueprint created. Use Save to add it to your library.');
     return true;
 }
 
-/**
- * Handle blueprint import - triggers file input
- */
+/** Open the file picker for importing a blueprint PNG. */
 export function handleImport() {
     $('#fileInput').click();
 }
 
 /**
- * Handle file selection for import
+ * Import a blueprint PNG: into the library when connected (original bytes
+ * kept), otherwise just open it in the editor.
  * @param {Event} e - File input change event
  */
 export async function handleFileSelect(e) {
     const file = e.target.files[0];
+    $('#fileInput').val('');
     if (!file) return;
 
     if (file.type !== 'image/png') {
         showError('Please select a PNG file');
         return;
     }
+    if (!confirmDiscard('Import')) return;
 
     try {
-        const blueprint = await importBlueprintFromPng(file);
-        if (blueprint) {
-            if (currentBlueprint && hasUnsavedChanges()) {
-                if (!confirm('You have unsaved changes. Import anyway?')) {
-                    return;
-                }
-            }
-
-            currentBlueprint = blueprint;
-
-            // Emit event for other modules
-            $(document).trigger('blueprint:loaded', { blueprint: currentBlueprint });
-
-            updateUIState();
-            showTabContent();
-            showSuccess('Blueprint imported successfully');
+        if (getConnectionStatus() === 'connected') {
+            const blueprint = await importPngToLibrary(file);
+            if (!blueprint) return; // cancelled in the duplicate dialog
+            openBlueprint(blueprint);
+            showSuccess('Blueprint imported into your library');
+        } else {
+            const blueprint = await decodeBlueprintFromPNG(file);
+            blueprint.userMetadata = blueprint.userMetadata || {};
+            openBlueprint(blueprint, { isDirty: true });
+            showSuccess('Blueprint opened (not connected, so it was not added to the library)');
         }
     } catch (error) {
         console.error('[Blueprint] Import failed:', error);
-        showError(`Import failed: ${error.message}`);
+        if (error.message?.includes('does not contain blueprint data')) {
+            showError('This PNG file does not contain a blueprint.');
+        } else {
+            showError(`Import failed: ${error.message}`);
+        }
     }
-
-    // Reset file input
-    $('#fileInput').val('');
 }
 
 /**
- * Handle blueprint export to PNG
- * @returns {Promise<boolean>} True if exported successfully
+ * Save the current blueprint to the shared library.
+ * @returns {Promise<boolean>}
+ */
+export async function handleSave() {
+    if (!currentBlueprint) {
+        showWarning('No blueprint to save');
+        return false;
+    }
+    if (getConnectionStatus() !== 'connected') {
+        showError('Not connected to SillyTavern, so the library is unavailable. Use Export PNG to keep a copy.');
+        return false;
+    }
+
+    try {
+        await saveBlueprint(currentBlueprint);
+        dirty = false;
+        updateSaveIndicator();
+        $(document).trigger('library:changed');
+        showSuccess('Saved to library');
+        return true;
+    } catch (error) {
+        console.error('[Blueprint] Save failed:', error);
+        showError(`Save failed: ${error.message}`);
+        return false;
+    }
+}
+
+/**
+ * Download the current blueprint as a PNG (same format as the extension's export).
+ * @returns {Promise<boolean>}
  */
 export async function handleExport() {
     if (!currentBlueprint) {
@@ -169,11 +175,10 @@ export async function handleExport() {
     }
 
     try {
-        const { encodeBlueprintAsPNG } = await getPngCodec();
-        const pngBlob = await encodeBlueprintAsPNG(currentBlueprint, currentBlueprint.cover || null);
+        const cover = await extractCoverAsCanvas(currentBlueprint);
+        const pngBlob = await encodeBlueprintAsPNG(currentBlueprint, cover);
         const title = currentBlueprint.userMetadata?.title || currentBlueprint.blueprint_title || 'blueprint';
-        const filename = `${title.replace(/[^a-z0-9]/gi, '_')}-${currentBlueprint.blueprint_id}.png`;
-        downloadBlob(pngBlob, filename);
+        downloadBlob(pngBlob, `${title.replace(/[^a-z0-9]+/gi, '_')}-${currentBlueprint.blueprint_id}.png`);
         showSuccess('Blueprint exported as PNG');
         return true;
     } catch (error) {
@@ -184,156 +189,53 @@ export async function handleExport() {
 }
 
 /**
- * Handle JSON export
- * @returns {boolean} True if exported successfully
+ * Download the current blueprint as JSON.
+ * @returns {boolean}
  */
 export function handleJsonExport() {
     if (!currentBlueprint) {
         showWarning('No blueprint to export');
         return false;
     }
-
-    try {
-        exportBlueprintToJson(currentBlueprint);
-        showSuccess('Blueprint exported as JSON');
-        return true;
-    } catch (error) {
-        console.error('[Blueprint] JSON export failed:', error);
-        showError(`Export failed: ${error.message}`);
-        return false;
-    }
+    const blob = new Blob([JSON.stringify(currentBlueprint, null, 2)], { type: 'application/json' });
+    downloadBlob(blob, `blueprint-${currentBlueprint.blueprint_id}.json`);
+    showSuccess('Blueprint exported as JSON');
+    return true;
 }
 
 // ============================================================================
-// UI STATE MANAGEMENT
+// UI STATE
 // ============================================================================
 
 /**
- * Update the overall UI state based on current conditions
- * @param {boolean} hasBlueprint - Whether a blueprint is loaded
+ * Update the overall UI state based on whether a blueprint is loaded
+ * @param {boolean} [hasBlueprint]
  */
 export function updateUIState(hasBlueprint) {
     if (hasBlueprint === undefined) {
         hasBlueprint = !!currentBlueprint;
     }
 
-    // Show/hide empty state
     $('#emptyState').toggle(!hasBlueprint);
     $('.sidebar-link[data-tab]').toggle(hasBlueprint);
+    $('.requires-blueprint').toggle(hasBlueprint);
 
-    // Update header title
-    const title = currentBlueprint?.blueprint_title
-        ? `${currentBlueprint.blueprint_title} - Story Mode Scenario Blueprint Editor`
+    const title = currentBlueprint?.userMetadata?.title || currentBlueprint?.blueprint_title;
+    document.title = title
+        ? `${title} - Story Mode Scenario Blueprint Editor`
         : 'Story Mode Scenario Blueprint Editor';
-    document.title = title;
 
-    // Emit event for other modules
+    updateSaveIndicator();
     $(document).trigger('ui:state-changed', { hasBlueprint });
 }
 
-/**
- * Show the tab content area
- */
-function showTabContent() {
-    $(document).trigger('tab:show');
-}
-
-// ============================================================================
-// BLUEPRINT OPERATIONS
-// ============================================================================
-
-/**
- * Create a blank blueprint
- * @returns {Object} Blank blueprint object
- */
-function createBlankBlueprint() {
-    // Placeholder - will import from lib/blueprint/blank-blueprint.js
-    return {
-        blueprint_id: crypto.randomUUID(),
-        story_type_id: '',
-        story_type_name: '',
-        core_premise: '',
-        setting: {
-            location: '',
-            time_period: '',
-            atmosphere: '',
-        },
-        protagonist_group: {
-            description: '',
-            shared_goal: '',
-            group_dynamic: '',
-        },
-        antagonistic_forces: {
-            description: '',
-            nature: 'external',
-            motivation: '',
-            manifestations: [],
-        },
-        arc_structure: {
-            opening_hook: '',
-            escalation_pattern: '',
-            climax_nature: '',
-            resolution_style: '',
-        },
-        character_arcs: [],
-        scene_plan: [],
-        tone_and_style: {
-            primary_tone: '',
-            narrative_voice: '',
-            pacing: '',
-            key_stylistic_elements: [],
-        },
-        content_boundaries: {
-            violence_level: 'none',
-            romance_level: 'none',
-        },
-        genre_realism_notes: {
-            metaphor_level_used: 'literal',
-            implementation_notes: '',
-        },
-    };
-}
-
-/**
- * Import blueprint from PNG file
- * @param {File} file - PNG file
- * @returns {Promise<Object|null>} Blueprint object or null if cancelled
- */
-export async function importBlueprintFromPng(file) {
-    try {
-        const { decodeBlueprintFromPNG } = await getPngCodec();
-        const blueprint = await decodeBlueprintFromPNG(file);
-        // Ensure blueprint has required metadata
-        blueprint.userMetadata = blueprint.userMetadata || {};
-        return blueprint;
-    } catch (error) {
-        console.error('[Blueprint] PNG decode failed:', error);
-        // Show user-friendly error message
-        if (error.message.includes('does not contain blueprint data')) {
-            showError('This PNG file does not contain a blueprint. Please select a valid blueprint PNG.');
-        } else if (error.message.includes('too large')) {
-            showError('PNG file is too large. Maximum size is 50MB.');
-        } else if (error.message.includes('timeout')) {
-            showError('PNG file took too long to process. It may be corrupted.');
-        } else {
-            showError(`Failed to import blueprint: ${error.message}`);
-        }
-        return null;
-    }
-}
-
-/**
- * Export blueprint to PNG (removed - now handled inline in handleExport)
- * @deprecated Use handleExport() instead
- */
-
-/**
- * Export blueprint to JSON file
- * @param {Object} blueprint - Blueprint to export
- */
-function exportBlueprintToJson(blueprint) {
-    const data = JSON.stringify(blueprint, null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
-    const filename = `blueprint-${blueprint.blueprint_id}.json`;
-    downloadBlob(blob, filename);
+function downloadBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }
