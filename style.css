@@ -56,6 +56,7 @@
 @import url('./lib/css/pacing-controls.css');
 @import url('./lib/css/character-picker.css');
 @import url('./lib/css/overview-mode.css');
+@import url('./lib/css/structure-editor.css');
 
 /* Legacy */
 @import url('./lib/css/legacy-support.css');

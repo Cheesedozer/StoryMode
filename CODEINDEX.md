@@ -540,6 +540,11 @@ lib/scenario/
 ├── beats.js (imports state-manager)
 └── character-injection.js (imports blueprint/characters/*, scenario/injection)
 
+lib/editor/structure/
+├── model.js (imports story/shapes, story/arcs, story/chapters, story/conditions, story/story-events)
+├── sections.js (imports model, story/*)
+└── structure-editor.js (imports sections, model; jQuery)
+
 lib/story/
 ├── shapes.js (imports core/phases only; usable by the standalone editor)
 ├── arcs.js (imports shapes)
@@ -703,6 +708,8 @@ const url = new URL('../../data/author_styles.json', import.meta.url);
 | Controller: summary | `lib/ui/controller-panel-summary.js` | `blueprint/module` |
 | Arc shapes catalogue | `lib/story/shapes.js` | `data/story_types.json` (`defaultShape`), `editor/story-type-form.js` |
 | Spine/threads at runtime and in generation | `lib/story/arcs.js` | `core/arc-engine.js`, `scenario/injection.js`, `generation/prompts.js`, `generation/orchestration.js`, `blueprint/normalization.js` |
+| Structure editor (both editors) | `lib/editor/structure/structure-editor.js` | `model.js`, `sections.js`, `editor/blueprint-editor.js` (mount), `standalone/editors/structure-editor.js` |
+| Ledger compaction | `lib/story/drama.js` (`scheduleLedgerCompaction`) | `story/ledger.js` (`compactChapter`, `unfoldSummary`), `blueprint/summarization.js` |
 | Chapters | `lib/story/chapters.js` | `scenario/injection.js`, `generation/orchestration.js`, `generation/staged-scenes.js`, `blueprint/normalization.js` |
 | Tentpoles, complications, ending lean | `lib/story/drama.js` | `story-events.js`, `conditions.js`, `index.js` (GENERATION_STARTED), `core/event-handlers.js` (epilogue, trackReply) |
 | Story tracker (inline / secondary model) | `lib/story/tracker.js` | `core/event-handlers.js` (`trackReply`, `applyStorySignals`), `index.js` (`waitForTracker`) |

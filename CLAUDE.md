@@ -26,6 +26,8 @@ Story Mode is a SillyTavern extension providing narrative structure through four
 
 **Arc shapes:** `lib/story/shapes.js` (catalogue, no SillyTavern imports) and `lib/story/arcs.js` (spine + up to 2 threads, current stages, `<arcs>` block, generation rules). See ARCHITECTURE.md.
 
+**Structure editor:** `lib/editor/structure/` (model, sections, structure-editor) edits arcs, chapters, tentpoles, complications, ending conditions and choice tags; mounted as the Structure tab in both editors.
+
 **Chapters and drama manager:** `lib/story/chapters.js` (chapters own arc stages), `lib/story/conditions.js` (tag/stage/chapter conditions), `lib/story/story-events.js` (normalize tentpoles, complications, ending conditions), `lib/story/drama.js` (runtime: tentpoles, complications on stalls, ending lean). See ARCHITECTURE.md.
 
 **Tracker and ledger:** `lib/story/tracker.js` (inline markers or a secondary model after every reply), `lib/story/ledger.js` (what the story has established, swipe-aware), `lib/ui/ledger-panel.js` (panel section + editor, hidden by default). See ARCHITECTURE.md.
@@ -247,6 +249,17 @@ window.StoryModeDebug.auditHandlers({ showAll: true })
 - Generate Heist + Romance → chapters list `advances`; romance crisis is not in a chapter after the spine's climax
 - v1 blueprint → `<arcs>` shows an Escalation spine following scene phases
 
+### Structure Editor
+- Structure tab in the extension editor and the standalone editor shows six sections
+- Change an arc's shape with chapters pointing at it → confirm, references removed
+- Create chapters, move a scene, remove a chapter → its stages and scenes join the previous chapter
+- Put a thread climax after the spine's → structure check flags it; "Apply arc rules" fixes it
+- Save, export PNG, re-import → every v2 field identical, `schema_version: 2`
+
+### Ledger Compaction & Stall
+- Finish a chapter with 4+ ledger entries → one "chapter N summary" entry with all tags; Unfold restores
+- Swipe the same reply several times → stall does not grow
+
 ### Chapters & Drama Manager
 - Generated blueprint has `chapters`, `tentpoles`, `complications`, and endings with `reached_if`
 - Reach a tentpole's chapter → `<happening_now>` appears whatever the player did; it says "under way" after one reply
@@ -337,8 +350,7 @@ Bad Request {"error":{"message":"Invalid option: expected one of \"xhigh\"|\"hig
 
 ### General
 - Phase proportions are fixed (25/50/15/10) and shared with blueprint scenes; shapes map their stages onto these slots
-- No ledger compaction into chapter summaries yet; the ledger budget keeps the newest entries
-- Stall counting also counts regenerated replies
+- The extension editor's Structure tab is covered by module tests and the shared component's browser test, not yet clicked through inside SillyTavern
 - No sequential arcs (Journey then Siege) yet; one spine plus up to two threads
 - Story types manually selected
 - Regeneration edge cases partially addressed

@@ -119,6 +119,21 @@ Runtime (`lib/story/drama.js`, state in `chatState.scenario`: `firedTentpoles`, 
 - Injection: `<happening_now>` after the scene (first reply "bring it in now", then "under way"), `<ending_direction>` during the resolution, the ending scene's situation replaced by the lean ending.
 - Tags: the inline `@@NOTE: ...@@` marker accepts `#tag` tokens; the signals block and the secondary tracker list the tags the story checks (current scene's choice tags first). Tags are editable in the ledger editor.
 - The epilogue request receives the active ledger and the lean ending, with `{{user}}` replaced by the persona name.
+- A regenerated or swiped reply (same message index as the last one counted) does not add to `stall` or age events; it can still reset `stall` by making progress.
+
+### Ledger compaction
+
+Ledger entries record their `chapter`. When play has moved past a chapter that has at least 4 active entries (settings: `ledger.compactChapters`, `ledger.compactMinEntries`), `evaluateDrama` folds them in the background: the Summary API profile (or the main API) condenses them into one `summary` entry carrying the union of their tags and `who_knows`, inserted where the chapter began. The originals stay stored with `compactedInto` and leave the prompt; deleting the summary in the ledger editor ("Unfold") restores them.
+
+## Structure Editor
+
+`lib/editor/structure/` is one editor for every v2 field, shared by the extension's blueprint editor (Structure tab, mounted into a placeholder after the tab renders) and the standalone editor (Structure tab via `standalone/editors/structure-editor.js`). It needs jQuery only and takes the host's input/button classes so each host styles it natively.
+
+- `model.js`: pure operations (arc shape changes prune stage references after a confirm, add/remove threads, create/add/remove/move chapters with scenes and stages following, scene → chapter assignment, `checkStructure` and `fixArcConvergence`, add/remove tentpoles and complications, condition cleanup).
+- `sections.js`: HTML for Story Arcs, Chapters (with scene assignment), Tentpoles, Complications, Ending Conditions and Choice Tags, plus a shared condition editor; a structure check banner offers "Apply arc rules".
+- `structure-editor.js`: write-through events (`data-path`/`data-kind`) and structural actions (`data-action`), calling the host's `onChange`.
+
+Saved PNGs carry `schema_version: 2` in the blueprint JSON (the PNG container version is unchanged); older extension versions ignore the new fields.
 
 ## Story Tracker and Ledger
 

@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (editor support)
+- **Structure tab** in both the extension's blueprint editor and the standalone editor: story arcs (shapes, questions, stage notes), chapters (titles, summaries, the stages each advances, which scenes they hold), tentpoles, complications, ending conditions and choice tags, with a structure check that flags thread climaxes out of order and fixes them
+- Saved blueprints record `schema_version: 2`
+- **Ledger compaction:** when a chapter ends, its ledger entries fold into one summary that keeps every tag; unfold it in the ledger editor to restore them (Story Tracking settings: Fold Finished Chapters)
+
+### Changed
+- Swiping or regenerating a reply no longer counts toward the stall that brings in a complication
+- Scene summarization reuses the shared reasoning-retry request instead of its own copy
+
 ### Added (chapters and drama manager)
 - **Chapters:** generated blueprints group scenes into chapters, and chapters say which arc stages they advance. The arc blending rules now apply per chapter. Older blueprints play as one chapter per scene
 - **Tentpoles:** 2–4 situations per blueprint that arrive at a set chapter or arc stage whatever the player has done; the player decides how to meet them. The story type's memorable element becomes one of them

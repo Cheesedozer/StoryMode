@@ -45,6 +45,7 @@ standalone/
 │   ├── details-editor.js         # Top-level fields, write-through by path
 │   ├── scenes-editor.js          # Scene CRUD, beats, reordering
 │   ├── characters-editor.js      # Character arc CRUD
+│   ├── structure-editor.js       # Structure tab: mounts lib/editor/structure
 │   ├── cover-editor.js           # Cover tab UI
 │   ├── cover-model.js            # metadata.coverGallery model (shared format)
 │   └── form-fields.js            # Modal form builder/reader
@@ -178,6 +179,7 @@ export function renderDetailsTab() { /* huge function */ }
 - [ ] Details edits change the blueprint (unsaved dot appears); Save writes it; the SillyTavern library shows the change
 - [ ] Scenes: add, edit (beats), reorder, delete; edited scenes keep fields not shown in the form
 - [ ] Characters: add, edit, delete arcs
+- [ ] Structure: edit arcs, chapters, tentpoles, complications, ending conditions, choice tags; Save keeps them
 - [ ] Cover: upload, generate, select, delete; saved PNG keeps the chosen cover
 - [ ] Import PNG (duplicate dialog), Export PNG, Export JSON, library card export
 - [ ] Saving in SillyTavern refreshes the editor's library, and vice versa

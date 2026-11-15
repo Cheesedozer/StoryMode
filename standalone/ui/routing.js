@@ -8,6 +8,7 @@ import { renderScenesTab } from '../editors/scenes-editor.js';
 import { renderCharactersTab } from '../editors/characters-editor.js';
 import { renderCoverTab } from '../editors/cover-editor.js';
 import { renderLorebookTab } from '../editors/lorebook-editor.js';
+import { renderStructureTab } from '../editors/structure-editor.js';
 import { getCurrentBlueprint } from '../handlers/blueprint-actions.js';
 import { sanitizeFilename } from '../../lib/blueprint/utils.js';
 
@@ -39,6 +40,11 @@ const TAB_RENDERERS = {
     },
     characters: {
         render: renderCharactersTab,
+        options: () => ({ readonly: false }),
+        cacheFullContent: false,
+    },
+    structure: {
+        render: renderStructureTab,
         options: () => ({ readonly: false }),
         cacheFullContent: false,
     },
