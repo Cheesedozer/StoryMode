@@ -9,14 +9,13 @@
 ```
 1. In SillyTavern, click Extensions → Install Extension
 2. Enter this repository URL:
-   https://github.com/Prompt-And-Circumstance/StoryMode
+   https://github.com/Cheesedozer/StoryMode
 3. Story Mode will appear in Extensions → Story Mode
 ```
 
 ---
 ## Scenario Blueprint Schema
-Details of the schema for the scenario cards implemented in this extension are available here:
-https://github.com/Prompt-And-Circumstance/scenario-card-spec-v1
+The blueprint format is specified in [docs/blueprint-spec-v2.md](./docs/blueprint-spec-v2.md). Version 2 extends the [v1 scenario card spec](https://github.com/Prompt-And-Circumstance/scenario-card-spec-v1) with story arcs, chapters, tentpoles, complications, conditional endings and choice tags; v1 blueprints remain valid.
 
 ## Overview
 
