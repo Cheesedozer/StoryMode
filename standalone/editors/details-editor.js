@@ -79,8 +79,8 @@ const SECTIONS = [
     {
         id: 'content', title: 'Content & Interpretation', icon: 'fa-shield-halved',
         fields: [
-            { path: 'content_boundaries.violence_level', label: 'Violence Level', kind: 'select', options: DROPDOWN_OPTIONS.violenceLevel, allowEmpty: 'Not specified' },
-            { path: 'content_boundaries.romance_level', label: 'Romance Level', kind: 'select', options: DROPDOWN_OPTIONS.romanceLevel, allowEmpty: 'Not specified' },
+            { path: 'content_boundaries.violence_level', label: 'Intended Violence', help: 'What this story aims for. Your Mature Content setting in SillyTavern decides how far it can go.', kind: 'select', options: DROPDOWN_OPTIONS.violenceLevel, allowEmpty: 'Not specified' },
+            { path: 'content_boundaries.romance_level', label: 'Intended Romance', kind: 'select', options: DROPDOWN_OPTIONS.romanceLevel, allowEmpty: 'Not specified' },
             { path: 'genre_realism_notes.metaphor_level_used', label: 'Metaphor Level', kind: 'select', options: DROPDOWN_OPTIONS.metaphorLevel, allowEmpty: 'Not specified' },
             { path: 'genre_realism_notes.implementation_notes', label: 'Interpretation Notes', kind: 'area', rows: 2 },
         ],

@@ -40,7 +40,7 @@ Design the foundation every later phase builds on. The protagonist is the player
 Return a JSON object with these fields:
 
 ### 1. core_premise (string)
-One or two sentences that pass the goal–motivation–conflict test. Name the protagonist by role, the catalyst that starts the story, what they want, why they want it, and who or what stands in their way. Leave the outcome open.
+One to five sentences that pass the goal–motivation–conflict test: the protagonist (by role), the catalyst that starts the story, what they want, why they want it, and who or what stands in their way. Use the room to make it specific to this story rather than compressing it into a slogan. Leave the outcome open.
 
 ### 2. blueprint_title (string, optional)
 A short, specific title.
@@ -74,7 +74,16 @@ A short, specific title.
 }
 ```
 
-### 6. tone_and_style (object)
+### 6. content_boundaries (object)
+The intensity this story intends, within whatever the user's content settings allow (they decide how explicit anything can be; these fields describe the story's own intent):
+```json
+{
+  "violence_level": "none | mild | moderate | intense",
+  "romance_level": "none | mild | moderate | explicit"
+}
+```
+
+### 7. tone_and_style (object)
 ```json
 {
   "primary_tone": "overall mood, drawn from the story type, scenario, and writing style",

@@ -18,7 +18,6 @@ Return a single JSON object with these fields:
   - `***Literary Devices:***` how foreshadowing, symbolism and irony are used
   - `***Subgenre:***` specific classification
   - `***Pacing:***` how the story moves
-  - `***POV:***` point of view that suits the genre
   - `***Structure:***` how events are typically organised (investigation, journey, escalating siege…)
   - `***Priority:***` the top three things to get right, in order
 - **progressTemplate**: `Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).`
@@ -28,10 +27,10 @@ Return a single JSON object with these fields:
   - climax (~15%): the shape of the decisive confrontation
   - resolution (~10%): what the aftermath focuses on
   Leave outcomes open: describe the situation each phase creates, and let the player's choices decide how it turns out.
-- **memorableElement**: the kind of signature moment this genre builds toward:
-  - `type`: revelation | climax | twist | emotional_peak
+- **memorableElement**: the signature moment this genre builds toward, written as a situation that will happen to the protagonist no matter what, which they can steer but not prevent (like a car coming head-on: they can't stop it arriving, only choose how to swerve):
+  - `type`: revelation | climax | twist | emotional_peak | moral_choice
   - `name`: a short evocative name
-  - `description`: what the moment is and why it lands
+  - `description`: what happens and why it can't be avoided, then the ways the protagonist could respond. Leave the outcome open
   - `placement`: setup | escalation | climax | resolution
   - `setup_hooks`: 2–4 things to plant earlier so the moment feels earned
 

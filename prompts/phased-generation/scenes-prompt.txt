@@ -47,7 +47,7 @@ The story type builds toward a signature moment:
 **Setup hooks to plant in earlier scenes:**
 {{MEMORABLE_ELEMENT_SETUP_HOOKS}}
 
-Place this moment in a scene in the recommended phase, adapted to this story, and plant the setup hooks earlier so it feels earned. Design it as a situation the protagonist walks into, so the player's choices still shape how it plays out.
+Place this moment in a scene in the recommended phase, adapted to this story, and plant the setup hooks earlier so it feels earned. It is unavoidable: it happens whatever the protagonist has done, the way an oncoming car arrives whether or not you saw it coming. Write it as events and other characters' actions; how the protagonist meets it, and therefore how it turns out, is left to the player.
 
 ## USER SCENARIO
 

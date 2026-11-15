@@ -25,7 +25,6 @@ STORY PROMPT:
 
 ***Pacing:*** [Pacing description]
 
-***POV:*** [Point of view approach]
 
 ***Structure:*** [Narrative structure approach]
 

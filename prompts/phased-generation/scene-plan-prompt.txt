@@ -45,7 +45,7 @@ For a turning point that belongs to the player persona, the scene creates the si
 **Setup Hooks (plant these in earlier scenes):**
 {{MEMORABLE_ELEMENT_SETUP_HOOKS}}
 
-Place this moment in a scene in the recommended phase, adapted to this story, and plant the setup hooks earlier so it feels earned.
+Place this moment in a scene in the recommended phase, adapted to this story, and plant the setup hooks earlier so it feels earned. It is unavoidable: it happens whatever the protagonist has done. How they meet it, and how it turns out, is left to the player.
 
 ## USER SCENARIO
 

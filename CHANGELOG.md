@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The v2 IndexedDB to File API blueprint library migration was never invoked; it now runs once at startup
 - Hard-coded `third-party/Extension-StoryMode/` paths replaced with the extension's real base URL, so the extension works under any install folder name (including SillyBunny per-user extension folders)
 
+### Changed (decisions)
+- Core premises may run 1–5 sentences, so the goal–motivation–conflict test doesn't force a cramped slogan
+- POV removed from story types; the writing style decides point of view
+- A blueprint's violence/romance levels now describe the story's intended intensity within the Mature Content setting (generated in Phase 1; injected as `intended_intensity`); Mature Content "Off" adds no guidance
+- All 43 memorable elements rewritten as unavoidable situations the player can steer but not prevent; generation prompts and the story-type editor describe them that way
+
 ### Added (standalone editor)
 - **The Fullscreen Editor is finished and re-enabled.** It shares the extension's library code through an import map and small shims, so blueprints it saves are byte-compatible with the extension's
 - AI generation, cover generation, personas and characters run through the open SillyTavern tab over a BroadcastChannel bridge (`lib/bridge/standalone-host.js`), using your real connection profiles and image source
