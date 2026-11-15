@@ -28,7 +28,7 @@ import { showLibrary, hideLibrary, initLibraryHandlers } from './ui/library-view
 // ============================================================================
 
 const APP_NAME = 'Story Mode Scenario Blueprint Editor';
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.5.0';
 
 // ============================================================================
 // STATE

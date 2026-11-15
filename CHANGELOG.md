@@ -5,7 +5,10 @@ All notable changes to Story Mode will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.5.0] - 2026-11-15
+
+### Fixed (characters and personas)
+- Generated blueprints now store the personas they were written for (`personaData`), so exported PNGs embed the persona; export also embeds any character arc that matches one of your personas, which covers older blueprints
 
 ### Added (editor support)
 - **Structure tab** in both the extension's blueprint editor and the standalone editor: story arcs (shapes, questions, stage notes), chapters (titles, summaries, the stages each advances, which scenes they hold), tentpoles, complications, ending conditions and choice tags, with a structure check that flags thread climaxes out of order and fixes them
