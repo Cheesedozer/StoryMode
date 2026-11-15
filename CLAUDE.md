@@ -14,6 +14,7 @@ Story Mode is a SillyTavern extension providing narrative structure through four
 | **[ARCHITECTURE.md](./ARCHITECTURE.md)** | System design, data flow, state management | Modifying core logic, understanding pacing modes |
 | **[CHARACTERS-AND-PERSONAS.md](./CHARACTERS-AND-PERSONAS.md)** | Character/persona data flow, export/import, status detection | Modifying character linking, import, or editor |
 | **[CODEINDEX.md](./CODEINDEX.md)** | File structure, module dependencies, imports | Finding files, understanding module relationships |
+| **[docs/blueprint-spec-v2.md](./docs/blueprint-spec-v2.md)** | Blueprint JSON format (v2: arcs, chapters, tentpoles, complications, endings) | Changing blueprint fields or generation output |
 | **[Planning/README.md](./Planning/README.md)** | Active/completed plans, feature roadmap | Planning new features |
 
 ## Quick Architecture Summary

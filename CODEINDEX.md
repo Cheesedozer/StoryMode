@@ -15,6 +15,7 @@ Extension-StoryMode/
 ├── ARCHITECTURE.md          # System design documentation
 ├── CHANGELOG.md             # Version history
 ├── CODEINDEX.md             # This file
+├── docs/blueprint-spec-v2.md  # Blueprint format specification
 ├── README.md                # Project overview
 ├── standalone/              # Standalone fullscreen blueprint editor (no build step)
 │   ├── index.html           # Static entry point, CDN deps (jQuery, toastr, Font Awesome)
