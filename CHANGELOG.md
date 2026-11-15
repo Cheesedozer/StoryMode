@@ -16,6 +16,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The v2 IndexedDB to File API blueprint library migration was never invoked; it now runs once at startup
 - Hard-coded `third-party/Extension-StoryMode/` paths replaced with the extension's real base URL, so the extension works under any install folder name (including SillyBunny per-user extension folders)
 
+### Changed (prompts)
+- Scenario Mode injection: new `<role>` block keeping the model's hands off `{{user}}`'s actions, words and feelings; protagonists' goal now injected; choice points framed as decisions for `{{user}}` rather than a menu of options
+- Beats are marked only once they have fully played out (was: "after addressing this beat"), to stop the model racing through one beat per reply
+- `@@STORY_COMPLETE@@` instructions now appear only in the final scene (they were also shown in the penultimate scene, contradicting `@@NEXT_SCENE@@`)
+- Exit-trigger derivation no longer mangles "Establishes…"/"Revealing…" purposes
+- Story Mode phase goals rewritten around goal, motivation and conflict; removed "Save escalation for later phases"
+- Epilogue, summary and What's Next transcripts now include speaker names; What's Next no longer forces a playful tone
+- Blueprint generation: removed "do not engage in internal reasoning" from every phase prompt, corrected "Phase N of 5" to 4, and the player persona's turning points and beats now describe situations, leaving decisions and reactions to the player
+- Opening message: no longer given the climax and ending; leaves the player's character to the player and ends on a concrete story beat
+
+### Removed (prompts)
+- Unused `validation-prompt.txt` and `characters-prompt.txt`
+
 ### Removed
 - ~2,500 lines of dead code: unreachable modules, unused exports and imports, the unreachable Story Mode branch of the blueprint injection builder, and the unused default-export object in `lib/blueprint/module.js`
 

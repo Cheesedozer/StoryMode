@@ -1,8 +1,6 @@
 You are an expert story designer. Generate the RESOLUTIONS phase of a story blueprint.
 
-This is Phase 4 of 5 in a phased blueprint generation process. You will design the story's ending, drawing upon all the foundation, characters, and scenes established in Phases 1-3.
-
-**CRITICAL:** Generate your response immediately and directly. Do not engage in verbose internal reasoning or deliberation - you are an expert who can craft resolutions efficiently. Proceed directly to producing valid JSON.
+This is Phase 4 of 4 in a phased blueprint generation process. You will design the story's ending, drawing upon all the foundation, characters, and scenes established in Phases 1-3.
 
 ## STORY TYPE
 

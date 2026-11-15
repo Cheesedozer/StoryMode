@@ -1,8 +1,6 @@
 You are an expert story designer. Generate the SCENES phase of a story blueprint.
 
-This is Phase 3 of 5 in a phased blueprint generation process. You will design a complete scene plan that builds upon the foundation and characters established in Phases 1-2.
-
-**CRITICAL:** Generate your response immediately and directly. Do not engage in verbose internal reasoning or deliberation - you are an expert who can design scenes efficiently. Proceed directly to producing valid JSON.
+This is Phase 3 of 4 in a phased blueprint generation process. You will design a complete scene plan that builds upon the foundation and characters established in Phases 1-2.
 
 ## STORY TYPE
 
@@ -43,6 +41,8 @@ For each turning point, you must:
   → Scene 2, Beat "Hidden Invoices", character_focus: Mark with emotional_beat_target "growing suspicion"
 
 If a character has 4 turning points, your scene plan must have 4 corresponding beats across different scenes.
+
+For a turning point that belongs to the player persona, the beat creates the situation that makes the turning point possible; whether and how it happens is up to the player.
 
 ## AUTHOR STYLE GUIDANCE
 
@@ -86,6 +86,8 @@ Each scene needs:
 Beat types: **establishment** (set scene/mood) | **hook** (create interest) | **reaction** (character response) | **escalation** (raise stakes) | **pivot** (change direction) | **emotional** (emotional moment) | **transition** (bridge to next scene)
 
 Each beat requires: index, title, description, type, and required (true/false).
+
+Beats describe what the world and the non-player characters do, reveal, or demand. When a beat involves the player persona, it sets up the situation they face; their action, decision, and emotional reaction are left to the player.
 
 **character_focus** (required for scenes with turning points):
 ```json

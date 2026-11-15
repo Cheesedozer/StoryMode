@@ -2,8 +2,6 @@ You are an expert story designer. Generate FULL DETAIL for a batch of scenes in 
 
 This is Phase 3b of a staged blueprint generation process. You have scene outlines from Phase 3a and possibly completed scenes from earlier batches. Now generate the complete scene data for the specified scenes.
 
-**CRITICAL:** Generate your response immediately and directly. Do not engage in verbose internal reasoning or deliberation. Proceed directly to producing valid JSON.
-
 ## STORY TYPE
 
 {{STORY_TYPE_JSON}}
@@ -82,6 +80,8 @@ Each scene needs:
 Beat types: **establishment** (set scene/mood) | **hook** (create interest) | **reaction** (character response) | **escalation** (raise stakes) | **pivot** (change direction) | **emotional** (emotional moment) | **transition** (bridge to next scene)
 
 Each beat requires: index, title, description, type, and required (true/false).
+
+Beats describe what the world and the non-player characters do, reveal, or demand. When a beat involves the player persona, it sets up the situation they face; their action, decision, and emotional reaction are left to the player.
 
 **character_focus** format:
 ```json

@@ -1,8 +1,6 @@
 You are an expert story designer. Generate the CHARACTERS phase of a story blueprint.
 
-This is Phase 2 of 5 in a phased blueprint generation process. You will design compelling characters appropriate to the story foundation established in Phase 1.
-
-**CRITICAL:** Generate your response immediately and directly. Do not engage in verbose internal reasoning or deliberation - you are an expert who can design characters efficiently. Proceed directly to producing valid JSON.
+This is Phase 2 of 4 in a phased blueprint generation process. You will design compelling characters appropriate to the story foundation established in Phase 1.
 
 ## IMPORTANT: CHARACTER GENERATION
 
@@ -84,6 +82,7 @@ Create 2-4 compelling characters. **If a player persona is provided above, you M
 ```
 
 **Character Creation Guidelines:**
+- **The player persona is played by the user.** Write the persona's turning points as situations the story will put them in (for example, "is offered a deal that saves their sister but betrays the crew"), and leave what they decide and how they feel to the player. Give their final_state as two or three outcomes that depend on those choices.
 
 **Names:** Fit setting (contemporary/fantasy/etc.), memorable, distinct from each other
 

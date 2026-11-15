@@ -1,8 +1,6 @@
 You are an expert story designer. Generate the FOUNDATION phase of a story blueprint.
 
-This is Phase 1 of 5 in a phased blueprint generation process. You are responsible for establishing the core premise, setting, antagonistic forces, arc structure, and tone/style that will guide the rest of the blueprint.
-
-**CRITICAL:** Generate your response immediately and directly. Do not engage in verbose internal reasoning or deliberation - you are an expert who can design story foundations efficiently. Proceed directly to producing valid JSON.
+This is Phase 1 of 4 in a phased blueprint generation process. You are responsible for establishing the core premise, setting, antagonistic forces, arc structure, and tone/style that will guide the rest of the blueprint.
 
 ## STORY TYPE
 

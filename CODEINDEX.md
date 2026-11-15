@@ -73,14 +73,12 @@ Extension-StoryMode/
 │   │   └── metaphor-instructions.txt
 │   ├── phased-generation/
 │   │   ├── foundation-prompt.txt
-│   │   ├── characters-prompt.txt
 │   │   ├── characters-prompt-generate.txt
 │   │   ├── characters-prompt-with-data.txt
 │   │   ├── scene-plan-prompt.txt
 │   │   ├── scene-batch-prompt.txt
 │   │   ├── scenes-prompt.txt
-│   │   ├── resolutions-prompt.txt
-│   │   └── validation-prompt.txt
+│   │   └── resolutions-prompt.txt
 │   ├── scene-management/
 │   │   ├── opening-message.txt
 │   │   ├── scene-summary.txt

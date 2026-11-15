@@ -2,8 +2,6 @@ You are an expert story designer. Generate the SCENE PLAN (lightweight outlines)
 
 This is Phase 3a of a staged blueprint generation process. You will design scene outlines that will later be expanded with full detail (beats, choice points, events) in subsequent calls.
 
-**CRITICAL:** Generate your response immediately and directly. Do not engage in verbose internal reasoning or deliberation. Proceed directly to producing valid JSON.
-
 ## STORY TYPE
 
 {{STORY_TYPE_JSON}}
@@ -36,6 +34,8 @@ This is Phase 3a of a staged blueprint generation process. You will design scene
 For each turning point, you must:
 1. Assign it to a specific scene (via `character_focus`)
 2. Set a `turning_point` field referencing the exact turning point text from Phase 2
+
+For a turning point that belongs to the player persona, the beat creates the situation that makes the turning point possible; whether and how it happens is up to the player.
 
 ## AUTHOR STYLE GUIDANCE
 

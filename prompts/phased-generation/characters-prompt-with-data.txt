@@ -1,8 +1,6 @@
 You are an expert story designer. Generate the CHARACTERS phase of a story blueprint.
 
-This is Phase 2 of 5 in a phased blueprint generation process. You will design character arcs for the **provided characters**, ensuring they work within the story foundation established in Phase 1.
-
-**CRITICAL:** Generate your response immediately and directly. Do not engage in verbose internal reasoning or deliberation - you are an expert who can design characters efficiently. Proceed directly to producing valid JSON.
+This is Phase 2 of 4 in a phased blueprint generation process. You will design character arcs for the **provided characters**, ensuring they work within the story foundation established in Phase 1.
 
 ## IMPORTANT: CHARACTER CONSTRAINT
 
@@ -128,6 +126,7 @@ Each character from the provided data MUST have an arc entry, **including the pl
 - Final states should be achievable through different player choices (not a single fixed outcome).
 - Emotional trajectories should capture the inner journey, not just external events.
 - Arcs should interweave - characters' turning points can and should reference each other.
+- **The player persona is played by the user.** Write the persona's turning points as situations the story will put them in (for example, "is offered a deal that saves their sister but betrays the crew"), and leave what they decide and how they feel to the player. Give their final_state as two or three outcomes that depend on those choices.
 
 ## EXAMPLE OUTPUT
 
