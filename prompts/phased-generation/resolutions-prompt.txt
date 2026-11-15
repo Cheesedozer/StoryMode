@@ -48,6 +48,18 @@ The foundation, characters, and scenes established in previous phases provide th
 
 {{SCENE_PLAN_SUMMARY}}
 
+## WHAT THE STORY REMEMBERS
+
+During play, a record of what the protagonist did is kept as short tags. These tags come from the choices above: {{TAG_VOCABULARY}}
+
+The story has {{CHAPTER_COUNT}} chapters (0-based in conditions), and these arc stages: {{STAGE_KEYS}}
+
+Endings and complications are chosen at runtime by checking conditions against that record:
+```json
+{ "tags_all": ["every one of these"], "tags_any": ["at least one of these"], "tags_none": ["none of these"], "stage": "arc:stage reached", "chapter_min": 2 }
+```
+Use any subset of these keys. Use the tags above; where an ending or complication depends on something no choice covers, add a new short snake_case tag that names an action (`spared_the_guard`, `told_mira_the_truth`).
+
 ## WRITING STYLE
 
 {{AUTHOR_STYLE_SECTION}}
@@ -66,7 +78,8 @@ The foundation, characters, and scenes established in previous phases provide th
 
 Design three endings the story can reach, each the result of a different pattern of choices by the protagonist. Together they cover the main ways the central conflict can resolve.
 
-- **primary_ending** is the ending that best fits the story's tone and the arcs as planned, if the player follows the most natural path. It is a destination the story can reach, not one it is steered toward.
+- Each ending has a **reached_if** condition: the tags that lead there. The ending whose condition best matches what the player actually did is the one the story moves toward. Make the conditions distinguish the endings from each other.
+- **primary_ending** is the ending that best fits the story's tone and the arcs as planned, if the player follows the most natural path. It is also the fallback when no other ending matches, so its reached_if can be light or empty.
 - **alternate_endings** are two meaningfully different outcomes: different winners, costs, or answers to the story's central question, not variations in detail.
 - Each ending's description starts with the choices and events that lead there, then describes the climax's outcome and its aftermath.
 - Character outcomes follow from each character's arc in Phase 2, whether completed or deliberately subverted. For the player persona, describe their situation at the end rather than their feelings.
@@ -80,7 +93,9 @@ Return a JSON object with these fields:
 
 ```json
 {
+  "id": "snake_case_id",
   "title": "2-4 word label",
+  "reached_if": { "tags_any": ["tags that lead here"], "tags_none": ["tags that rule it out"] },
   "description": "3-5 sentences: the choices and events that lead here, then the outcome of the climax and its aftermath",
   "character_outcomes": [
     { "character_name": "exact name from Phase 2", "outcome": "where they end up" }
@@ -92,6 +107,20 @@ Return a JSON object with these fields:
 ### alternate_endings (array of exactly 2)
 
 Each has the same shape as primary_ending.
+
+### complications (array of 6-10)
+
+Complications are brought in when the story stalls: when several exchanges pass without progress, the runtime picks the most specific complication whose condition holds. Each one is a pressure the world applies because of what has or has not happened: a consequence of an earlier choice, a rival's move, a deadline arriving. Make most of them depend on tags or stages, and keep two or three general ones with an empty condition.
+
+```json
+{
+  "id": "snake_case_id",
+  "name": "short name",
+  "when": { "tags_all": ["used_real_name"] },
+  "situation": "1-2 sentences: what happens, as events and other characters' actions",
+  "once": true
+}
+```
 
 ### blueprint_title (string)
 

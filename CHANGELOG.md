@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (chapters and drama manager)
+- **Chapters:** generated blueprints group scenes into chapters, and chapters say which arc stages they advance. The arc blending rules now apply per chapter. Older blueprints play as one chapter per scene
+- **Tentpoles:** 2–4 situations per blueprint that arrive at a set chapter or arc stage whatever the player has done; the player decides how to meet them. The story type's memorable element becomes one of them
+- **Complications:** a pool of 6–10 per blueprint. After several replies without progress (default 4, configurable, can be turned off), the most specific complication whose conditions match what has happened is brought in
+- **Conditional endings:** each ending has conditions on what the player did. From the climax on, the story leans toward the best match; the resolution, the final scene and the epilogue follow it
+- Choice points carry tags; the narrator's `@@NOTE: ...@@` marker and the secondary tracker record them; tags are visible and editable in the ledger editor
+- The epilogue receives the ledger and the ending the story leaned toward
+- Controller panel shows the chapter and anything happening now
+
+### Fixed
+- Reading chat state replaced the play-state object every time, so code that held it across another read could lose its changes
+- The single-call scene prompt's JSON example had a stray quote
+
 ### Added (story arc shapes)
 - **13 arc shapes:** Escalation, Mystery, Tournament, Siege, Journey, Journey and return, Heist, Episodic, Kishōtenketsu, Tragedy, Quiet or cumulative, Romance and Comedy of errors. Each has its own stages mapped onto the four pacing phases
 - **Spine and threads:** a story has one main arc and up to two threads (a romance inside a heist, a mystery inside a siege). Generated blueprints keep thread climaxes before or together with the main climax, and at most one thread peaks per scene

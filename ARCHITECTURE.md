@@ -93,11 +93,32 @@ A story arc is a group of chapters with a shape. `lib/story/shapes.js` holds the
 A story has one **spine** (carries the main question, decides the ending) and up to two **threads** (`MAX_THREADS`). Story types carry `defaultShape` and optional `suggestedThreads`; types saved before shapes existed are backfilled from the bundled defaults at load (in memory).
 
 - **Story Mode:** Genre & Style → Story Shape and Threads, stored per chat as `chatState.storyShape` (`''` = story type default) and `chatState.threadShapes` (`null` = story type suggestions). Every arc's stage follows the round counter through the slots (`getStagesForPhase`), so thread climaxes converge with the spine's. `<arcs>` replaces the old generic phase goals. The story type's own phase prompts are used only when the spine is the type's default shape, since they were written for it.
-- **Blueprints:** the generate form picks the spine (default from the story type) and threads. Phase 1 returns `arcs` with a question and per-stage notes; the requested shapes always win (`mergeGeneratedArcs`). Phase 3 (single-call and staged; the staged merge keeps the plan's assignments) gives every scene `arc_stages: ["spine:preparation", "romance:deepening"]`. After Phase 3, `enforceArcConvergence` repairs the blending rules: a thread's climax lands before the spine's or in the same scene, and at most one thread peaks per scene.
+- **Blueprints:** the generate form picks the spine (default from the story type) and threads. Phase 1 returns `arcs` with a question and per-stage notes; the requested shapes always win (`mergeGeneratedArcs`). Phase 3 groups scenes into chapters (below). After Phase 3, `enforceArcConvergence` repairs the blending rules per chapter: a thread's climax lands before the spine's or in the same chapter, and at most one thread peaks per chapter.
 - **Scenario Mode injection:** `<arcs>` sits between `<role>` and `<abstract_act>`. An arc's current stage is the latest one reached at or before the current scene. Threads not advanced in this scene render as one line.
 - **v1 blueprints** (no `arcs`) play as an Escalation spine whose stages follow the scene phases.
 
-Chapters as a layer between arcs and scenes are not built yet; scenes declare stages directly.
+## Chapters
+
+A chapter is a stretch of play that advances one or more arc stages and holds one to three scenes (`lib/story/chapters.js`). `blueprint.chapters = [{ index, title, summary, advances: ["spine:preparation", "romance:deepening"] }]`, and each scene has `chapter`. Chapters own the arc stages: an arc's current stage is the latest one advanced at or before the current scene's chapter, and a thread renders in full only in chapters that advance it.
+
+Phase 3 (single call) and Phase 3a (staged plan) return `chapters` and `tentpoles` alongside the scenes; the staged path settles chapters before the batches, and batch merges keep the plan's chapter. If a model returns no chapters, `materializeChapters` makes one per scene so the coordination rules still apply. Blueprints saved before chapters existed get one chapter per scene on read (from step 3 `arc_stages`, or from scene phases); that synthesis is never written back, and the UI only shows chapters for blueprints that have real ones.
+
+## Drama Manager: tentpoles, complications, endings
+
+Blueprint data (normalized in `lib/story/story-events.js`), with conditions over ledger tags, arc stages and chapter (`lib/story/conditions.js`: `tags_all`, `tags_any`, `tags_none`, `stage`, `chapter_min`):
+
+- `tentpoles: [{ id, name, trigger, situation, ways_to_meet, setup_hooks }]`: 2–4 unavoidable situations. The story type's memorable element becomes one in generation. Older blueprints get a tentpole from it only when a scene already mentions it by name.
+- `complications: [{ id, name, when, situation, once }]`: 6–10, generated in Phase 4.
+- Endings carry `id` and `reached_if`. The appended ending scene is titled "The Ending" and plays whichever ending the story leans toward.
+- Choice points carry `tags` (one per approach); Phase 4 receives them as the vocabulary for its conditions.
+
+Runtime (`lib/story/drama.js`, state in `chatState.scenario`: `firedTentpoles`, `usedComplications`, `activeEvents`, `stall`, `endingLean`):
+
+- `evaluateDrama()` runs on `GENERATION_STARTED` after the tracker. It fires the first unfired tentpole whose trigger holds (one at a time), draws a complication when `stall` ≥ the setting (default 4) and nothing else is in motion (most specific matching condition wins, `once` respected), and from climax scenes on scores every ending's `reached_if` against active ledger tags. Primary wins ties and is the fallback. The lean freezes at the resolution.
+- `recordReplyProgress()` runs after each tracked reply (inline in `trackReply`, secondary in `runTracker`): progress (beat change, scene change, new ledger entry) resets `stall`; events age and drop out when the scene changes or after 8 (tentpole) / 4 (complication) replies.
+- Injection: `<happening_now>` after the scene (first reply "bring it in now", then "under way"), `<ending_direction>` during the resolution, the ending scene's situation replaced by the lean ending.
+- Tags: the inline `@@NOTE: ...@@` marker accepts `#tag` tokens; the signals block and the secondary tracker list the tags the story checks (current scene's choice tags first). Tags are editable in the ledger editor.
+- The epilogue request receives the active ledger and the lean ending, with `{{user}}` replaced by the persona name.
 
 ## Story Tracker and Ledger
 

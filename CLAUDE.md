@@ -26,6 +26,8 @@ Story Mode is a SillyTavern extension providing narrative structure through four
 
 **Arc shapes:** `lib/story/shapes.js` (catalogue, no SillyTavern imports) and `lib/story/arcs.js` (spine + up to 2 threads, current stages, `<arcs>` block, generation rules). See ARCHITECTURE.md.
 
+**Chapters and drama manager:** `lib/story/chapters.js` (chapters own arc stages), `lib/story/conditions.js` (tag/stage/chapter conditions), `lib/story/story-events.js` (normalize tentpoles, complications, ending conditions), `lib/story/drama.js` (runtime: tentpoles, complications on stalls, ending lean). See ARCHITECTURE.md.
+
 **Tracker and ledger:** `lib/story/tracker.js` (inline markers or a secondary model after every reply), `lib/story/ledger.js` (what the story has established, swipe-aware), `lib/ui/ledger-panel.js` (panel section + editor, hidden by default). See ARCHITECTURE.md.
 
 **Key Entry Points:**
@@ -242,8 +244,15 @@ window.StoryModeDebug.auditHandlers({ showAll: true })
 - Story Mode, Slice of Life at the climax → phase shows RESONANCE, no confrontation guidance
 - Change Story Shape away from the type's default → the type's phase prompts are left out
 - Threads: story type suggestions preselected; None removes them; never more than 2
-- Generate Heist + Romance → every scene has `arc_stages`; romance crisis is not after the spine's climax
+- Generate Heist + Romance → chapters list `advances`; romance crisis is not in a chapter after the spine's climax
 - v1 blueprint → `<arcs>` shows an Escalation spine following scene phases
+
+### Chapters & Drama Manager
+- Generated blueprint has `chapters`, `tentpoles`, `complications`, and endings with `reached_if`
+- Reach a tentpole's chapter → `<happening_now>` appears whatever the player did; it says "under way" after one reply
+- 4 replies without progress → the most specific matching complication is injected (turn off in Story Tracking settings)
+- `@@NOTE: ... #tag@@` → ledger entry with that tag
+- Climax → ending lean follows ledger tags; resolution freezes it; ending scene and epilogue use it
 
 ### Tracker & Ledger
 - Inline mode: `@@NOTE: ...@@` becomes a ledger entry and is stripped from the message
@@ -311,7 +320,7 @@ window.StoryModeDebug.auditHandlers({ showAll: true })
 
 ### Stub Functions (v2 placeholders)
 - `resolvePlaceholders()` - returns text unchanged (no placeholder resolution)
-- `checkPrerequisites()` - always returns true (no prerequisite checking)
+- `checkPrerequisites()` - always returns true for beats (conditions exist for tentpoles, complications and endings in `lib/story/conditions.js`, not for beats)
 
 ### GLM 4.7 Reasoning Parameter Error
 
@@ -328,7 +337,8 @@ Bad Request {"error":{"message":"Invalid option: expected one of \"xhigh\"|\"hig
 
 ### General
 - Phase proportions are fixed (25/50/15/10) and shared with blueprint scenes; shapes map their stages onto these slots
-- No chapter layer yet: scenes declare the arc stages they advance
+- No ledger compaction into chapter summaries yet; the ledger budget keeps the newest entries
+- Stall counting also counts regenerated replies
 - No sequential arcs (Journey then Siege) yet; one spine plus up to two threads
 - Story types manually selected
 - Regeneration edge cases partially addressed

@@ -29,15 +29,11 @@ You are an expert story designer. This is Phase 3b of a story blueprint: expand 
 
 {{AUTHOR_STYLE_SECTION}}
 
-## MEMORABLE ELEMENT
+## TENTPOLES
 
-**Type:** {{MEMORABLE_ELEMENT_TYPE}}
-**Name:** {{MEMORABLE_ELEMENT_NAME}}
-**Description:** {{MEMORABLE_ELEMENT_DESCRIPTION}}
-**Recommended Placement:** {{MEMORABLE_ELEMENT_PLACEMENT}}
+These happen whatever the protagonist does. Plant their setup hooks in earlier scenes; in the chapter a tentpole arrives in, leave room for it rather than writing it into a beat, since it is injected during play.
 
-**Setup Hooks:**
-{{MEMORABLE_ELEMENT_SETUP_HOOKS}}
+{{TENTPOLES_SUMMARY}}
 
 ## METAPHOR LEVEL
 
@@ -68,10 +64,10 @@ Each scene needs:
 - **title**: Keep from outline (may refine slightly)
 - **phase**: Keep from outline
 - **purpose**: Keep from outline (may refine slightly)
-- **arc_stages**: Keep from outline
+- **chapter**: Keep from outline
 - **situation**: 1-2 sentences on where the protagonist is, what they want now, and what opposes them
 - **key_events_if_unchallenged**: 3-5 things the opposition and other characters will do in this scene if the protagonist doesn't intervene
-- **choice_points**: 0-2 per scene (story-altering decisions only)
+- **choice_points**: 0-2 per scene (story-altering decisions only), each with a short tag per approach so later complications and endings can check what the player chose
 - **character_focus**: Array with `name`, `emotional_beat_target`, and `turning_point` fields
 - **beats**: 3-7 beats marking progression through the scene
 - **hooks_for_future**: Threads connecting to later scenes
@@ -102,7 +98,8 @@ Beats describe what the world and the non-player characters do, reveal, or deman
     "example_player_intents": ["one approach", "another approach"],
     "consequences": {
       "direction_if_<approach>": "where that approach leads"
-    }
+    },
+    "tags": ["snake_case tags naming what the protagonist did, one per approach, e.g. sided_with_dispatcher"]
   }
 ]
 ```
@@ -130,7 +127,7 @@ Return a single JSON object and nothing else, shaped like this:
       "title": "scene title from the outline",
       "phase": "phase from the outline",
       "purpose": "purpose from the outline",
-      "arc_stages": ["arc stages from the outline"],
+      "chapter": 0,
       "situation": "where the protagonist is, what they want now, what opposes them",
       "key_events_if_unchallenged": ["what the opposition or others do if the protagonist doesn't intervene"],
       "choice_points": [],

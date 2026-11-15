@@ -19,6 +19,7 @@ import { getBlueprintState } from './lib/blueprint/storage.js';
 import { initBlueprintIntegration } from './lib/blueprint/integration.js';
 import { initStandaloneBridgeHost } from './lib/bridge/standalone-host.js';
 import { waitForTracker } from './lib/story/tracker.js';
+import { evaluateDrama } from './lib/story/drama.js';
 
 // Import Blueprint Editor module
 
@@ -787,6 +788,8 @@ jQuery(async function () {
         // prompt reflects it (bounded by the tracker timeout)
         if (!dryRun) {
             await waitForTracker();
+            // Fire due tentpoles, draw a complication on a stall, update the ending lean
+            await evaluateDrama().catch(error => console.error('[Story Mode] Drama manager error:', error));
         }
         if (chat.length > 0) {
             setRegenerating(false); // fresh generation

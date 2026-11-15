@@ -25,15 +25,27 @@ You are an expert story designer. This is Phase 3a of a story blueprint: lightwe
 
 **Character Arcs:** {{CHARACTER_ARCS_SUMMARY}}
 
-## STORY ARCS
+## STORY ARCS AND CHAPTERS
 
 {{ARCS_SECTION}}
 
-Every scene advances at least one stage of the spine, listed in `arc_stages` as `"arc:stage"` (for example `"spine:preparation"`). A scene that also moves a thread lists that stage too. Stages run in order within each arc. Coordinate the arcs this way:
+Group the scenes into chapters. A chapter is a stretch of the story that moves one or more arc stages forward and holds one to three scenes, usually two. Each chapter lists the stages it advances in `advances` as `"arc:stage"` strings (for example `"spine:preparation"`). Every chapter advances a spine stage; a chapter that also moves a thread lists that stage too. Stages run in order within each arc. Coordinate the arcs this way:
 
-- The spine's climax stage comes in the climax scene, last among the climaxes. A thread's climax lands in an earlier scene or in the same scene as the spine's.
-- At most one thread reaches its climax in any scene.
-- Threads appear often enough to stay alive, roughly every second or third scene, and are woven into the spine's scenes rather than given scenes of their own.
+- The spine's climax stage comes in the chapter that holds the climax scene, last among the climaxes. A thread's climax lands in an earlier chapter or in the same chapter as the spine's.
+- At most one thread reaches its climax in any chapter.
+- Threads appear often enough to stay alive, roughly every second chapter, and are woven into the spine's scenes rather than given scenes of their own.
+
+## TENTPOLES
+
+Tentpoles are 2 to 4 situations that happen whatever the protagonist has done, at a set point in the story. The player steers how the protagonist meets one, and so how it turns out, but cannot stop it arriving, the way an oncoming car arrives whether or not you saw it coming. Write each as events and other characters' actions.
+
+The story type's signature moment is one of them, adapted to this story:
+
+**{{MEMORABLE_ELEMENT_NAME}}** ({{MEMORABLE_ELEMENT_TYPE}}, usually in the {{MEMORABLE_ELEMENT_PLACEMENT}} phase): {{MEMORABLE_ELEMENT_DESCRIPTION}}
+Setup hooks:
+{{MEMORABLE_ELEMENT_SETUP_HOOKS}}
+
+Each tentpole has a trigger: the chapter it arrives in (`{ "chapter": 3 }`, 0-based) or an arc stage (`{ "stage": "spine:execution" }`). Plant each tentpole's setup hooks in earlier scenes so it feels earned. A tentpole is brought in during play when its trigger is reached, so the scenes of its chapter leave room for it instead of scripting it as a beat.
 
 ## TURNING POINTS
 
@@ -44,18 +56,6 @@ For a turning point that belongs to the player persona, the scene creates the si
 ## WRITING STYLE
 
 {{AUTHOR_STYLE_SECTION}}
-
-## MEMORABLE ELEMENT
-
-**Type:** {{MEMORABLE_ELEMENT_TYPE}}
-**Name:** {{MEMORABLE_ELEMENT_NAME}}
-**Description:** {{MEMORABLE_ELEMENT_DESCRIPTION}}
-**Recommended Placement:** {{MEMORABLE_ELEMENT_PLACEMENT}}
-
-**Setup Hooks (plant these in earlier scenes):**
-{{MEMORABLE_ELEMENT_SETUP_HOOKS}}
-
-Place this moment in a scene in the recommended phase, adapted to this story, and plant the setup hooks earlier so it feels earned. It is unavoidable: it happens whatever the protagonist has done. How they meet it, and how it turns out, is left to the player.
 
 ## USER SCENARIO
 
@@ -78,14 +78,14 @@ Each scene is a complete dramatic unit built around a goal and an obstacle. Star
 
 ## YOUR TASK
 
-Produce outlines only; beats, key events, and choice points come in the next step.
+Produce the chapters, the tentpoles, and scene outlines; beats, key events, and choice points come in the next step.
 
 Each scene outline needs:
 - **index**: Scene number (0-based)
 - **title**: Short scene title
 - **phase**: setup | escalation | climax | resolution
 - **purpose**: the scene's goal, phrased as what must be settled by the end of it
-- **arc_stages**: the arc stages this scene advances, as `"arc:stage"` strings
+- **chapter**: the index of the chapter this scene belongs to
 - **situation**: 1-2 sentences on where the protagonist is, what they want now, and what opposes them
 - **character_focus**: Array of `{ "name", "turning_point" }` objects mapping character turning points
 - **hooks_for_future**: Array of threads connecting to later scenes
@@ -96,13 +96,31 @@ Return a single JSON object and nothing else, shaped like this:
 
 ```json
 {
+  "chapters": [
+    {
+      "index": 0,
+      "title": "short chapter title",
+      "summary": "one sentence: what this stretch of the story is about",
+      "advances": ["spine:<stage id>", "<thread id>:<stage id>"]
+    }
+  ],
+  "tentpoles": [
+    {
+      "id": "snake_case_id",
+      "name": "short evocative name",
+      "trigger": { "chapter": 3 },
+      "situation": "what happens regardless, as events and other characters' actions",
+      "ways_to_meet": ["2-4 ways the protagonist might respond"],
+      "setup_hooks": ["things planted in earlier scenes"]
+    }
+  ],
   "scene_plan": [
     {
       "index": 0,
       "title": "short scene title",
       "phase": "setup | escalation | climax | resolution",
       "purpose": "what must be settled by the end of the scene",
-      "arc_stages": ["spine:<stage id>", "<thread id>:<stage id>"],
+      "chapter": 0,
       "situation": "where the protagonist is, what they want now, what opposes them",
       "character_focus": [
         {

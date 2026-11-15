@@ -542,7 +542,11 @@ lib/scenario/
 
 lib/story/
 ├── shapes.js (imports core/phases only; usable by the standalone editor)
-├── arcs.js (imports shapes, core/phases)
+├── arcs.js (imports shapes)
+├── chapters.js (imports shapes, arcs, core/phases)
+├── conditions.js (no deps)
+├── story-events.js (imports conditions, chapters, core/phases)
+├── drama.js (imports state-manager, blueprint/storage, ledger, chapters, conditions, story-events)
 ├── ledger.js (imports state-manager)
 └── tracker.js (imports state-manager, blueprint/storage, generation/orchestration, ledger)
 
@@ -699,6 +703,8 @@ const url = new URL('../../data/author_styles.json', import.meta.url);
 | Controller: summary | `lib/ui/controller-panel-summary.js` | `blueprint/module` |
 | Arc shapes catalogue | `lib/story/shapes.js` | `data/story_types.json` (`defaultShape`), `editor/story-type-form.js` |
 | Spine/threads at runtime and in generation | `lib/story/arcs.js` | `core/arc-engine.js`, `scenario/injection.js`, `generation/prompts.js`, `generation/orchestration.js`, `blueprint/normalization.js` |
+| Chapters | `lib/story/chapters.js` | `scenario/injection.js`, `generation/orchestration.js`, `generation/staged-scenes.js`, `blueprint/normalization.js` |
+| Tentpoles, complications, ending lean | `lib/story/drama.js` | `story-events.js`, `conditions.js`, `index.js` (GENERATION_STARTED), `core/event-handlers.js` (epilogue, trackReply) |
 | Story tracker (inline / secondary model) | `lib/story/tracker.js` | `core/event-handlers.js` (`trackReply`, `applyStorySignals`), `index.js` (`waitForTracker`) |
 | Story ledger | `lib/story/ledger.js` | `core/arc-engine.js` (injection), `ui/ledger-panel.js` (panel + editor) |
 | Scenario Mode | `lib/scenario/injection.js` | `beats.js`, `character-injection.js`, `blueprint/module.js` |
