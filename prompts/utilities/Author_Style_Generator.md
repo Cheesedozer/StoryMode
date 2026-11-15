@@ -38,7 +38,7 @@ Based on your input, create a comprehensive author style definition following th
 ### authorPrompt
 This is the core instruction that guides the AI's writing. Include:
 
-1. **Opening directive**: "Write in a style inspired by [Author/Style]."
+1. **No names in the instructions**: describe the techniques directly. The narrating model works better from concrete technique than from "write like [author]", which tends to produce pastiche and borrowed characters. Keep the author's name for the `name` and `keywords` fields only.
 
 2. **Prose characteristics**: Sentence structure, rhythm, complexity
    - Long/short sentences? Complex/simple? Flowing/staccato?
@@ -58,10 +58,10 @@ This is the core instruction that guides the AI's writing. Include:
 7. **Atmosphere/mood**: The overall feeling the prose should evoke
 
 ### nsfwPrompt
-Guidance for handling romantic or mature content that fits the style:
-- How explicit/implicit should intimacy be?
-- What's the emotional vs. physical focus?
-- What would feel authentic vs. out-of-place for this style?
+How this voice writes romance, desire, and sex scenes:
+- What does the prose notice, and in what register?
+- What are these scenes usually about for the characters (power, comedy, tenderness, danger)?
+- Describe the voice only; how explicit to be is set separately by the user's Mature Content setting.
 
 ### keywords
 5-8 searchable terms including:
@@ -71,36 +71,3 @@ Guidance for handling romantic or mature content that fits the style:
 - Mood/atmosphere descriptors
 
 ---
-
-## Example Output
-
-For input "Raymond Chandler":
-
-```json
-{
-  "id": "raymond_chandler",
-  "name": "Raymond Chandler",
-  "category": ["Noir", "Hardboiled Detective"],
-  "authorPrompt": "Write in a style inspired by Raymond Chandler.\nUse a first-person narrative voice that is world-weary yet morally centered, observing corruption with sardonic detachment. Favor sharp, rhythmic sentences that balance tough-guy terseness with sudden poetic imagery—similes that illuminate character through unexpected comparisons. Let Los Angeles (or your setting) become a character: describe its geography, weather, and social strata with precise, atmospheric detail.\n\nDistinctive techniques to employ:\n- Similes that reveal character through vivid, often dark comparisons\n- Dialogue that crackles with subtext, threats veiled in politeness\n- A protagonist who maintains personal integrity despite systemic corruption\n- Scene-setting that uses light, shadow, and architecture to create mood\n- Occasional philosophical asides delivered in clipped, quotable prose\n- Violence described with clinical brevity, aftermath with emotional weight",
-  "nsfwPrompt": "Handle attraction with charged tension and implication rather than explicit detail. Femme fatales are dangerous and alluring; romantic encounters should feel like another kind of danger. Keep bedroom scenes brief and suggestive—a closed door, rumpled sheets, morning-after regret—focusing on the emotional and moral aftermath rather than physical mechanics.",
-  "keywords": ["noir", "hardboiled", "detective", "Los Angeles", "Marlowe", "cynical", "atmospheric", "first-person"]
-}
-```
-
----
-
-## Output Instructions
-
-After generating the author style JSON:
-
-1. **Display the JSON** in a code block for review
-2. **Offer to download** by saying: "Would you like me to provide this as a downloadable JSON file?"
-3. If yes, **create a downloadable file** using your file creation capabilities (canvas/artifact) named `[author_id]_style.json`
-
-**Import instructions for the user:**
-> To import this author style into Story Mode:
-> 1. Open the Story Mode settings dialog
-> 2. Go to **Genre & Style** → **Author Style** tab
-> 3. Click the **✏️ Edit** button next to the Author Style dropdown
-> 4. Click **Import JSON** and select your downloaded file
-> 5. The new style will appear in all Author Style dropdowns

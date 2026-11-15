@@ -52,10 +52,13 @@ if (mode === PACING_MODES.SCENARIO) { /* signal-based UI */ }
 
 **Rounds:** Increment on USER message submission (not AI response). Enables group chat where multiple AI characters respond per round. Only used in Story Mode.
 
-**Three-Act Structure:** Fixed 33% phase boundaries (Story Mode only):
-- Setup (0-33%): World-building, character introduction
-- Confrontation (34-66%): Escalating challenges
-- Resolution (67-100%): Climax and conclusion
+**Four Phases:** Shared by Story Mode rounds and blueprint scenes, defined in `lib/core/phases.js`:
+- Setup (~25%): who wants what, why, and what stands in the way
+- Escalation (~50%): attempts, costs, reversals
+- Climax (~15%): the decisive confrontation
+- Resolution (~10%): aftermath
+
+Legacy three-phase data (`confrontation`) is mapped by `normalizePhase()` / `getPhasePrompts()`; a legacy `resolution` phase prompt is reused for the climax.
 
 **Abstract Acts (Scenario Mode):** Based on **StoryVerse** (Wang et al., 2024). Scenes defined by goals, not round counts. Beats are flexible milestones with visual markers: `[✓ done] [→ current] [□ pending] [x skipped]`
 
@@ -264,7 +267,6 @@ return result.text || result.content || '';
 extension_settings[MODULE_NAME].blueprintSettings = {
     enabled, useScenePrompts, sceneTransitionNotify,
     generationApi: string,  // Profile ID for blueprint generation
-    masterPrompt: string | null
 };
 ```
 

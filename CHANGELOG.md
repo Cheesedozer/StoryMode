@@ -16,6 +16,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The v2 IndexedDB to File API blueprint library migration was never invoked; it now runs once at startup
 - Hard-coded `third-party/Extension-StoryMode/` paths replaced with the extension's real base URL, so the extension works under any install folder name (including SillyBunny per-user extension folders)
 
+### Changed (story structure, styles, content)
+- **Four phases everywhere**: Story Mode rounds and blueprint scenes now share setup / escalation / climax / resolution (25/50/15/10%) from `lib/core/phases.js`. Legacy three-phase story types and blueprints are mapped automatically
+- All 43 built-in story types: phase guidance rewritten for four phases around goal, motivation and conflict, with outcomes left to the player (no more "justice is served" / "love triumphs"); trope lists removed; the most cliché taglines rewritten
+- **Writing styles describe technique instead of naming the author**: the "Write in a style inspired by X" line is gone from all 42 built-in styles and from every generation prompt; names remain as menu labels
+- **Mature Content setting (Off / Intimacy / Explicit)** replaces the NSFW toggle (on migrates to Explicit). Each style's `nsfwPrompt` was rewritten to describe how its voice writes intimacy rather than forbidding it; guidance also reaches blueprint generation, and states that sexual content involves adults only
+- Generation prompts: removed the copied worked examples (every prompt used the same memory-archive story), removed CRITICAL / MUST / non-negotiable emphasis, made the premise follow the goal-motivation-conflict test, made scene purposes goals and `key_events_if_unchallenged` "what the opposition does if the protagonist doesn't intervene", and made endings conditional on the player's choices
+- Metaphor-level instructions no longer contradict themselves or impose Monster-of-the-Week structure on every genre
+- Scene summaries now record the protagonist's choices and their consequences
+
+### Fixed
+- Normalization dropped `key_events_if_unchallenged` (it wrote a misspelled `key_events_if_unchanged`), so the field never reached the controller panel
+- The blueprint schema only accepted the old three phase names although generation produced four
+- `renderTemplate` hung forever if a value contained its own placeholder, and expanded `$&`-style patterns in user text
+- Blueprints without content boundaries injected `violence="None specified" romance="None specified"`
+
+### Removed
+- The Master Prompt editor and `data/blueprint-master-prompt.txt`: generation never used them, and edits were never saved
+- The stale `prompts/utilities/generated/` sample
+
 ### Changed (prompts)
 - Scenario Mode injection: new `<role>` block keeping the model's hands off `{{user}}`'s actions, words and feelings; protagonists' goal now injected; choice points framed as decisions for `{{user}}` rather than a menu of options
 - Beats are marked only once they have fully played out (was: "after addressing this beat"), to stop the model racing through one beat per reply

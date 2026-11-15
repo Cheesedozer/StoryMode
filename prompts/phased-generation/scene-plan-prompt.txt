@@ -1,6 +1,4 @@
-You are an expert story designer. Generate the SCENE PLAN (lightweight outlines) for a story blueprint.
-
-This is Phase 3a of a staged blueprint generation process. You will design scene outlines that will later be expanded with full detail (beats, choice points, events) in subsequent calls.
+You are an expert story designer. This is Phase 3a of a story blueprint: lightweight scene outlines, which later calls expand with beats, choice points, and events. The player persona is the protagonist, and the user decides what they do.
 
 ## STORY TYPE
 
@@ -27,17 +25,13 @@ This is Phase 3a of a staged blueprint generation process. You will design scene
 
 **Character Arcs:** {{CHARACTER_ARCS_SUMMARY}}
 
-## TURNING POINT MAPPING (Required)
+## TURNING POINTS
 
-**Every character turning point listed above MUST appear in your scene plan.** This is non-negotiable.
+Give every turning point from Phase 2 a scene: list the character in that scene's `character_focus` with `turning_point` set to the exact turning point text.
 
-For each turning point, you must:
-1. Assign it to a specific scene (via `character_focus`)
-2. Set a `turning_point` field referencing the exact turning point text from Phase 2
+For a turning point that belongs to the player persona, the scene creates the situation that makes the turning point possible; whether and how it happens is up to the player.
 
-For a turning point that belongs to the player persona, the beat creates the situation that makes the turning point possible; whether and how it happens is up to the player.
-
-## AUTHOR STYLE GUIDANCE
+## WRITING STYLE
 
 {{AUTHOR_STYLE_SECTION}}
 
@@ -51,7 +45,7 @@ For a turning point that belongs to the player persona, the beat creates the sit
 **Setup Hooks (plant these in earlier scenes):**
 {{MEMORABLE_ELEMENT_SETUP_HOOKS}}
 
-Your scene plan MUST include this memorable element. Assign it to the appropriate scene and plant setup hooks in earlier scenes.
+Place this moment in a scene in the recommended phase, adapted to this story, and plant the setup hooks earlier so it feels earned.
 
 ## USER SCENARIO
 
@@ -64,55 +58,50 @@ Your scene plan MUST include this memorable element. Assign it to the appropriat
 ## STORY PARAMETERS
 
 - **Expected Scenes:** {{EXPECTED_SCENE_COUNT}}
-- **Scene Distribution:** Setup (~25%) -> Escalation (~50%) -> Climax (~15%) -> Resolution (~10%)
+- **Scene Distribution:** {{PHASE_DISTRIBUTION}}
 
-## SCENE COHESION RULES
+## SCENE DESIGN
 
-A scene is a **complete dramatic unit**. Do NOT split continuous action into separate scenes.
+Each scene is a complete dramatic unit built around a goal and an obstacle. Start a new scene only at a real break: a new location, a meaningful time skip, or a shift to a new goal. Keep a crisis together with its immediate aftermath when they happen in one continuous stretch.
 
-**Anti-Split Rule:** Keep together:
-- Action sequences and their immediate emotional aftermath
-- A crisis and its resolution when they occur in the same location
-- A confrontation and its direct consequences if they flow without interruption
-
-**Climax-Resolution Unity:** The CLIMAX phase scene and its immediate aftermath MUST be combined if they occur in the same location, less than 1 hour passes, and the same core characters are involved.
+The climax scene contains the decisive confrontation and its immediate aftermath. The final resolution scene takes place in a new situation and is about the new equilibrium.
 
 ## YOUR TASK
 
-Generate ONLY lightweight scene outlines. Do NOT include beats, key_events, or choice_points -- those will be generated in subsequent batches.
+Produce outlines only; beats, key events, and choice points come in the next step.
 
 Each scene outline needs:
 - **index**: Scene number (0-based)
-- **title**: Memorable scene title
+- **title**: Short scene title
 - **phase**: setup | escalation | climax | resolution
-- **purpose**: What this scene accomplishes for plot/character/theme
-- **situation**: 1-2 sentences describing what the protagonists face
+- **purpose**: the scene's goal, phrased as what must be settled by the end of it
+- **situation**: 1-2 sentences on where the protagonist is, what they want now, and what opposes them
 - **character_focus**: Array of `{ "name", "turning_point" }` objects mapping character turning points
 - **hooks_for_future**: Array of threads connecting to later scenes
 
 ## RESPONSE FORMAT
 
-Return ONLY valid JSON. No explanations, markdown blocks, or filler.
+Return a single JSON object and nothing else, shaped like this:
 
 ```json
 {
   "scene_plan": [
     {
       "index": 0,
-      "title": "Scene Title",
-      "phase": "setup",
-      "purpose": "What this accomplishes",
-      "situation": "1-2 sentences describing the scene",
+      "title": "short scene title",
+      "phase": "setup | escalation | climax | resolution",
+      "purpose": "what must be settled by the end of the scene",
+      "situation": "where the protagonist is, what they want now, what opposes them",
       "character_focus": [
         {
           "name": "Character Name",
           "turning_point": "exact turning point text from Phase 2 or null"
         }
       ],
-      "hooks_for_future": ["thread 1", "thread 2"]
+      "hooks_for_future": ["threads paid off in later scenes"]
     }
   ]
 }
 ```
 
-Generate {{EXPECTED_SCENE_COUNT}} scene outlines. Your entire response must be a single parseable JSON object with the scene_plan field.
+Produce {{EXPECTED_SCENE_COUNT}} scene outlines.

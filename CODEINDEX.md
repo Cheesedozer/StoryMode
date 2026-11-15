@@ -67,7 +67,6 @@ Extension-StoryMode/
 ├── data/
 │   ├── story_types.json     # 40+ story type definitions
 │   ├── author_styles.json   # 40+ author style definitions
-│   └── blueprint-master-prompt.txt # Master blueprint prompt
 ├── prompts/                 # LLM prompt templates (loaded at runtime)
 │   ├── blueprint-generation/
 │   │   └── metaphor-instructions.txt
@@ -97,6 +96,8 @@ Extension-StoryMode/
     │   ├── file-backed-data.js # File API persistence layer (debounced saves)
     │   ├── data-migration-v3.js # localforage/localStorage → File API migration
     │   ├── arc-engine.js    # Phase calculation, prompt injection
+    │   ├── phases.js        # Four-phase model shared by rounds and scenes
+    │   ├── content-level.js # Mature content level (off/intimacy/explicit)
     │   └── event-handlers.js# Message events, signal parsing
     ├── blueprint/           # Blueprint system
     │   ├── index.js         # Re-exports public API
@@ -432,6 +433,8 @@ Direct re-exports (`export { x } from './foo.js'`) don't create local bindings, 
 ```
 lib/core/
 ├── constants.js (no deps)
+├── phases.js (no deps)
+├── content-level.js (no deps)
 ├── file-backed-data.js (imports blueprint/file-api, /script.js)
 ├── data-migration-v3.js (imports blueprint/file-api, editor/import-export, popup.js)
 ├── state-manager.js (imports constants, file-backed-data)
@@ -659,7 +662,6 @@ const url = new URL('../../data/author_styles.json', import.meta.url);
 | Blueprint file storage | `lib/blueprint/file-storage.js` | `file-api.js`, `manifest.js` |
 | Blueprint library | `lib/blueprint/library-adapter.js` | `integration.js`, `manifest.js` |
 | Blueprint import UI | `lib/blueprint/import-ui.js` | `import.js`, `utils.js` |
-| Blueprint master prompt | `lib/blueprint/prompts.js` | `data/blueprint-master-prompt.txt` |
 | Blueprint settings sync | `lib/blueprint/settings-sync.js` | `state-manager.js` |
 | Blueprint startup | `lib/blueprint/startup.js` | `missing-style-handler.js`, `storage.js` |
 | Style resolution (export) | `lib/blueprint/resource-utils.js` | `export.js`, `editor-action-handlers.js` |

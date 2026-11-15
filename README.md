@@ -28,12 +28,12 @@ Choose from **43 pre-defined story genres** - Mystery, Horror, Fantasy, Sci-Fi, 
 - Thematic hooks and tone guidance
 - Genre-appropriate tropes and literary devices
 - Pacing and POV suggestions
-- Three-act structure templates
+- Four-phase arc guidance (setup, escalation, climax, resolution)
 
 These can be used to provide a loose strucutre to your rolepay.
 
 ### ✍️ Author Style
-Emulate the writing style of popular authors. The LLM adopts their voice, prose rhythm, description techniques, and dialogue patterns. Includes optional NSFW/mature content guidance tailored to each author's style.
+Choose a writing style, named after the author who inspired it. The model is given a description of the techniques (voice, prose rhythm, description, dialogue), not the author's name, which tends to produce pastiche. A global Mature Content setting (Off / Intimacy / Explicit) controls how far intimate scenes go, and each style describes how its voice writes them.
 
 ### 🎭 Mix and Match
 Combine any story genre with any author style:
@@ -43,9 +43,12 @@ Combine any story genre with any author style:
 
 ### 🎬 Narrative Arc
 Set your story to follow a loose arc over any number of messages (5–50+). The LLM receives phase-specific guidance as it progresses through:
-- **Setup** (~33%): Establish world, characters, and conflict
-- **Escalation** (~33%): Raise stakes and deepen challenges
-- **Resolution** (~33%): Climax and conclusion.
+- **Setup** (~25%): Who wants what, why, and what stands in the way
+- **Escalation** (~50%): Attempts cost something; pressure rises
+- **Climax** (~15%): The decisive confrontation
+- **Resolution** (~10%): The aftermath
+
+Scenario blueprints use the same four phases.
 
 ### 🗺️ Scenario Blueprints
 Tell structured, multi-scene stories with:
@@ -102,7 +105,7 @@ See [CHANGELOG.md](./CHANGELOG.md) for detailed release notes.
 
 ### v1.0.0 (Current Release)
 - 43 pre-defined story types
-- Author style system with NSFW support
+- Writing styles with a three-level Mature Content setting
 - Three-phase narrative arc structure
 - Scenario Blueprints with multi-scene, beat-level progression
 - File-backed Scenario Library (PNG storage, cross-browser)

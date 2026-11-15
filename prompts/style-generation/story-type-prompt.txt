@@ -1,53 +1,38 @@
-You are an expert story designer. Generate a comprehensive story type definition based on the user's description.
+You design story types (genre frameworks) for an interactive fiction tool. A story type tells the narrating model what kind of pressure this genre puts on its characters, how it moves, and what it feels like, without dictating the plot or the ending.
 
 ## User Request
 {{USER_DESCRIPTION}}
 
-## Output Requirements
+## Output
 
-Generate a JSON object with these exact fields:
+Return a single JSON object with these fields:
 
-```json
-{
-  "id": "lowercase_snake_case_identifier",
-  "name": "Display Name",
-  "category": ["Category1"],
-  "storyPrompt": "Complete genre description with thematic hooks...",
-  "progressTemplate": "Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Message {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).",
-  "phasePrompts": {
-    "setup": "Setup phase guidance...",
-    "confrontation": "Confrontation phase guidance...",
-    "resolution": "Resolution phase guidance..."
-  },
-  "memorableElement": {
-    "type": "revelation|climax|twist|emotional_peak",
-    "name": "The Defining Moment Name",
-    "description": "What happens in this memorable moment...",
-    "placement": "resolution",
-    "setup_hooks": ["Hook 1", "Hook 2", "Hook 3"]
-  }
-}
-```
+- **id**: lowercase_snake_case identifier
+- **name**: display name
+- **category**: array of 1–3 genre categories
+- **storyPrompt**: the genre framework, as separate lines:
+  - 2–3 sentences on what this genre is about: the kind of problem characters face and what makes it compelling. Describe the dynamics, not a list of stock characters or settings.
+  - `***Thematic Hook:***` the central question or tension stories in this genre explore
+  - `***Narrative Scope:***` scale of the story (intimate, local, epic…)
+  - `***Tone:***` 3–5 tone words
+  - `***Literary Devices:***` how foreshadowing, symbolism and irony are used
+  - `***Subgenre:***` specific classification
+  - `***Pacing:***` how the story moves
+  - `***POV:***` point of view that suits the genre
+  - `***Structure:***` how events are typically organised (investigation, journey, escalating siege…)
+  - `***Priority:***` the top three things to get right, in order
+- **progressTemplate**: `Arc Progress: Step {currentStep}/{arcLength} ({arcPercent}% complete). Phase: {phase} - Round {positionInPhase}/{totalInPhase} ({phasePercent}% through {phase}).`
+- **phasePrompts**: an object with `setup`, `escalation`, `climax` and `resolution`, 1–2 sentences each, describing the pressure this genre applies in that phase:
+  - setup (~25% of the story): who wants what, why, and what stands in the way
+  - escalation (~50%): how attempts fail, cost, or reveal; how pressure rises
+  - climax (~15%): the shape of the decisive confrontation
+  - resolution (~10%): what the aftermath focuses on
+  Leave outcomes open: describe the situation each phase creates, and let the player's choices decide how it turns out.
+- **memorableElement**: the kind of signature moment this genre builds toward:
+  - `type`: revelation | climax | twist | emotional_peak
+  - `name`: a short evocative name
+  - `description`: what the moment is and why it lands
+  - `placement`: setup | escalation | climax | resolution
+  - `setup_hooks`: 2–4 things to plant earlier so the moment feels earned
 
-### Field Guidelines
-
-**storyPrompt**: Include all of these on separate lines:
-- 2-3 sentence genre overview
-- ***Thematic Hook:*** Core premise integrating all elements
-- ***Narrative Scope:*** Story scale (Intimate, Urban, Epic, etc.)
-- ***Tone:*** 4-6 descriptive tone words
-- ***Tropes:*** 6-10 genre-specific tropes
-- ***Literary Devices:*** Foreshadowing, Symbolism, Irony approaches
-- ***Subgenre:*** Specific classification
-- ***Pacing:*** Pacing description
-- ***POV:*** Point of view approach
-- ***Structure:*** Narrative structure
-- ***Priority:*** Top 3 priorities in order
-
-**phasePrompts**: 2-3 sentences each describing what happens in Setup, Confrontation, Resolution phases.
-
-**memorableElement**: The signature moment that defines stories in this genre. Include setup_hooks that foreshadow it.
-
-## Response Format
-
-Output ONLY the JSON object. No preamble, no explanation, no markdown code fences.
+Output only the JSON object.

@@ -4,7 +4,7 @@ Quick reference for Claude Code when working with this repository.
 
 ## Project Overview
 
-Story Mode is a SillyTavern extension providing narrative structure through three-act story arc progression and author style emulation. Injects context-aware prompts to guide AI narration.
+Story Mode is a SillyTavern extension providing narrative structure through four-phase story arc progression and writing-style guidance. Injects context-aware prompts to guide AI narration.
 
 ## Documentation Index
 
@@ -19,7 +19,7 @@ Story Mode is a SillyTavern extension providing narrative structure through thre
 ## Quick Architecture Summary
 
 **Two Pacing Modes** (see [ARCHITECTURE.md](./ARCHITECTURE.md) for details):
-- **Story Mode**: Round-based, `currentStep++` on user message, 33% phase boundaries
+- **Story Mode**: Round-based, `currentStep++` on user message, four phases (25/50/15/10, `lib/core/phases.js`)
 - **Scenario Mode**: Signal-based (`@@BEAT:N@@`, `@@NEXT_SCENE@@`), blueprint-driven
 
 **Key Entry Points:**
@@ -309,7 +309,7 @@ Bad Request {"error":{"message":"Invalid option: expected one of \"xhigh\"|\"hig
 **Manual Fix:** Edit connection profile preset, change reasoning effort from "auto" to "high".
 
 ### General
-- Phase boundaries fixed at 33%
+- Phase proportions are fixed (25/50/15/10) and shared with blueprint scenes
 - No nested/branching arcs
 - Story types manually selected
 - Regeneration edge cases partially addressed

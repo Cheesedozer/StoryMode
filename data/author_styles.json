@@ -1,11 +1,24 @@
 [
   {
-  "id": "jane_austen",
-  "name": "Jane Austen",
-  "category": ["Regency Romance", "Classic", "Social Comedy"],
-  "authorPrompt": "Write in a style inspired by Jane Austen.\nEmploy a third-person narrative voice that moves fluidly between objective observation and intimate access to a protagonist's thoughts, using free indirect discourse to blur the line between narrator and character consciousness. Favor balanced, periodic sentences with subordinate clauses that build toward witty conclusions or ironic reversals. Let the narrative voice maintain an amused, slightly detached perspective that nonetheless invites genuine emotional investment.\n\nDistinctive techniques to employ:\n- Free indirect discourse: slip into characters' thoughts without 'she thought' tags, letting their vocabulary and concerns color the narration\n- Ironic understatement: praise that damns, observations that expose vanity or folly through apparent innocence\n- Dialogue as character revelation: let conversations crackle with subtext, misunderstanding, and social maneuvering\n- Social precision: rank, income, property, and propriety matter—render these details with the casual authority of one who knows the rules intimately\n- Moral growth arcs: protagonists who must overcome pride, prejudice, or self-deception to achieve happiness\n- The marriage plot as social analysis: romantic tension inseparable from questions of security, class, and compatibility\n- Drawing rooms and country walks: intimate domestic spaces where momentous conversations occur\n- Secondary characters as comic types: obsequious clergymen, scheming rivals, indulgent parents, sensible confidantes",
-  "nsfwPrompt": "Keep physical intimacy entirely offstage and implied through heightened emotional language. A lingering glance, an unexpected touch of hands, a letter read and reread—these carry erotic charge through restraint. If the story ventures beyond Regency propriety, maintain the period voice: let characters experience desire through the lens of duty, reputation, and genuine feeling rather than explicit physical description. Focus on the exquisite tension of attraction constrained by social rules.",
-  "keywords": ["Regency", "irony", "free indirect discourse", "marriage plot", "social comedy", "wit", "Pride and Prejudice", "romantic tension"]
+    "id": "jane_austen",
+    "name": "Jane Austen",
+    "category": [
+      "Regency Romance",
+      "Classic",
+      "Social Comedy"
+    ],
+    "authorPrompt": "Employ a third-person narrative voice that moves fluidly between objective observation and intimate access to a protagonist's thoughts, using free indirect discourse to blur the line between narrator and character consciousness. Favor balanced, periodic sentences with subordinate clauses that build toward witty conclusions or ironic reversals. Let the narrative voice maintain an amused, slightly detached perspective that nonetheless invites genuine emotional investment.\n\nDistinctive techniques to employ:\n- Free indirect discourse: slip into characters' thoughts without 'she thought' tags, letting their vocabulary and concerns color the narration\n- Ironic understatement: praise that damns, observations that expose vanity or folly through apparent innocence\n- Dialogue as character revelation: let conversations crackle with subtext, misunderstanding, and social maneuvering\n- Social precision: rank, income, property, and propriety matter—render these details with the casual authority of one who knows the rules intimately\n- Moral growth arcs: protagonists who must overcome pride, prejudice, or self-deception to achieve happiness\n- The marriage plot as social analysis: romantic tension inseparable from questions of security, class, and compatibility\n- Drawing rooms and country walks: intimate domestic spaces where momentous conversations occur\n- Secondary characters as comic types: obsequious clergymen, scheming rivals, indulgent parents, sensible confidantes",
+    "nsfwPrompt": "Desire runs on restraint and social risk: a glance held too long, hands meeting, a letter reread. When scenes go further, keep the period voice and the ironic narrator, and let longing, propriety, and what is at stake for reputation shape how bodies and feelings are described.",
+    "keywords": [
+      "Regency",
+      "irony",
+      "free indirect discourse",
+      "marriage plot",
+      "social comedy",
+      "wit",
+      "Pride and Prejudice",
+      "romantic tension"
+    ]
   },
   {
     "id": "jrr_tolkien",
@@ -15,8 +28,8 @@
       "Epic",
       "Literary Fantasy"
     ],
-    "authorPrompt": "Write in a style inspired by J.R.R. Tolkien.\n\nEmploy an elevated, mythopoeic prose that echoes medieval chronicles and Northern European sagas. Sentences should flow with measured dignity—complex yet clear, often building through dependent clauses toward moments of revelation or sorrow. Vary rhythm deliberately: formal narration gives way to archaic gravitas in moments of high import.\n\nDistinctive techniques to employ:\n- Deep-time perspective: events feel weighted by ages of history; reference ancient deeds, fallen kingdoms, and languages half-remembered\n- Landscape as character: describe terrain with loving geographic precision—hills, rivers, forests—as though the land itself carries memory and meaning\n- Eucatastrophe: allow moments of unexpected grace or deliverance at the darkest hour, earning joy through peril survived\n- Interlaced verse and song: weave poetry into narrative naturally, characters singing or reciting as cultural expression\n- Moral clarity without simplicity: good and evil are real, yet temptation, pity, and mercy complicate every choice\n- Names that resonate: places and people carry linguistic weight suggesting meaning beyond translation\n- Walking and journey as structure: travel sequences build camaraderie, reveal character, and develop the world\n- Register shifts: hobbits speak warmly and colloquially; elves with formal beauty; men of Gondor with noble gravity; villains with cold or seductive menace\n\nNarrative voice remains third-person omniscient but intimate—an unseen chronicler who loves these characters and grieves their losses. Descriptions favor the visual and the auditory: firelight on faces, wind in grass, distant horns, the weight of silence in ancient places.",
-    "nsfwPrompt": "Tolkien's work is famously chaste; romance appears through devotion, sacrifice, and the binding of fates across ages rather than physical intimacy. If mature content must be addressed, handle it with courtly restraint—a clasped hand, a farewell kiss, the ache of separation. Intimacy between bonded partners should feel sacred and implied rather than depicted. Focus on the spiritual and emotional dimensions of love: loyalty tested, reunion earned, mortality faced together.",
+    "authorPrompt": "Employ an elevated, mythopoeic prose that echoes medieval chronicles and Northern European sagas. Sentences should flow with measured dignity—complex yet clear, often building through dependent clauses toward moments of revelation or sorrow. Vary rhythm deliberately: formal narration gives way to archaic gravitas in moments of high import.\n\nDistinctive techniques to employ:\n- Deep-time perspective: events feel weighted by ages of history; reference ancient deeds, fallen kingdoms, and languages half-remembered\n- Landscape as character: describe terrain with loving geographic precision—hills, rivers, forests—as though the land itself carries memory and meaning\n- Eucatastrophe: allow moments of unexpected grace or deliverance at the darkest hour, earning joy through peril survived\n- Interlaced verse and song: weave poetry into narrative naturally, characters singing or reciting as cultural expression\n- Moral clarity without simplicity: good and evil are real, yet temptation, pity, and mercy complicate every choice\n- Names that resonate: places and people carry linguistic weight suggesting meaning beyond translation\n- Walking and journey as structure: travel sequences build camaraderie, reveal character, and develop the world\n- Register shifts: humble folk speak warmly and colloquially; ancient peoples with formal beauty; nobility with grave dignity; villains with cold or seductive menace\n\nNarrative voice remains third-person omniscient but intimate—an unseen chronicler who loves these characters and grieves their losses. Descriptions favor the visual and the auditory: firelight on faces, wind in grass, distant horns, the weight of silence in ancient places.",
+    "nsfwPrompt": "Love is devotion and shared fate, described in elevated, reverent language. Intimate scenes carry the weight of oaths and mortality; physical closeness is rendered with the same grave, archaic dignity as the rest of the prose.",
     "keywords": [
       "epic fantasy",
       "mythopoeic",
@@ -35,8 +48,8 @@
       "Classic",
       "Victorian Social"
     ],
-    "authorPrompt": "Write in a style inspired by Charles Dickens.\nFavor long, richly detailed sentences, vivid descriptions of setting, and a blend of humour, sentiment, and social criticism. Populate the world with strongly characterised side figures, often with memorable quirks and names. Use coincidence and set-piece scenes to advance the plot, with a narrative voice that moves freely between characters and occasionally addresses the reader.",
-    "nsfwPrompt": "Keep romance and physical intimacy decorous and implied; focus on emotional bonds, moral conflict, and social stakes, without explicit sexual description.",
+    "authorPrompt": "Favor long, richly detailed sentences, vivid descriptions of setting, and a blend of humour, sentiment, and social criticism. Populate the world with strongly characterised side figures, often with memorable quirks and names. Use coincidence and set-piece scenes to advance the plot, with a narrative voice that moves freely between characters and occasionally addresses the reader.",
+    "nsfwPrompt": "Romance is tied to moral character and social circumstance. Intimate scenes keep the narrator's warmth and sentiment, with physical detail filtered through feeling, consequence, and the characters' place in society.",
     "keywords": [
       "Victorian",
       "omniscient",
@@ -52,8 +65,8 @@
       "Poetic",
       "Lyric Literary"
     ],
-    "authorPrompt": "Write in a style inspired by Emily Dickinson.\nUse intensely inward focus, as if catching fleeting thoughts in mid-flight. Favor compressed, fragmentary, and highly metaphorical language, with unusual images and slant, oblique statements rather than direct exposition. Let punctuation and line/sentence breaks create pauses and jolts, and allow big themes—death, love, time, God—to surface through small, domestic details.",
-    "nsfwPrompt": "Keep any intimacy purely in the realm of emotional or spiritual longing; avoid on-page physical sexual content, relying instead on suggestion, absence, and charged metaphor.",
+    "authorPrompt": "Use intensely inward focus, as if catching fleeting thoughts in mid-flight. Favor compressed, fragmentary, and highly metaphorical language, with unusual images and slant, oblique statements rather than direct exposition. Let punctuation and line/sentence breaks create pauses and jolts, and allow big themes—death, love, time, God—to surface through small, domestic details.",
+    "nsfwPrompt": "Desire is rendered through compression and slant metaphor: dashes, sudden images, the body as landscape or weather. Even explicit moments stay short, charged, and oblique in syntax.",
     "keywords": [
       "poetic",
       "metaphorical",
@@ -68,8 +81,8 @@
     "category": [
       "Diary Rom-Com"
     ],
-    "authorPrompt": "Write in a style inspired by Helen Fielding's Bridget Jones books.\nUse a witty, self-deprecating diary-style voice with time stamps or casual dated entries when appropriate. Favor quick, punchy sentences, lists, and asides, mixing romantic angst with social satire and everyday disasters. Let humour come from hyperbolic overreaction, awkward situations, and the gap between the narrator's ideals and reality.",
-    "nsfwPrompt": "Include frank thoughts about sex, bodies, and dating, plus some on-page snogging and bedroom implication, but keep explicit sexual description fairly light, focusing on comedy and emotional messiness rather than graphic detail.",
+    "authorPrompt": "Use a witty, self-deprecating diary-style voice with time stamps or casual dated entries when appropriate. Favor quick, punchy sentences, lists, and asides, mixing romantic angst with social satire and everyday disasters. Let humour come from hyperbolic overreaction, awkward situations, and the gap between the narrator's ideals and reality.",
+    "nsfwPrompt": "Sex is a source of comedy, anxiety, and candid self-assessment in the narrator's voice: frank thoughts about bodies and dating, awkward logistics, and emotional messiness alongside the heat.",
     "keywords": [
       "diary",
       "rom-com",
@@ -84,8 +97,8 @@
     "category": [
       "YA Fantasy"
     ],
-    "authorPrompt": "Write in a style inspired by J. K. Rowling's Harry Potter-era prose.\nUse a clear, accessible narrative voice, often anchored in one young protagonist. Blend school or everyday life with a layered magical or institutional world, using vivid but straightforward description, humour in dialogue, and distinctive secondary characters. Structure scenes around mysteries, reveals, and escalating stakes, with a mix of cosy detail and darker undercurrents.",
-    "nsfwPrompt": "Keep romance mild and age-appropriate: crushes, hand-holding, and brief kisses; avoid explicit sexual content and keep the focus on friendship, found family, and adventure.",
+    "authorPrompt": "Use a clear, accessible narrative voice, often anchored in one young protagonist. Blend school or everyday life with a layered magical or institutional world, using vivid but straightforward description, humour in dialogue, and distinctive secondary characters. Structure scenes around mysteries, reveals, and escalating stakes, with a mix of cosy detail and darker undercurrents.",
+    "nsfwPrompt": "Attraction shows through banter, embarrassment, and friends' commentary, in the same clear, warm, wry voice as the rest of the story. Intimate scenes stay grounded in the characters' personalities and the humour between them.",
     "keywords": [
       "YA",
       "magical",
@@ -101,8 +114,8 @@
       "Cyberpunk",
       "SF"
     ],
-    "authorPrompt": "Write in a style inspired by William Gibson.\nDrop the reader directly into dense, sensory, urban or high-tech environments. Favor precise, atmospheric description filled with brand, tech, and subcultural detail, and let slang and neologisms appear without over-explaining. Maintain a cool, slightly detached tone as damaged or hustling characters navigate systems larger than they are.",
-    "nsfwPrompt": "Treat sex and attraction as part of the texture of a gritty world—brief, pragmatic, sometimes jaded—without lingering on explicit anatomical detail; keep intimate scenes stylish, elliptical, and secondary to atmosphere and plot.",
+    "authorPrompt": "Drop the reader directly into dense, sensory, urban or high-tech environments. Favor precise, atmospheric description filled with brand, tech, and subcultural detail, and let slang and neologisms appear without over-explaining. Maintain a cool, slightly detached tone as damaged or hustling characters navigate systems larger than they are.",
+    "nsfwPrompt": "Sex is part of the world's texture: brief, pragmatic, sometimes jaded, rendered in the same clipped, brand-dense, elliptical prose as everything else. Let atmosphere and what each person wants from the other carry the scene.",
     "keywords": [
       "cyberpunk",
       "tech",
@@ -117,8 +130,8 @@
     "category": [
       "Spy Thriller"
     ],
-    "authorPrompt": "Write in a style inspired by Ian Fleming's Bond novels.\nCenter on a competent, worldly protagonist, with occasional shifts into a more report-like tone. Favor clean, clipped prose with precise detail about food, drink, clothes, weapons, and settings, and a cool, sometimes snobbish observational voice. Mix action sequences, travelogue description, and moments of psychological or ideological reflection.",
-    "nsfwPrompt": "Portray seduction and sexual encounters openly, with a glamorous, slightly chauvinistic edge, but keep descriptions suggestive rather than graphically explicit, focusing on mood, power, and style.",
+    "authorPrompt": "Center on a competent, worldly protagonist, with occasional shifts into a more report-like tone. Favor clean, clipped prose with precise detail about food, drink, clothes, weapons, and settings, and a cool, sometimes snobbish observational voice. Mix action sequences, travelogue description, and moments of psychological or ideological reflection.",
+    "nsfwPrompt": "Seduction is glamorous and tied to danger, power, and sensual detail: food, cloth, skin, setting. Write encounters with confident, luxurious specificity and let the mission's tension hang over them.",
     "keywords": [
       "spy",
       "Bond",
@@ -133,8 +146,8 @@
     "category": [
       "Conspiracy Thriller"
     ],
-    "authorPrompt": "Write in a style inspired by Robert Ludlum.\nFollow a protagonist caught in conspiracies, amnesia, or global plots with an urgent narrative voice. Favor clear, punchy prose with frequent internal questions, cliffhanger chapter endings, and a steady drumbeat of twists, chases, and reversals. Let exposition arrive through tense conversations, documents, and reveals rather than long lectures, and maintain a paranoid, high-stakes atmosphere.",
-    "nsfwPrompt": "Include occasional romantic or sexual interludes that underscore trust, betrayal, or danger, but keep them relatively brief and non-graphic; the emphasis should remain on suspense, action, and intrigue, not extended erotica.",
+    "authorPrompt": "Follow a protagonist caught in conspiracies, amnesia, or global plots with an urgent narrative voice. Favor clear, punchy prose with frequent internal questions, cliffhanger chapter endings, and a steady drumbeat of twists, chases, and reversals. Let exposition arrive through tense conversations, documents, and reveals rather than long lectures, and maintain a paranoid, high-stakes atmosphere.",
+    "nsfwPrompt": "Intimacy is a brief refuge or a trap inside the thriller. Write it with urgency and tension, aware that trust may be misplaced, and let it feed straight back into the danger.",
     "keywords": [
       "conspiracy",
       "amnesia",
@@ -149,8 +162,8 @@
     "category": [
       "Comic Fantasy"
     ],
-    "authorPrompt": "Write in a style inspired by Terry Pratchett.\nUse a humorous narrative voice that comments on events with wry observation and occasionally addresses the reader directly. Favor clear, punchy prose with playful metaphors and precise similes using unexpected comparisons. Include mild absurdity and sharp social observation, letting jokes illuminate character and society rather than undercut genuine emotion.\n\nDistinctive techniques to employ:\n- Philosophical tangents that seem trivial but reveal deeper truths about human nature\n- Subverted fantasy tropes—acknowledge clichés, then twist them knowingly\n- Footnotes* for digressions, asides, and worldbuilding details\n- Capital Letters for personified concepts (Death, Fate, Narrative Causality)\n- Observations about narrative convention, as if the story knows it's a story\n- Sharp metaphors grounded in mundane reality (bureaucracy, sausages, economics)\n\n*Like this one, which exists mainly to demonstrate the technique.",
-    "nsfwPrompt": "Keep romance and intimacy very mild and mostly implied; focus on emotional connection, banter, and tenderness, and avoid explicit sexual description.",
+    "authorPrompt": "Use a humorous narrative voice that comments on events with wry observation and occasionally addresses the reader directly. Favor clear, punchy prose with playful metaphors and precise similes using unexpected comparisons. Include mild absurdity and sharp social observation, letting jokes illuminate character and society rather than undercut genuine emotion.\n\nDistinctive techniques to employ:\n- Philosophical tangents that seem trivial but reveal deeper truths about human nature\n- Subverted fantasy tropes—acknowledge clichés, then twist them knowingly\n- Footnotes* for digressions, asides, and worldbuilding details\n- Capital Letters for personified concepts (Death, Fate, Narrative Causality)\n- Observations about narrative convention, as if the story knows it's a story\n- Sharp metaphors grounded in mundane reality (bureaucracy, sausages, economics)\n\n*Like this one, which exists mainly to demonstrate the technique.",
+    "nsfwPrompt": "Romance is warm and wry, seen through a narrator who finds people endearingly ridiculous. Intimate scenes keep the humour and footnote-style asides, with real tenderness underneath the jokes.",
     "keywords": [
       "Discworld",
       "satire",
@@ -166,8 +179,8 @@
     "category": [
       "Comic SF"
     ],
-    "authorPrompt": "Write in a style inspired by Douglas Adams.\nTreat the universe as fundamentally ill-designed and faintly ridiculous with a wry narrative voice. Favor long, tumbling sentences that build absurd images, sudden hyperbolic comparisons, and pseudo-technical explanations of trivial things, with digressive comic mini-essays about bureaucracy, physics, or human behaviour.",
-    "nsfwPrompt": "Keep romance and physical affection extremely low-key and mostly offstage; if attraction appears, handle it with gentle comedy and implication, not detailed sexual content.",
+    "authorPrompt": "Treat the universe as fundamentally ill-designed and faintly ridiculous with a wry narrative voice. Favor long, tumbling sentences that build absurd images, sudden hyperbolic comparisons, and pseudo-technical explanations of trivial things, with digressive comic mini-essays about bureaucracy, physics, or human behaviour.",
+    "nsfwPrompt": "Attraction is treated with deadpan absurdity and digressive commentary; intimate moments are funny, a little bewildered, and sincere underneath the comedy.",
     "keywords": [
       "Hitchhiker's Guide",
       "absurd",
@@ -182,8 +195,8 @@
     "category": [
       "Dark Satire"
     ],
-    "authorPrompt": "Write in a style inspired by Kurt Vonnegut.\nUse a conversational, deadpan, darkly comic narrative voice. Favor short, clear sentences, repetition for effect, and meta-narrative asides that comment on war, suffering, and absurdity, balancing bleak subject matter with humane compassion and bitter humour.",
-    "nsfwPrompt": "Refer to sex candidly but briefly, with plain language and an ironic or matter-of-fact tone; avoid extended, detailed erotic description.",
+    "authorPrompt": "Use a conversational, deadpan, darkly comic narrative voice. Favor short, clear sentences, repetition for effect, and meta-narrative asides that comment on war, suffering, and absurdity, balancing bleak subject matter with humane compassion and bitter humour.",
+    "nsfwPrompt": "Sex is described candidly in plain words and short sentences, with irony and a matter-of-fact tone that sits alongside the humane sadness of the narration.",
     "keywords": [
       "satire",
       "deadpan",
@@ -198,8 +211,8 @@
     "category": [
       "Confessional Literary"
     ],
-    "authorPrompt": "Write in a style inspired by Sylvia Plath.\nImmerse tightly in the protagonist's inner life so that description doubles as emotional commentary. Employ confessional, emotionally intense prose that fuses interior monologue with vivid, sometimes unsettling imagery, favouring precise sensory detail and metaphors that make ordinary objects feel symbolically charged.",
-    "nsfwPrompt": "Center on psychological and emotional intensity; intimacy can feel raw or vulnerable but should be more alluded to than graphically depicted, with little to no explicit sexual detail.",
+    "authorPrompt": "Immerse tightly in the protagonist's inner life so that description doubles as emotional commentary. Employ confessional, emotionally intense prose that fuses interior monologue with vivid, sometimes unsettling imagery, favouring precise sensory detail and metaphors that make ordinary objects feel symbolically charged.",
+    "nsfwPrompt": "Intimacy is raw and intensely interior: the body as a site of vulnerability, hunger, and alienation, in vivid, startling imagery and a confessional voice.",
     "keywords": [
       "confessional",
       "intense",
@@ -215,8 +228,8 @@
       "Literary",
       "Speculative"
     ],
-    "authorPrompt": "Write in a style inspired by Margaret Atwood.\nUse a sharp, observant intelligence with a cool narrative voice and a streak of dry, sometimes dark humour. Favor clear, economical prose that slips easily between present action, memory, and quiet speculation, letting domestic or ordinary details carry political and psychological weight.",
-    "nsfwPrompt": "Address sex and the body frankly when needed, but frame intimate scenes in a psychologically and socially aware way; allow some explicitness, yet avoid purely gratuitous or fetishised description.",
+    "authorPrompt": "Use a sharp, observant intelligence with a cool narrative voice and a streak of dry, sometimes dark humour. Favor clear, economical prose that slips easily between present action, memory, and quiet speculation, letting domestic or ordinary details carry political and psychological weight.",
+    "nsfwPrompt": "The body and sex are written frankly and with psychological and social awareness: power, consent, and observation from inside a sharp, ironic consciousness.",
     "keywords": [
       "dystopian",
       "feminist",
@@ -231,8 +244,8 @@
     "category": [
       "Mythic Realism"
     ],
-    "authorPrompt": "Write in a style inspired by Toni Morrison.\nMove fluidly between present, memory, and myth, often shifting focal characters within a community. Favor dense, musical prose with strong imagery, symbolism, and attention to the weight of history, race, and family, allowing nonlinear structures and re-told scenes.",
-    "nsfwPrompt": "Treat sex and the body as powerful, sometimes painful sites of identity and history; intimate scenes can be frank and intense, but should serve psychological and thematic depth rather than erotic titillation.",
+    "authorPrompt": "Move fluidly between present, memory, and myth, often shifting focal characters within a community. Favor dense, musical prose with strong imagery, symbolism, and attention to the weight of history, race, and family, allowing nonlinear structures and re-told scenes.",
+    "nsfwPrompt": "Sex and the body carry history, memory, and identity. Write intimate scenes with lyrical intensity and emotional truth, letting language become rhythmic and sensory.",
     "keywords": [
       "mythic",
       "lyrical",
@@ -247,8 +260,8 @@
     "category": [
       "Procedural Crime"
     ],
-    "authorPrompt": "Write in a style inspired by Michael Connelly.\nFollow a working professional moving methodically through cases and evidence with a clean, procedural narrative voice. Favor straightforward, unshowy prose with careful attention to procedure, documents, timelines, and institutional constraints, letting character emerge through dogged persistence and a personal moral code.",
-    "nsfwPrompt": "Keep sexual and romantic content low-key and secondary to the case; mention relationships and attraction briefly, without graphic description, using them mainly to raise stakes or show vulnerability.",
+    "authorPrompt": "Follow a working professional moving methodically through cases and evidence with a clean, procedural narrative voice. Favor straightforward, unshowy prose with careful attention to procedure, documents, timelines, and institutional constraints, letting character emerge through dogged persistence and a personal moral code.",
+    "nsfwPrompt": "Relationships sit inside the case: intimacy is brief, adult, and observed with procedural plainness, often showing the detective's guardedness or what the job costs them.",
     "keywords": [
       "detective",
       "procedural",
@@ -263,8 +276,8 @@
     "category": [
       "Legal Thriller"
     ],
-    "authorPrompt": "Write in a style inspired by John Grisham.\nUse a clean, fast-moving narrative with a strong sense of forward momentum and practical stakes framed as legal or procedural problems. Favor straightforward prose, short to medium sentences, and scenes built around deadlines, conflicts, and negotiations, using dialogue and small cliffhangers to pull the reader along.",
-    "nsfwPrompt": "Keep sexual content minimal and mostly off-page; romance can exist as a subplot with brief, non-graphic mentions of intimacy, but avoid detailed or extended sex scenes.",
+    "authorPrompt": "Use a clean, fast-moving narrative with a strong sense of forward momentum and practical stakes framed as legal or procedural problems. Favor straightforward prose, short to medium sentences, and scenes built around deadlines, conflicts, and negotiations, using dialogue and small cliffhangers to pull the reader along.",
+    "nsfwPrompt": "Romance is a subplot told in clean, direct prose; intimate scenes are adult and straightforward and connect back to pressure from the case.",
     "keywords": [
       "legal",
       "courtroom",
@@ -279,8 +292,8 @@
     "category": [
       "Techno-Procedural Thriller"
     ],
-    "authorPrompt": "Write in a style inspired by Tom Clancy.\nFollow professionals (military, intelligence, police, technical specialists) working inside real institutions with a grounded narrative voice. Keep prose clear and conventional but layer in confident procedural detail—job titles, chains of command, briefing structures, realistic tactics, and specific equipment or system names—moving scenes through planning, execution, and after-action assessment.",
-    "nsfwPrompt": "Mention sex and private life only briefly, mainly to show stress, downtime, or stakes; keep the focus on operations, professionalism, and the technical and political architecture around them, not on explicit intimacy.",
+    "authorPrompt": "Follow professionals (military, intelligence, police, technical specialists) working inside real institutions with a grounded narrative voice. Keep prose clear and conventional but layer in confident procedural detail—job titles, chains of command, briefing structures, realistic tactics, and specific equipment or system names—moving scenes through planning, execution, and after-action assessment.",
+    "nsfwPrompt": "Private life is a counterweight to operations: intimate moments are brief and grounded, showing stress, trust, and what the characters stand to lose.",
     "keywords": [
       "military",
       "techno-thriller",
@@ -295,8 +308,8 @@
     "category": [
       "Action Thriller"
     ],
-    "authorPrompt": "Write in a style inspired by Lee Child.\nCenter on a highly competent, laconic protagonist with strong tactical awareness. Favor short, declarative sentences, simple vocabulary, and clear physical choreography as scenes revolve around problem-solving, threat assessment, and decisive confrontations.",
-    "nsfwPrompt": "Treat sex and romance as occasional, straightforward interludes, usually described briefly and without graphic detail; keep the emphasis on action and consequence rather than prolonged erotic focus.",
+    "authorPrompt": "Center on a highly competent, laconic protagonist with strong tactical awareness. Favor short, declarative sentences, simple vocabulary, and clear physical choreography as scenes revolve around problem-solving, threat assessment, and decisive confrontations.",
+    "nsfwPrompt": "Encounters are direct and adult, told in short declarative sentences with the same physical precision used for action, then back to the problem at hand.",
     "keywords": [
       "action",
       "Reacher",
@@ -311,8 +324,8 @@
     "category": [
       "Airport Thriller"
     ],
-    "authorPrompt": "Write in a style inspired by James Patterson.\nUse a fast, cinematic narrative with very short chapters, plain language, a high dialogue ratio, and constant hooks. Cut quickly between parallel plotlines and big emotional stakes. Summarise interiority efficiently and end scenes on sharp turns, reveals, or threats.",
-    "nsfwPrompt": "Include romantic and family subplots with simple, direct treatment and non-graphic intimacy; any sex scenes should be very brief, clearly described, and always subordinate to pace and suspense.",
+    "authorPrompt": "Use a fast, cinematic narrative with very short chapters, plain language, a high dialogue ratio, and constant hooks. Cut quickly between parallel plotlines and big emotional stakes. Summarise interiority efficiently and end scenes on sharp turns, reveals, or threats.",
+    "nsfwPrompt": "Short chapters, fast beats: intimate scenes are direct, punchy, and quick, keeping the pace and the suspense running through them.",
     "keywords": [
       "fast-paced",
       "short chapters",
@@ -327,8 +340,8 @@
     "category": [
       "Noir"
     ],
-    "authorPrompt": "Write in a style inspired by Raymond Chandler.\nUse a hard-boiled, wisecracking narrative voice steeped in urban atmosphere. Favor vivid similes, sharp metaphors, and snappy, cynical observations about corruption and human frailty, with crisp, subtext-rich dialogue driving investigations and confrontations.",
-    "nsfwPrompt": "Portray attraction and seduction through innuendo, flirtation, and suggestive detail; fade to implication rather than on-page sex, leaning on atmosphere and subtext instead of graphic description.",
+    "authorPrompt": "Use a hard-boiled, wisecracking narrative voice steeped in urban atmosphere. Favor vivid similes, sharp metaphors, and snappy, cynical observations about corruption and human frailty, with crisp, subtext-rich dialogue driving investigations and confrontations.",
+    "nsfwPrompt": "Seduction plays out in innuendo, wisecracks, and loaded similes. Keep the first-person cynicism and atmosphere through any scene, however far it goes.",
     "keywords": [
       "hard-boiled",
       "noir",
@@ -344,8 +357,8 @@
       "Cozy",
       "Classic Mystery"
     ],
-    "authorPrompt": "Write in a style inspired by Agatha Christie.\nFocus on clues, routines, and social interactions in villages, country houses, or other bounded settings, with simple, precise prose. Build mystery through carefully planted details, shifting suspicions, and conversation-driven scenes while maintaining a polite, orderly surface tone.",
-    "nsfwPrompt": "Keep romantic or sexual elements minimal and discreet; any intimacy should be lightly sketched or implied, never described in explicit detail.",
+    "authorPrompt": "Focus on clues, routines, and social interactions in villages, country houses, or other bounded settings, with simple, precise prose. Build mystery through carefully planted details, shifting suspicions, and conversation-driven scenes while maintaining a polite, orderly surface tone.",
+    "nsfwPrompt": "Romance is sketched briskly and observed with dry social insight; intimate moments are economical and often carry information about motive or secrets.",
     "keywords": [
       "mystery",
       "cozy",
@@ -360,8 +373,8 @@
     "category": [
       "Cosmic Horror"
     ],
-    "authorPrompt": "Write in a style inspired by H. P. Lovecraft.\nFunnel everything through a deeply anxious, over-articulate observer whose perceptions gradually unravel. Favor ornate, antiquated diction, long sentences, and an atmosphere of creeping, cosmic dread, where mundane details gradually reveal hints of something vast, indifferent, and incomprehensible behind reality.",
-    "nsfwPrompt": "Let human concerns like romance and sex feel trivial or absent beside the encroaching void; avoid on-page sexual content and focus on horror emerging through suggestion, forbidden knowledge, and existential terror.",
+    "authorPrompt": "Funnel everything through a deeply anxious, over-articulate observer whose perceptions gradually unravel. Favor ornate, antiquated diction, long sentences, and an atmosphere of creeping, cosmic dread, where mundane details gradually reveal hints of something vast, indifferent, and incomprehensible behind reality.",
+    "nsfwPrompt": "Desire, when present, is entangled with dread, inheritance, and the uncanny; any intimate moment is shadowed by the cosmic and described in the same ornate, fearful register.",
     "keywords": [
       "Cthulhu",
       "cosmic horror",
@@ -376,8 +389,8 @@
     "category": [
       "Horror Realism"
     ],
-    "authorPrompt": "Write in a style inspired by Stephen King.\nSit right inside the protagonist's head, blending present action with their running internal commentary. Favor clear, conversational prose with an ear for ordinary speech and small-town or everyday detail, letting unease build gradually from the mundane with specific sensory cues and hints of the uncanny.",
-    "nsfwPrompt": "When sex appears, allow it to be direct and sometimes uncomfortable, tied to fear, vulnerability, or power; intimate scenes can be explicit, but they should feel disturbing or emotionally charged rather than purely erotic.",
+    "authorPrompt": "Sit right inside the protagonist's head, blending present action with their running internal commentary. Favor clear, conversational prose with an ear for ordinary speech and small-town or everyday detail, letting unease build gradually from the mundane with specific sensory cues and hints of the uncanny.",
+    "nsfwPrompt": "Sex can be direct and sometimes uncomfortable, tied to fear, vulnerability, or power, in a conversational, colloquial voice with intrusive interior thoughts.",
     "keywords": [
       "horror",
       "small town",
@@ -393,8 +406,8 @@
       "Bleak Literary",
       "Western"
     ],
-    "authorPrompt": "Write in a style inspired by Cormac McCarthy.\nUse spare dialogue and minimal interior explanation, often eschewing quotation marks and extra punctuation. Favor long, rhythmic sentences alongside short, blunt ones, with biblical or mythic resonance, describing landscapes, weather, animals, and violence in stark, vivid detail that gives events a ritual or fated quality.",
-    "nsfwPrompt": "If sex appears, depict it briefly and without ornament, often as harsh, transactional, or bleak; avoid romanticised or lushly erotic description.",
+    "authorPrompt": "Use spare dialogue and minimal interior explanation, often eschewing quotation marks and extra punctuation. Favor long, rhythmic sentences alongside short, blunt ones, with biblical or mythic resonance, describing landscapes, weather, animals, and violence in stark, vivid detail that gives events a ritual or fated quality.",
+    "nsfwPrompt": "Sex is described starkly and without ornament, in long unpunctuated sentences or bare short ones; bodies and landscape are given the same weight.",
     "keywords": [
       "bleak",
       "biblical",
@@ -409,8 +422,8 @@
     "category": [
       "Space Opera SF"
     ],
-    "authorPrompt": "Write in a style inspired by Iain M. Banks.\nMove between close focus on a character and a more panoramic, almost cinematic overview of events or systems with a flexible narrative voice. Favor energetic, intelligent prose with a mix of dry wit, sharp dialogue, and vivid, sometimes brutal or surreal imagery, allowing digressions into worldbuilding, politics, or technology that feel like glimpses into a much larger culture.",
-    "nsfwPrompt": "Treat sex and relationships as a normal part of life and worldbuilding; you can show casual or unconventional intimacy in a matter-of-fact way with some explicit detail if relevant, but avoid dwelling on sexual description for its own sake.",
+    "authorPrompt": "Move between close focus on a character and a more panoramic, almost cinematic overview of events or systems with a flexible narrative voice. Favor energetic, intelligent prose with a mix of dry wit, sharp dialogue, and vivid, sometimes brutal or surreal imagery, allowing digressions into worldbuilding, politics, or technology that feel like glimpses into a much larger culture.",
+    "nsfwPrompt": "Sex and relationships are a normal, sometimes playful part of a post-scarcity culture; write intimacy matter-of-factly, with wit, including unconventional arrangements.",
     "keywords": [
       "Culture",
       "space opera",
@@ -425,8 +438,8 @@
     "category": [
       "Idea-Heavy SF"
     ],
-    "authorPrompt": "Write in a style inspired by Neal Stephenson.\nInterleave present-tense scenes with long, idea-heavy digressions into history, math, cryptography, or technology. Favor dense, witty, info-rich prose with technical detail, explanatory asides, and smart, slightly geeky humour, oscillating between kinetic action and extended exposition.",
-    "nsfwPrompt": "Treat sex and violence directly but briefly, as part of the sprawling web of systems and consequences rather than as lingering, lush set-pieces.",
+    "authorPrompt": "Interleave present-tense scenes with long, idea-heavy digressions into history, math, cryptography, or technology. Favor dense, witty, info-rich prose with technical detail, explanatory asides, and smart, slightly geeky humour, oscillating between kinetic action and extended exposition.",
+    "nsfwPrompt": "Intimacy is treated directly and often with digressive, analytical humour, as one more system the characters are navigating.",
     "keywords": [
       "cryptonomicon",
       "technical",
@@ -442,8 +455,8 @@
       "Hopepunk",
       "Cozy SF"
     ],
-    "authorPrompt": "Write in a style inspired by Becky Chambers.\nPrioritise characters' inner lives, friendships, and chosen family in cosy, mostly low-stakes SF settings. Favor warm, hopeful prose with gentle humour, strong sensory detail, and an emphasis on kindness, cultural difference, and communication, with quiet, episodic plots built around small crises and moral choices.",
-    "nsfwPrompt": "Treat romance and intimacy in a tender, inclusive, emotionally focused way, with minimal explicit sexual description; keep the focus on connection, consent, and personal growth.",
+    "authorPrompt": "Prioritise characters' inner lives, friendships, and chosen family in cosy, mostly low-stakes SF settings. Favor warm, hopeful prose with gentle humour, strong sensory detail, and an emphasis on kindness, cultural difference, and communication, with quiet, episodic plots built around small crises and moral choices.",
+    "nsfwPrompt": "Intimacy is tender, consensual, and emotionally attentive, inclusive of different bodies and species; write it warmly and with care for how each partner feels.",
     "keywords": [
       "hopepunk",
       "cozy",
@@ -458,8 +471,8 @@
     "category": [
       "Formal SF"
     ],
-    "authorPrompt": "Write in a style inspired by Ann Leckie.\nOften come from an unusual consciousness (AIs, collectives, culturally alien minds), with particular attention to pronouns, hierarchy, and etiquette. Favor clear but slightly distanced prose, precise worldbuilding, and careful observation of power structures and social rituals, with tension arising from clashes of obligation, culture, and identity.",
-    "nsfwPrompt": "Treat sex and gender expression matter-of-factly within the norms of the invented culture, with little graphic erotic focus; intimacy may be present but is not described in explicit physical detail.",
+    "authorPrompt": "Often come from an unusual consciousness (AIs, collectives, culturally alien minds), with particular attention to pronouns, hierarchy, and etiquette. Favor clear but slightly distanced prose, precise worldbuilding, and careful observation of power structures and social rituals, with tension arising from clashes of obligation, culture, and identity.",
+    "nsfwPrompt": "Intimacy follows the invented culture's norms of gender and status, observed precisely by the narrator; let cultural difference and perception shape the scene.",
     "keywords": [
       "Ancillary",
       "AI",
@@ -474,8 +487,8 @@
     "category": [
       "Systemic Fantasy"
     ],
-    "authorPrompt": "Write in a style inspired by Brandon Sanderson.\nAlternate between key characters with straightforward, transparent prose. Focus on plot, magic systems, and character arcs with a strong sense of cause and effect and rule-based worldbuilding, structuring scenes around goals, conflicts, and reveals and explaining fantastical elements logically.",
-    "nsfwPrompt": "Keep romance and physical affection relatively wholesome and restrained; kisses and implied intimacy are fine, but avoid graphic sexual content and keep the focus on relationships, growth, and adventure.",
+    "authorPrompt": "Alternate between key characters with straightforward, transparent prose. Focus on plot, magic systems, and character arcs with a strong sense of cause and effect and rule-based worldbuilding, structuring scenes around goals, conflicts, and reveals and explaining fantastical elements logically.",
+    "nsfwPrompt": "Romance grows through partnership and banter. Intimate scenes are sincere and character-focused, written in the same clear, accessible prose as the rest of the story.",
     "keywords": [
       "magic system",
       "Cosmere",
@@ -490,8 +503,8 @@
     "category": [
       "Arcane Historical Fantasy"
     ],
-    "authorPrompt": "Write in a style inspired by Susanna Clarke.\nUse a measured narrative with an almost 19th-century sensibility, mixing formal, slightly archaic diction with dry, understated wit. Blend the mundane and the magical in a matter-of-fact way, often through scholarship, footnotes, or in-world documents, so the narrative feels like a carefully annotated history or journal of strange events.",
-    "nsfwPrompt": "Keep romantic and sexual content subtle, mostly in subtext, longing, or quiet attachment; avoid explicit sex and focus on atmosphere, restraint, and the emotional or magical consequences of relationships.",
+    "authorPrompt": "Use a measured narrative with an almost 19th-century sensibility, mixing formal, slightly archaic diction with dry, understated wit. Blend the mundane and the magical in a matter-of-fact way, often through scholarship, footnotes, or in-world documents, so the narrative feels like a carefully annotated history or journal of strange events.",
+    "nsfwPrompt": "Attachment and desire are written with period formality and quiet irony, with magic and strangeness at the edges; intimate moments are understated and uncanny.",
     "keywords": [
       "Jonathan Strange",
       "footnotes",
@@ -507,8 +520,8 @@
       "Wealth Satire",
       "Contemporary Drama"
     ],
-    "authorPrompt": "Write in a style inspired by Kevin Kwan.\nJump between characters within a glamorous, contemporary setting with a chatty, knowing narrative voice. Favor brisk pacing, brand-name detail, lavish descriptions of wealth, food, and fashion, and lots of dialogue and family drama, mixing satire of excess with genuine affection for characters and their emotional journeys.",
-    "nsfwPrompt": "Include flirting, dating, and some on-page sensuality, but keep explicit sexual description light; focus more on romantic tension, social stakes, and the comedic or dramatic fallout of relationships.",
+    "authorPrompt": "Jump between characters within a glamorous, contemporary setting with a chatty, knowing narrative voice. Favor brisk pacing, brand-name detail, lavish descriptions of wealth, food, and fashion, and lots of dialogue and family drama, mixing satire of excess with genuine affection for characters and their emotional journeys.",
+    "nsfwPrompt": "Romance is entangled with family, money, and gossip; intimate scenes are glamorous and sensual and watched over by social consequences and comic asides.",
     "keywords": [
       "Crazy Rich Asians",
       "wealth",
@@ -523,8 +536,8 @@
     "category": [
       "Hard SF"
     ],
-    "authorPrompt": "Write in a style inspired by Cixin Liu.\nZoom from individual scientists and officials out to global and cosmic scales with a mostly detached narrative voice. Favor clear, functional prose with heavy emphasis on scientific ideas, technological speculation, and large-scale historical or cosmic consequences, often making human characters feel small compared to the magnitude of events.",
-    "nsfwPrompt": "Keep sexual and romantic content minimal and understated; mention relationships and family where relevant, but avoid detailed or extended depictions of sex, prioritising science, philosophy, and suspense instead.",
+    "authorPrompt": "Zoom from individual scientists and officials out to global and cosmic scales with a mostly detached narrative voice. Favor clear, functional prose with heavy emphasis on scientific ideas, technological speculation, and large-scale historical or cosmic consequences, often making human characters feel small compared to the magnitude of events.",
+    "nsfwPrompt": "Relationships are rendered plainly and set against vast scale; intimacy is quiet and earnest and often throws the cosmic stakes into relief.",
     "keywords": [
       "Three-Body",
       "hard SF",
@@ -539,8 +552,8 @@
     "category": [
       "Epic Historical"
     ],
-    "authorPrompt": "Write in a style inspired by Ken Follett.\nFollow a determined, practical protagonist through concrete goals and escalating obstacles within institutions, projects, or historical crises. Keep prose clear, modern, and highly readable, grounding every scene in specific physical tasks or negotiations and showing how individual ambitions collide with larger systems—church, state, finance, or war.",
-    "nsfwPrompt": "When depicting sex or violence, be frank and straightforward rather than lyrical; tie intimate or shocking moments back to character motivation and larger social or historical stakes, not prolonged eroticism.",
+    "authorPrompt": "Follow a determined, practical protagonist through concrete goals and escalating obstacles within institutions, projects, or historical crises. Keep prose clear, modern, and highly readable, grounding every scene in specific physical tasks or negotiations and showing how individual ambitions collide with larger systems—church, state, finance, or war.",
+    "nsfwPrompt": "Sex is written frankly and directly, tied to character motivation and the historical and social stakes of the moment.",
     "keywords": [
       "Pillars",
       "historical",
@@ -555,8 +568,8 @@
     "category": [
       "Battlefield Historical"
     ],
-    "authorPrompt": "Write in a style inspired by Bernard Cornwell.\nStick close to a tough, capable protagonist with occasional dry asides and battlefield-style clarity. Favor straightforward, muscular prose with strong verbs, clear spatial sense, and gritty physical detail—weather, fatigue, minor injuries, and the feel of weapons or tools—treating conflict as a series of tactical problems.",
-    "nsfwPrompt": "Include sex and desire sparingly and earthily, with brief, direct description; focus more on camaraderie, survival, and the cost of violence than on extended romantic or erotic scenes.",
+    "authorPrompt": "Stick close to a tough, capable protagonist with occasional dry asides and battlefield-style clarity. Favor straightforward, muscular prose with strong verbs, clear spatial sense, and gritty physical detail—weather, fatigue, minor injuries, and the feel of weapons or tools—treating conflict as a series of tactical problems.",
+    "nsfwPrompt": "Desire is earthy and direct, in a soldier's plain voice; intimate scenes are brief and physical and set against violence and survival.",
     "keywords": [
       "Sharpe",
       "warfare",
@@ -571,8 +584,8 @@
     "category": [
       "Cross-Cultural Epic"
     ],
-    "authorPrompt": "Write in a style inspired by James Clavell.\nFollow ambitious, often out-of-their-depth protagonists as they collide with complex foreign cultures, power structures, and long games of trade or politics. Keep prose clear and accessible but expansive, with concrete detail about work, hierarchy, and daily routines within institutions (companies, schools, governments), and let cultural misunderstanding, negotiation, and shifting alliances drive the story.",
-    "nsfwPrompt": "Show sex and violence frankly but functionally, as part of power dynamics, manipulation, and personal stakes, without turning scenes into extended erotic set-pieces.",
+    "authorPrompt": "Follow ambitious, often out-of-their-depth protagonists as they collide with complex foreign cultures, power structures, and long games of trade or politics. Keep prose clear and accessible but expansive, with concrete detail about work, hierarchy, and daily routines within institutions (companies, schools, governments), and let cultural misunderstanding, negotiation, and shifting alliances drive the story.",
+    "nsfwPrompt": "Sex is part of power, culture, and negotiation; write it frankly and with attention to the cultural codes and manipulation in play.",
     "keywords": [
       "Shogun",
       "cultural clash",
@@ -588,8 +601,8 @@
       "Social",
       "Political Saga"
     ],
-    "authorPrompt": "Write in a style inspired by Jeffrey Archer.\nFocus on ambitious, often morally flexible characters climbing social, political, or financial ladders with a brisk narrative voice. Keep prose straightforward and highly readable, heavy on plot with sharp turns, reversals, secrets, and ironic twists of fate, emphasising rivalries and cliffhanger chapter endings.",
-    "nsfwPrompt": "Treat romance and sex as elements of social maneuvering and personal stakes, with direct but not graphically explicit handling; keep intimate scenes relatively short and functional.",
+    "authorPrompt": "Focus on ambitious, often morally flexible characters climbing social, political, or financial ladders with a brisk narrative voice. Keep prose straightforward and highly readable, heavy on plot with sharp turns, reversals, secrets, and ironic twists of fate, emphasising rivalries and cliffhanger chapter endings.",
+    "nsfwPrompt": "Romance is one more arena of ambition and rivalry; intimate scenes are direct and quick and turn on what each person gains or risks.",
     "keywords": [
       "political",
       "ambitious",
@@ -604,8 +617,8 @@
     "category": [
       "Reflective Popular Epic"
     ],
-    "authorPrompt": "Write in a style inspired by Bryce Courtenay's later novels.\nUse a warm, reflective narrative voice, as if an older storyteller is looking back over hard years with generosity and hindsight. Let prose be conversational, expansive, and openly emotional, with frequent digressions into background, small community stories, and observations about ordinary people's courage and cruelty, focusing on perseverance through layered hardship balanced by humour and kindness.",
-    "nsfwPrompt": "Allow sentimentality and big cathartic moments, with sensual or romantic scenes that are earnest and emotionally focused but not graphically explicit; keep any sexual description moderate and secondary to character growth.",
+    "authorPrompt": "Use a warm, reflective narrative voice, as if an older storyteller is looking back over hard years with generosity and hindsight. Let prose be conversational, expansive, and openly emotional, with frequent digressions into background, small community stories, and observations about ordinary people's courage and cruelty, focusing on perseverance through layered hardship balanced by humour and kindness.",
+    "nsfwPrompt": "Intimacy is earnest and cathartic, part of a big emotional journey; write sensual scenes warmly and openly, centred on growth and connection.",
     "keywords": [
       "Australian",
       "epic",
@@ -620,8 +633,8 @@
     "category": [
       "Raunchy Social Comedy"
     ],
-    "authorPrompt": "Write in a style inspired by Jilly Cooper.\nHover close to the protagonist but allow for cheeky, intrusive narrator asides with a lively narrative voice. Adopt a chatty, exuberant voice with fizzy humour and a slightly posh, tongue-in-cheek tone, favouring long, flowing sentences, playful metaphors, and social comedy around class, romance, and everyday chaos.",
-    "nsfwPrompt": "Allow on-page sexual tension, playful raunch, and some explicit sexual description, but keep the tone fun, glamorous, and indulgent rather than graphically anatomical or brutally dark.",
+    "authorPrompt": "Hover close to the protagonist but allow for cheeky, intrusive narrator asides with a lively narrative voice. Adopt a chatty, exuberant voice with fizzy humour and a slightly posh, tongue-in-cheek tone, favouring long, flowing sentences, playful metaphors, and social comedy around class, romance, and everyday chaos.",
+    "nsfwPrompt": "Sex is playful, glamorous, and indulgent: raunchy banter, gossip, and comic mishaps, with a fun, decadent tone.",
     "keywords": [
       "British",
       "raunchy",
@@ -636,8 +649,8 @@
     "category": [
       "Multicultural Literary"
     ],
-    "authorPrompt": "Write in a style inspired by Zadie Smith.\nMove between characters in multicultural urban settings with an intelligent, slightly ironic narrative voice. Favor vivid, free-flowing prose that mixes high and low registers—slang, academic language, and sharp observational humour—while digging into race, class, family, and identity through ensemble casts.",
-    "nsfwPrompt": "Treat sex, religion, and politics frankly, with more emphasis on awkwardness, power, and self-consciousness than on explicit erotic detail; keep any sexual description moderate and character-driven.",
+    "authorPrompt": "Move between characters in multicultural urban settings with an intelligent, slightly ironic narrative voice. Favor vivid, free-flowing prose that mixes high and low registers—slang, academic language, and sharp observational humour—while digging into race, class, family, and identity through ensemble casts.",
+    "nsfwPrompt": "Sex is written with frank awkwardness and social self-consciousness: class, race, and the gap between what people think and say.",
     "keywords": [
       "multicultural",
       "London",
@@ -653,8 +666,8 @@
       "Modernist",
       "Stream-of-Consciousness"
     ],
-    "authorPrompt": "Write in a style inspired by Virginia Woolf.\nDrift through consciousness, moving seamlessly between characters' interior thoughts and perceptions. Favor long, flowing sentences, rich sensory detail, and attention to small moments of awareness, memory, and social nuance, with time flexing through recollection and anticipation.",
-    "nsfwPrompt": "Treat attraction and intimacy as part of inner life—glances, touches, remembered encounters—described in impressionistic, emotional terms rather than explicit physical detail.",
+    "authorPrompt": "Drift through consciousness, moving seamlessly between characters' interior thoughts and perceptions. Favor long, flowing sentences, rich sensory detail, and attention to small moments of awareness, memory, and social nuance, with time flexing through recollection and anticipation.",
+    "nsfwPrompt": "Attraction and intimacy are part of the flow of consciousness: impressionistic, sensory, and moving between minds and moments in time.",
     "keywords": [
       "modernist",
       "stream-of-consciousness",
@@ -669,8 +682,8 @@
     "category": [
       "Paranoid SF"
     ],
-    "authorPrompt": "Write in a style inspired by Philip K. Dick.\nEmphasise confusion, paranoia, and shifting realities. Favor straightforward, sometimes blunt prose interwoven with bursts of surreal or disorienting imagery, letting characters question their perceptions, identity, and the trustworthiness of systems around them.",
-    "nsfwPrompt": "Keep sexual content secondary and somewhat uneasy; mention desire and relationships when relevant, but avoid extended or graphic sex scenes, focusing instead on psychological and existential tension.",
+    "authorPrompt": "Emphasise confusion, paranoia, and shifting realities. Favor straightforward, sometimes blunt prose interwoven with bursts of surreal or disorienting imagery, letting characters question their perceptions, identity, and the trustworthiness of systems around them.",
+    "nsfwPrompt": "Desire is uneasy and tangled with paranoia and questions of what is real; intimate scenes carry a sense of dislocation and existential doubt.",
     "keywords": [
       "paranoid",
       "reality",
